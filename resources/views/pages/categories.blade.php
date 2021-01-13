@@ -66,29 +66,31 @@
         </center>
         </div><br><br>
         <?php endforeach; ?> 
-        <div class="row">
 
+        
           <!-- SHOP Item -->
+          <div class="row">
           <?php
           if(count($content) > 0){
           foreach ($content as $products):
           ?>
-         <div class="col-md-2 col-lg-2 pb-80 card" >
-          <div class="post-prev-img">  
-            <a href="/productdetails/{{$products->inmr_hash}}"><img style="height: 250px; width: auto" src="/images/products/{{$products->image_path}}" alt="img"></a>
-          </div>
-          
-          <div class="post-prev-title mb-5">
-            <h3 style="text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;" ><a class="font-norm a-inv" href="/productdetails/{{$products->inmr_hash}}">{{$products->product_name}}</a></h3>
-          </div>
+            <div class="col-md-3 col-lg-3 pb-80 card" >
+              <div class="post-prev-img">  
+                <a href="/productdetails/{{$products->inmr_hash}}"><img style="height: 370px; width: 472px;" src="/images/products/{{$products->image_path}}" alt="img"></a>
+              </div>
             
-          <div class="shop-price-cont" data-price={{ $products->cost_amt }}>
-            <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
-          </div>
-        </div>
+              <div class="post-prev-title mb-5">
+                <h3 style="text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;" ><a class="font-norm a-inv" href="/productdetails/{{$products->inmr_hash}}">{{$products->product_name}}</a></h3>
+              </div>
+              
+              <div class="shop-price-cont" data-price={{ $products->cost_amt }}>
+                <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
+              </div>
+            </div>
           <?php endforeach; ?>   
+          </div>
           <?php }else{ ?>
             <div>
               <h3>
@@ -104,7 +106,7 @@
             {{ $content->links() }}
           </nav> 
         </div>
-      </div>
+      
     </div>
   </div>
 </div>
