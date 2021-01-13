@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\OrderHeader;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use Illuminate\Support\Facades\Validator;
 use Mpdf\Mpdf;
 use Carbon\Carbon;
 use Session;
@@ -25,16 +26,35 @@ class ProfileController extends Controller
         if(Session::has('user_hash')){
             $user_hash = session('user_hash');
             $title = 'Profile';
-            $data['profile'] =  User::where('is_deleted', 0)->findOrFail($user_hash);
 
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            
+            $data['profile'] =  User::where('is_deleted', 0) 
+            ->leftJoin('regn', 'regn.regn_hash', '=', 'user.regn_hash')
+            ->leftJoin('prov', 'prov.prov_hash', '=', 'user.prov_hash')
+            ->leftJoin('city', 'city.city_hash', '=', 'user.city_hash')
+            ->leftJoin('brgy', 'brgy.brgy_hash', '=', 'user.brgy_hash')
+            ->findOrFail($user_hash);
+
+            $data['prof'] =  User::where('is_deleted', 0) 
+            ->leftJoin('regn', 'regn.regn_hash', '=', 'user.regn_hash')
+            ->leftJoin('prov', 'prov.prov_hash', '=', 'user.prov_hash')
+            ->leftJoin('city', 'city.city_hash', '=', 'user.city_hash')
+            ->leftJoin('brgy', 'brgy.brgy_hash', '=', 'user.brgy_hash')
+            ->where('user.user_hash', $user_hash)
+            ->get();
+
+            $data['tbl_region'] =  DB::table('regn')->get();
+            $data['tbl_province'] =  DB::table('prov')->get();
+            $data['tbl_city'] =  DB::table('city')->get();
+            $data['tbl_brgy'] =  DB::table('brgy')->get();
             // SHOW ALL THE ORDERS OF 1 USER
             // $data['order'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
             // ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
             // ->where('sohr.user_hash', $user_hash)
             // ->get(); 
 
-            $data['order_no'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
-            ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
+            $data['order_no'] = OrderHeader::leftJoin('user', 'user.user_hash', '=', 'sohr.user_hash')
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
@@ -44,14 +64,11 @@ class ProfileController extends Controller
 
             $data['order'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
-            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
-            ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
             ->orderBy('sohr.sohr_hash', 'desc')
             ->get(); 
 
-            $data['to_ship'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
-            ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
+            $data['to_ship'] = OrderHeader::leftJoin('user', 'user.user_hash', '=', 'sohr.user_hash')
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
@@ -62,15 +79,13 @@ class ProfileController extends Controller
 
             $data['ship'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
-            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
-            ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
             ->where('sohr.status_user', '2')
             ->orderBy('sohr.sohr_hash', 'desc')
             ->get(); 
 
-            $data['to_receive'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
-            ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
+
+            $data['to_receive'] = OrderHeader::leftJoin('user', 'user.user_hash', '=', 'sohr.user_hash')
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
@@ -82,16 +97,14 @@ class ProfileController extends Controller
 
             $data['delivered'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
-            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
-            ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
             ->where('sohr.status_user', '3')
             ->orwhere('sohr.status_user', '4')
             ->orderBy('sohr.sohr_hash', 'desc')
             ->get(); 
 
-            $data['all_completed'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
-            ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
+
+            $data['all_completed'] = OrderHeader::leftJoin('user', 'user.user_hash', '=', 'sohr.user_hash')
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
@@ -102,15 +115,12 @@ class ProfileController extends Controller
 
             $data['completed'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
-            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
-            ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
             ->where('sohr.status_user', '5')
             ->orderBy('sohr.sohr_hash', 'desc')
-            ->get(); 
+            ->get();  
 
-            $data['all_cancel'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
-            ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
+            $data['all_cancel'] = OrderHeader::leftJoin('user', 'user.user_hash', '=', 'sohr.user_hash')
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
@@ -121,51 +131,21 @@ class ProfileController extends Controller
 
             $data['cancelled'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
-            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
-            ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
             ->where('sohr.status_user', '6')
             ->orderBy('sohr.sohr_hash', 'desc')
-            ->get(); 
+            ->get();  
 
             $data['reason'] =  DB::table('urfc')->get();
 
 
+        // return view('pages.profile', compact('visit'))->with('data', $data);
         return view('pages.profile')->with('data', $data);
     }else{
+        // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        // return view('pages.login', compact('visit'));
         return view('pages.login');
         }
-    }
-
-    public function sort(Request $request)
-    {
-            $user_hash = session('user_hash');
-            $title = 'Profile';
-            
-            $data['profile'] =  User::where('is_deleted', 0)->findOrFail($user_hash);
-
-            $data['order_no'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
-            ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
-            ->where('sohr.user_hash', $user_hash)
-            ->groupBy('sohr.order_no')
-            ->orderBy('sohr.sohr_hash', 'desc')
-            ->get(); 
-
-            $data['order'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
-            ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
-            ->where('sohr.user_hash', $user_hash)
-            ->orderBy('sohr.sohr_hash', 'desc')
-            ->get();
-
-
-        $sort = $request->sort;
-
-
-         if ($sort == '1'){
-            $data['order'] = OrderDetail::leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')->where('sohr.status_user', '1')->where('sohr.user_hash', $user_hash)->orderBy('sohr.sohr_hash','desc')->paginate(18);
-            } 
-
-        return view ('pages.profile',compact('$data'));
     }
 
     public function updatestatus($id)
@@ -175,102 +155,47 @@ class ProfileController extends Controller
             $order->status_user = '5';
             $order->is_comp = '1';
             $order->save();
+
+            // $points = $order->order_total / 100;
+            // DB::table('user')->where('user_hash', $order->user_hash)->increment('az_pouch',$points);
+
             return redirect('/profile');
     } 
 
     public function updatecancel(Request $request,$id)
     {       
-                    $order = OrderHeader::findOrFail($id);
-                    $order->order_stat = '9';
-                    $order->status_user = '6';
-                    $order->is_cancel = '1';
-                    $order->user_reason_decline = $request['reason'];
-                    $order->user_decline_datetime = Carbon::now();
-                    $order->save();
 
-                        $myorder = OrderDetail::select('inmr_hash', 'qty')
-                        ->where('soln.sohr_hash', $id)
-                        ->get(); 
-                    
-                        foreach ($myorder as $order)
-                        {
-                            DB::table('inmr')->where('inmr_hash', $order->inmr_hash)->increment('available_qty',$order->qty);
-                        }
-            return redirect('/profile');
-    } 
-    
-    // public function updatecancel(Request $request,$id)
-    // {       
+        $check = OrderHeader::select('order_stat')
+        ->where('sohr_hash', $id)
+        ->where('order_stat', '>', '1')
+        ->get(); 
 
-    //     if(Session::has('user_hash')){
-    //         $user_hash = session('user_hash');
-    //         $title = 'Profile';
-    //         $data['profile'] =  User::where('is_deleted', 0)->findOrFail($user_hash);
+        if (count ($check) > 0){
+            // return redirect('/profile');
+            return redirect('/profile')->with('error', 'Sorry, This order cannot be cancelled anymore.');
+        }else{
+            $order = OrderHeader::findOrFail($id);
+            $order->order_stat = '9';
+            $order->status_user = '6';
+            $order->is_cancel = '1';
+            $order->user_reason_decline = $request['reason'];
+            $order->user_decline_datetime = Carbon::now();
+            $order->save();
 
-    //             $supplier = OrderHeader::leftJoin('user', 'user.user_hash', '=', 'sohr.user_hash')
-    //             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
-    //             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
-    //             ->where('sohr.user_hash', $user_hash)
-    //             ->groupBy('sohr.order_no')
-    //             ->orderBy('sohr.sohr_hash', 'desc')
-    //             ->get(); 
-
-    
-    //             // for ($i=0; $i < count($supplier); $i++) { 
-    //                 $order = OrderHeader::findOrFail($id);
-    //                 $order->order_stat = '9';
-    //                 $order->status_user = '6';
-    //                 $order->is_cancel = '1';
-    //                 $order->user_reason_decline = $request['reason'];
-    //                 $order->user_decline_datetime = Carbon::now();
-    //                 $order->save();
-
-    //                     $myorder = OrderDetail::select('inmr_hash', 'qty')
-    //                     ->where('soln.sohr_hash', $id)
-    //                     ->orderBy('sohr.sohr_hash', 'desc')
-    //                     ->get(); 
-                    
-    //                     foreach ($myorder as $order)
-    //                     {
-                            
-    //                     }
-    
-    //                 // for ($a=0; $a < count($myorder); $a++) { 
-    //                 //     if($supplier[$i]->sumr_hash == $myorder[$a]->sumr_hash){
-    
-    //                         $orderdetail = OrderDetail::findOrFail($myorder[$a]->soln_hash);
-    //                         $orderdetail->sohr_hash = $id;
-    //                         $orderdetail->inmr_hash = $myorder[$a]->inmr_hash;
-    //                         $orderdetail->qty = $myorder[$a]->qty;
-    //                         // $orderdetail->save();
-    
-    //                         DB::table('inmr')->where('inmr_hash', $myorder[$a]->inmr_hash)->increment('available_qty',$orderdetail->qty);
-               
-    //             //         }   
-    
-    //             //     }
-    //             // } 
-    //         return redirect('/profile');
-    //     }else{
-    //         return view('pages.login');
-    //     }
+                $myorder = OrderDetail::select('inmr_hash', 'qty')
+                ->where('soln.sohr_hash', $id)
+                ->get(); 
             
-    //         // $order = OrderHeader::findOrFail($id);
-    //         // $order->order_stat = '9';
-    //         // $order->status_user = '6';
-    //         // $order->is_cancel = '1';
-    //         // $order->user_reason_decline = $request['reason'];
-    //         // $order->user_decline_datetime = Carbon::now();
-    //         // $order->save();
+                foreach ($myorder as $order)
+                {
+                    DB::table('inmr')->where('inmr_hash', $order->inmr_hash)->increment('available_qty',$order->qty);
+                }
+                return redirect('/profile')->with('status', 'Success, This order has been cancelled.');
+        }
 
-    //         // $orderdetail = OrderDetail::findOrFail($order);
-    //         // $orderdetail->qty = $qty;
-    //         // $orderdetail->save();
-
-    //         // DB::table('inmr')->where('inmr_hash', $orderdetail->inmr_hash)->decrement('available_qty',$orderdetail->qty);
-    //         // return redirect('/profile');
-    // } 
-    
+                    
+    } 
+   
     public function review(Request $request, $id)
     {       
             
@@ -286,7 +211,29 @@ class ProfileController extends Controller
             //  DB::table('sohr')->where('sohr_hash', $order->sohr_hash)->update(['status' => 'COMPLETED']);   
 
             return redirect('/profile');
-    }   
+    }  
+    
+    public function editprofile(Request $request, $id)
+    {       
+
+        $validator= Validator::make($request->all(),
+            [
+                'fullname' => 'required|regex:/^[a-zA-Z\s]+$/',
+                'contact_no' => 'required|regex:/(09)[0-9]{9}$/'
+            ]
+        );
+        if($validator->fails()){
+            return redirect('/profile')->with('status', 'Required.');
+        } else {
+
+            $profile = User::where('is_deleted', 0)->findOrFail($id);
+            $profile->fullname = $request->input('fullname');
+            $profile->contact_no = $request->input('contact_no');
+            $profile->save(); 
+
+            return redirect('/profile')->with('status', 'else to.');
+        }
+    }  
 
 
     /**

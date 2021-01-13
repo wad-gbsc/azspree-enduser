@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use App\Models\CartHeader;
 use Session;
 use Hash;
 use DB;
@@ -152,6 +153,12 @@ class LoginController extends Controller
 
                 DB::table('user')->where('user_hash', $newUser->user_hash)->update(['is_verified' => '1']); 
 
+                //For SRHR
+                $srhr = new CartHeader();
+                $srhr->user_hash = $newUser->user_hash;
+                $srhr->create_datetime = Carbon::now();
+                $srhr->save();
+
                 if(count($finduser) > 0){
 
                     session()->put('user_hash', $finduser[0]->user_hash);
@@ -206,10 +213,17 @@ class LoginController extends Controller
                 $newUser->type = 'US';
                 $newUser->status = 'A';
                 $newUser->facebook_id = $user->id;
+                $newUser->picture = $user->avatar;
                 $newUser->create_datetime = Carbon::now();
                 $newUser->save();
 
                 DB::table('user')->where('user_hash', $newUser->user_hash)->update(['is_verified' => '1']); 
+
+                //For SRHR
+                $srhr = new CartHeader();
+                $srhr->user_hash = $newUser->user_hash;
+                $srhr->create_datetime = Carbon::now();
+                $srhr->save();
 
                 if(count($finduser) > 0){
 
@@ -232,6 +246,8 @@ class LoginController extends Controller
     {
         Session::forget('user_hash');
         return view('pages.login');
+        // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        // return view('pages.login', compact('visit'));
     }
 
 

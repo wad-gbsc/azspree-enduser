@@ -7,26 +7,31 @@ use App\Models\User;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\Product;
-use App\Models\OrderHeader;
+use App\Models\VisitorCounter;
 use App\Models\OrderDetail;
 use Session;
 use DB;
 
 class PagesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Azspree';
         $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
         $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->orderBy('inmr_hash','desc')->paginate(24);
-        
-        return view('welcome', compact('categories','content'));
+
+        $visitcount =  DB::table('cntr')->where('is_deleted', 0)->where('ip_address', $request->ip())->get();
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        // $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->inRandomOrder()->paginate(24);
+        return view('welcome', compact('categories','content','visitcount', 'visit'));
     }
     public function login(){
         if(Session::has('user_hash')){
             $user_hash = session('user_hash');
             $title = 'Profile';
             $data['profile'] =  User::where('is_deleted', 0)->findOrFail($user_hash);
+
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
 
             $data['order_no'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
@@ -126,19 +131,44 @@ class PagesController extends Controller
             $data['reason'] =  DB::table('urfc')->get();
 
 
-        return view('pages.profile')->with('data', $data);
+            // return view('pages.profile', compact('visit'))->with('data', $data);
+            return view('pages.profile')->with('data', $data);
         }else{
-            return view('pages/login');
+            return view('pages.login');
+            // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            // return view('pages.login', compact('visit'));
         }
     }
     
 
-    public function success(){
-        if(Session::has('user_hash')){
-            return view('success');
+    public function update(Request $request){
+        // $ip = $this->server->get('REMOTE_ADDR');
+
+        // $visitcount = $request->visit_count;
+        
+        // //     // DB::table('cntr')->where('cntr_hash', '1')->update(['times' => $visitcount ]);
+        //     DB::table('cntr')->where('cntr_hash', '1')->update(['times' => $request->visit_count ]);
+
+        // // $cntr_hash = 1;
+        $check_if_exists = DB::table('cntr')->where('ip_address', $request->ip())->first();
+
+        if(!$check_if_exists)
+        {
+            $visitcount = new VisitorCounter;
+            $visitcount->times = 1;
+            $visitcount->ip_address = $request->ip();
+            $visitcount->save();
         }else{
-            return view('pages/login');
+            DB::table('cntr')->where('ip_address', $request->ip())->increment('times');
         }
+
+
+        
+        // $visitcount = new VisitorCounter;
+        // $visitcount->times = $request->visit_count;
+
+        // $visitcount->save();
+        
     } 
 
     public function signup(){
@@ -147,6 +177,8 @@ class PagesController extends Controller
             $title = 'Profile';
             $data['profile'] =  User::where('is_deleted', 0)->findOrFail($user_hash);
 
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+
             $data['order_no'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
@@ -245,15 +277,19 @@ class PagesController extends Controller
             $data['reason'] =  DB::table('urfc')->get();
 
 
-        return view('pages.profile')->with('data', $data);
+            // return view('pages.profile', compact('visit'))->with('data', $data);
+            return view('pages.profile')->with('data', $data);
         }else{
             return view('pages/signup');
+            // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            // return view('pages/signup', compact('visit'));
         }
     }
 
-    public function trackorder()
+    public function try()
     {
-        return view ('pages.trackorder');
+        $data['addition'] =  DB::table('add')->where('is_deleted', 0)->inRandomOrder()->get();
+        return view ('pages.try')->with('data', $data);
     }
 
     public function checkout(){
@@ -424,6 +460,8 @@ class PagesController extends Controller
     public function welcomeseller()
     {
         return view ('pages.welcomeseller');
+        // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        // return view ('pages.welcomeseller', compact('visit'));
     }
 
 }

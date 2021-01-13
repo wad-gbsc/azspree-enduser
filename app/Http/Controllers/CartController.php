@@ -34,6 +34,8 @@ class CartController extends Controller
             $srhr_hash = session('user_hash');
             $title = 'MyCart';
 
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+
             $data['mycart'] = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
             ->where('srln.srhr_hash', $srhr_hash)
             ->where('srln.status', 0)
@@ -55,9 +57,12 @@ class CartController extends Controller
             ->orderBy('sumr.sumr_hash', 'desc')
             ->get();
 
+        // return view('pages.mycart', compact('visit'))->with('data', $data);
         return view('pages.mycart')->with('data', $data);
     }else{
         return view('pages.login');
+        // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        // return view('pages.login', compact('visit'));
         }
     }
 
@@ -67,6 +72,7 @@ class CartController extends Controller
 
             $srhr_hash = session('user_hash');
             $title = 'checkout';
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
 
             $data['comr'] = DB::table('comr')
             ->select('excess_kg_fee', 'max_kg')
@@ -98,9 +104,12 @@ class CartController extends Controller
             $data['tbl_city'] =  DB::table('city')->get();
             $data['tbl_brgy'] =  DB::table('brgy')->get();
 
-        return view('pages.checkout')->with('data', $data);
+            // return view('pages.checkout', compact('visit'))->with('data', $data);
+            return view('pages.checkout')->with('data', $data);
     }else{
         return view('pages.login');
+        // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        // return view('pages.login', compact('visit'));
         }
     }
 
@@ -140,10 +149,6 @@ class CartController extends Controller
             ->select('shipping_fee', 'sumr_hash')
             ->where('city_hash', $city_hash)
             ->get();
-
-
-
-
     return response()->json($ursf);
     }
 
@@ -227,9 +232,15 @@ class CartController extends Controller
         public function placeorder(Request $request)
         {
             if(Session::has('user_hash')){
-            $srhr_hash = session('user_hash');
+            $user_hash = session('user_hash');
             $title = 'MyOrder';
-            $data['oder'] =  User::where('is_deleted', 0)->findOrFail($srhr_hash);
+            $data['oder'] =  User::where('is_deleted', 0)->findOrFail($user_hash);
+
+            $validator= Validator::make($request->all(),
+            [
+                'fullname' => 'required|regex:/^[a-zA-Z\s]+$/',
+                'contact_no' => 'required|regex:/(09)[0-9]{9}$/'
+            ]);
             
             $ursf = DB::table('ursf')
             ->select('shipping_fee', 'sumr_hash')
@@ -242,7 +253,7 @@ class CartController extends Controller
             ->get();
         
             $mycart = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
-            ->where('srln.srhr_hash', $srhr_hash)
+            ->where('srln.srhr_hash', $user_hash)
             ->where('srln.is_selected', 1)
             ->where('srln.status', 0)
             ->where('srln.is_deleted', 0)
@@ -251,7 +262,7 @@ class CartController extends Controller
 
             $supplier =  CartDetail::leftJoin('sumr', 'sumr.sumr_hash', '=', 'srln.sumr_hash')
             ->leftJoin('srhr', 'srhr.srhr_hash', '=', 'srln.srhr_hash')
-            ->where('srln.srhr_hash', $srhr_hash)
+            ->where('srln.srhr_hash', $user_hash)
             ->where('srln.is_selected', 1)
             ->where('srln.status', 0)
             ->where('srln.is_deleted', 0)
@@ -259,6 +270,12 @@ class CartController extends Controller
             ->orderBy('sumr.sumr_hash', 'desc')
             ->get();
 
+
+            if($validator->fails()){
+                $response['stat']='error';
+                $response['msg'] =$validator->errors();
+                echo json_encode($response);
+            } else {
             for ($i=0; $i < count($supplier); $i++) { 
 
                 $unit_total = 0; 
@@ -286,6 +303,9 @@ class CartController extends Controller
                 $dh = 0;
                 $sub_1 = 0;
                 $sub_2 = 0;
+                $sub_3 = 0;
+                $sub_4 = 0;
+                $sub_5 = 0;
 
 
                 $order = new OrderHeader();
@@ -296,7 +316,9 @@ class CartController extends Controller
                 $order->city_hash = $request->input('city');
                 $order->brgy_hash = $request->input('barangay');
                 $order->address = $request->input('address');
-                $order->user_hash = $srhr_hash;
+                $order->user_hash = $user_hash;
+                $order->fullname = $request->input('fullname');
+                $order->contact_no = $request->input('contact_no');
                 $order->sumr_hash = $supplier[$i]->sumr_hash;
                 $order->payment_method = $request->input('payment_method');
                 $order->create_datetime = Carbon::now();
@@ -326,9 +348,15 @@ class CartController extends Controller
                                 $sub_2 = ($sub_1 * $excess_kg_fee );
                                 $total_kg = ($sub_2 * $mycart[$a]->qty );
                             }else{
-                                $total_kg = $dimension;
-
-                            }
+                                if($mycart[$a]->qty > 1){
+                                    $sub_3 = ($dimension * $mycart[$a]->qty );
+                                    $sub_4 = (round($sub_3) - $max_kg);
+                                    $sub_5 = ($sub_4 * $excess_kg_fee );
+                                    $total_kg = $sub_5;
+                                  }else{
+                                    $total_kg = 0;
+                                  }
+                                }
                         }else if($dimension = $weight){
                             if ($weight > $max_kg){
                                 $sub_1= ($weight - $max_kg);
@@ -337,8 +365,14 @@ class CartController extends Controller
                                 $sub_2 = ($sub_1 * $excess_kg_fee );
                                 $total_kg = ($sub_2 * $mycart[$a]->qty );
                             }else{
-                                $total_kg = $weight;
-
+                                if($mycart[$a]->qty > 1){
+                                    $sub_3 = ($weight * $mycart[$a]->qty );
+                                    $sub_4 = (round($sub_3) - $max_kg);
+                                    $sub_5 = ($sub_4 * $excess_kg_fee );
+                                    $total_kg = $sub_5;
+                                  }else{
+                                    $total_kg = 0;
+                                  }
                             }
                         }else{
                             if ($weight > $max_kg){
@@ -348,8 +382,18 @@ class CartController extends Controller
                                 $sub_2 = ($sub_1 * $excess_kg_fee);
                                 $total_kg = ($sub_2 * $mycart[$a ]->qty );
                             }else{
-                                $total_kg = $weight;
-
+                                if($weight >= 1){
+                                    $total_kg = $weight;
+                                }else{
+                                    if($mycart[$a]->qty > 1){
+                                        $sub_3 = ($weight * $mycart[$a]->qty );
+                                        $sub_4 = (round($sub_3) - $max_kg);
+                                        $sub_5 = ($sub_4 * $excess_kg_fee );
+                                        $total_kg = $sub_5;
+                                      }else{
+                                        $total_kg = 0;
+                                      }
+                                }
                             }
                         }
                         $shipping_extra += $total_kg;
@@ -396,11 +440,24 @@ class CartController extends Controller
                 $order->dh = $dh;
                 $order->save();
             }
-            DB::table('user')->where('user_hash', $sohr_hash)->update(['regn_hash' => $request->input('barangay'), 'prov_hash' => $request->input('province'), 'city_hash' => $request->input('city'), 'brgy_hash' => $request->input('region'), 'address' => $request->input('address')]);  
 
+            $check = User::select('contact_no')
+            ->where('user_hash', $user_hash)
+            ->where('contact_no', null )
+            ->get(); 
+
+            if (count ($check) > 0){
+                $response['stat']='success';
+               
+            }else{
+                DB::table('user')->where('user_hash', $user_hash)->update(['contact_no' => $request->input('contact_no')]);  
+                
+            }
             $response['stat']='success';
-            $response['msg']='<b>ORDER PLACED SUCCESSFULLY.</b>';
-            echo json_encode($response);
+                $response['msg']='<b>ORDER PLACED SUCCESSFULLY.</b>';
+                echo json_encode($response);
+            
+        }
         }
         }
     /**
@@ -422,10 +479,10 @@ class CartController extends Controller
      */
     public function show($id)
     { 
-        $data['products'] = Product::leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
-        ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
-        ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
-        ->findOrFail($id);
+        // $data['products'] = Product::leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        // ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
+        // ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+        // ->findOrFail($id);
 
         $data['products'] = Product::leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
         ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
