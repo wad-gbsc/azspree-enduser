@@ -41,4 +41,17 @@ return [
         'redirect' => 'https://localhost.azspree.com/auth/facebook/callback',
     ],
 
+    //For Up
+    // 'google' => [
+    //     'client_id' => '670035484977-vi38v7j7afhl7efe2bt9i8u1os7n9gr8.apps.googleusercontent.com',
+    //     'client_secret' => '02FUS4h-B3vYhA8-Nr5Rctj6',
+    //     'redirect' => 'https://azspree.com/auth/google/callback',
+    // ],
+
+    // 'facebook' => [
+    //     'client_id' => '219192816331509',
+    //     'client_secret' => '951c343c3c28fe6af2c76e12c03f80fb',
+    //     'redirect' => 'https://azspree.com/auth/facebook/callback',
+    // ],
+
 ];
