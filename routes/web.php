@@ -26,6 +26,7 @@ Route::get('auth/google/callback', 'LoginController@handleGoogleCallback');
 Route::get('auth/facebook', 'LoginController@redirectTofacebook');
 Route::get('auth/facebook/callback', 'LoginController@handlefacebookCallback');
 Route::get('/', 'PagesController@index');
+Route::put('/visitorcount', 'PagesController@update');
 Route::get('/search', 'PagesController@search');
 Route::get('/sortbyprice', 'PagesController@sortbyprice');
 Route::get('/login', 'PagesController@login');
@@ -36,7 +37,7 @@ Route::get('/get-province-list/{regn_hash}','CartController@getProvinceList');
 Route::get('/get-city-list/{prov_hash}','CartController@getCityList');
 Route::get('/get-barangay-list/{city_hash}','CartController@getBarangayList');
 
-Route::get('/trackorder', 'PagesController@trackorder');
+// Route::get('/try', 'PagesController@try');
 Route::get('/checkout', 'PagesController@checkout');
 // Route::get('/payment', 'PagesController@payment');
 
@@ -50,6 +51,7 @@ Route::get('/checkout', 'CartController@indexcheckout');
 Route::get('/delete/{id}', 'CartController@delete');
 Route::get('/updatestatus/{id}', 'ProfileController@updatestatus');
 Route::get('/updatecancel/{id}', 'ProfileController@updatecancel');
+Route::get('/editprofile/{id}', 'ProfileController@editprofile');
 Route::get('/review/{id}', 'ProfileController@review');
 Route::post('/cart/create', 'CartController@create');
 Route::post('/cart/createmsg', 'CartController@createmsg');
