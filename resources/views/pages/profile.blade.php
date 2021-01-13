@@ -61,6 +61,9 @@
   text-align: center;
   vertical-align: middle;
 }
+.myacc:hover, .mypur:hover{
+   color:rgb(60, 204, 190);;
+}
 </style>
 @endsection
 
@@ -73,14 +76,27 @@
                         <center> <b style="color:rgb(72, 99, 160);" >Hi</b> <b style="color:black">{{ $data['profile']->fullname }}</b> </center>
                         <hr style="margin:0;padding:0px;">
                         <br>
-                        <i  style="color:rgb(72, 99, 160);" class="fa fa-envelope"></i> <b style="color:black">{{ $data['profile']->email }}</b><br>
-                        <i  style="color:rgb(72, 99, 160);" class="fa fa-phone"></i> <b style="color:black">{{ $data['profile']->contact_no }}</b>
+                        <button class="mypur" style="border: none; border-color: transparent; background-color: white; font-weight: bold;"><img src="/brands_try/Purchase.png" class="logo-img" alt="img" style="font-size: 5px">&nbsp;PURCHASE</button><br>
+                        <button class="myacc" style="border: none; border-color: transparent; background-color: white; font-weight: bold;"><img src="/brands_try/User.png" class="logo-img" alt="img" style="font-size: 5px">&nbsp;ACCOUNT</button><br>
+                        &nbsp; <img src="/brands_try/Coins.png" class="logo-img" alt="img" style="font-size: 5px">&nbsp;<span style="font-weight: bold;" >AZ POUCH</span>&nbsp;<b style="color:black">{{ $data['profile']->az_pouch }}</b>
+                        
                     </div>
                 </div>
             </div>
             <div class="col-md-9">
-
+              @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+              @endif
+              @if (session('error'))
+                <div class="alert alert-danger animated shake">
+                    {{ session('error') }}
+                </div>
+              @endif
+              <div id="MyPurchase" style="display: block;">
               <div class="panel panel-default">
+                
                 <div class="panel-heading">
                     <center><label>MY PURCHASE</label></center>
                 </div>
@@ -89,11 +105,11 @@
                   <div class="row">
                   <div class="col-md-12">
                     <ul id="myTab2" class="nav nav-pills bootstrap-tabs">
-                      <li class="active"><a href="#all" class="a-blue" style="width: 150px; text-align: center;" data-toggle="tab" aria-expanded="true">ALL</a></li>
-                      <li><a href="#toship" class="a-blue" style="width: 150px; text-align: center;" data-toggle="tab">TO SHIP</a></li>
-                      <li><a href="#toreceive" class="a-blue" style="width: 150px; text-align: center;" data-toggle="tab">TO RECEIVE</a></li>
-                      <li><a href="#completed" class="a-blue" style="width: 150px; text-align: center;" data-toggle="tab">COMPLETED</a></li>
-                      <li><a href="#cancelled" class="a-blue" style="width: 150px; text-align: center;" data-toggle="tab">CANCELLED</a></li>
+                      <li class="active"><a href="#all" class="button medium cyan" style="width: 150px; text-align: center;" data-toggle="tab" aria-expanded="true">ALL</a></li>
+                      <li><a href="#toship" class="button medium cyan" style="width: 150px; text-align: center;" data-toggle="tab">TO SHIP</a></li>
+                      <li><a href="#toreceive" class="button medium cyan" style="width: 150px; text-align: center;" data-toggle="tab">TO RECEIVE</a></li>
+                      <li><a href="#completed" class="button medium cyan" style="width: 150px; text-align: center;" data-toggle="tab">COMPLETED</a></li>
+                      <li><a href="#cancelled" class="button medium cyan" style="width: 150px; text-align: center;" data-toggle="tab">CANCELLED</a></li>
                     </ul>
                     <div class="tab-content">
                       <div class="tab-pane fade active in" id="all">
@@ -159,7 +175,7 @@
                               <div class="row">
                                 <div class="col-md-4" >
                                   <label style="font-size:16px; color:black; ">Shop:
-                                  <label style="font-size:18px; color:rgb(72, 99, 160);">{{ $order_no->seller_name }} </label></label><br>
+                                  <label style="font-size:18px; color:rgb(72, 99, 160);">{{ $order_no->shop_name }} </label></label><br>
                               </div>
                                 <div class="col-md-8 text-right" >
                                     <label style="font-size:16px; color:black; float:right;">Order Total:
@@ -245,7 +261,7 @@
                               <div class="row">
                                 <div class="col-md-4" >
                                   <label style="font-size:16px; color:black; ">Shop:
-                                  <label style="font-size:18px; color:rgb(72, 99, 160);">{{ $order_no->seller_name }} </label></label><br>
+                                  <label style="font-size:18px; color:rgb(72, 99, 160);">{{ $order_no->shop_name }} </label></label><br>
                               </div>
                                 <div class="col-md-8 text-right" >
                                     <label style="font-size:16px; color:black; float:right;">Order Total:
@@ -307,7 +323,7 @@
                               <div class="row">
                                 <div class="col-md-4" >
                                   <label style="font-size:16px; color:black; ">Shop:
-                                  <label style="font-size:18px; color:rgb(72, 99, 160);">{{ $order_no->seller_name }} </label></label><br>
+                                  <label style="font-size:18px; color:rgb(72, 99, 160);">{{ $order_no->shop_name }} </label></label><br>
                               </div>
                                 <div class="col-md-8 text-right" >
                                     <label style="font-size:16px; color:black; float:right;">Order Total:
@@ -398,7 +414,7 @@
                               <div class="row">
                                 <div class="col-md-4" >
                                   <label style="font-size:16px; color:black; ">Shop:
-                                  <label style="font-size:18px; color:rgb(72, 99, 160);">{{ $order_no->seller_name }} </label></label><br>
+                                  <label style="font-size:18px; color:rgb(72, 99, 160);">{{ $order_no->shop_name }} </label></label><br>
                               </div>
                                 <div class="col-md-8 text-right" >
                                     <label style="font-size:16px; color:black; float:right;">Order Total:
@@ -460,7 +476,7 @@
                               <div class="row">
                                 <div class="col-md-4" >
                                   <label style="font-size:16px; color:black; ">Shop:
-                                  <label style="font-size:18px; color:rgb(72, 99, 160);">{{ $order_no->seller_name }} </label></label><br>
+                                  <label style="font-size:18px; color:rgb(72, 99, 160);">{{ $order_no->shop_name }} </label></label><br>
                               </div>
                                 <div class="col-md-8 text-right" >
                                     <label style="font-size:16px; color:black; float:right;">Order Total:
@@ -650,6 +666,174 @@
                     {{ $data['order']->links() }}
                   </nav> 
                 </div> --}}
+              </div>
+
+              <div id="MyAccount" style="display:none;">
+              {{-- <div id="MyAccount"> --}}
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                      <center><label>MY ACCOUNT</label></center>
+                  </div>
+                    <div class="panel-body">
+                      <div id="tabs" class="mb-0 bs-docs-section">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <img src="/brands_try/User.png" class="logo-img" alt="img">&nbsp;Full Name&nbsp;<br><b style="color:black">{{ $data['profile']->fullname }}</b>
+                              </div>
+                              <div class="col-md-4">
+                                <?php if ($data['profile']->barangay == 0 ) { ?>
+                                  <img src="/brands_try/Address.png" class="logo-img" alt="img">&nbsp;Address&nbsp;<br>
+                                    <b style="color:black">No Address</b>
+                                  <?php }else{ ?>
+                                    <img src="/brands_try/Address.png" class="logo-img" alt="img">&nbsp;Address&nbsp;<br>
+                                    <b style="color:black">{{ $data['profile']->address}},
+                                      &nbsp;{{ $data['profile']->barangay}},
+                                      &nbsp;{{ $data['profile']->city}},
+                                      &nbsp;{{ $data['profile']->province}},
+                                      &nbsp;{{ $data['profile']->region}}
+                                    </b>
+                                  <?php }?>
+                              </div>
+                              <div class="col-md-4">
+                                
+                                <img src="/brands_try/Contact.png" class="logo-img" alt="img">&nbsp;Contact No.&nbsp;<br><b style="color:black">{{ $data['profile']->contact_no }}</b>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="row">
+                              <div class="col-md-4">
+                               
+                              </div>
+                              <div class="col-md-4">
+                                
+                              </div>
+                              <div class="col-md-4 mt-100">
+                                <button type="button" id="change"  data-toggle="modal" data-target="#ModalEdit{{$data['profile']->user_hash}}"
+                                  class="button medium cyan"> <label class="change_label">EDIT PROFILE</label>
+                              </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      <?php foreach ($data['prof'] as $profile): ?>
+                       <!-- Modal Edit -->
+                       <div class="modal fade bootstrap-modal" id="ModalEdit{{$profile->user_hash}}" tabindex="-1" role="dialog" aria-labelledby="ModalEditLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-body">
+                            <div class="row row-error">
+                              <div class="col-md-12">
+                                  <div class="alert alert-danger animated shake">
+                                      <span aria-hidden="true" class="alert-icon icon_blocked"></span>
+                                      <span class="error_msg"></span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row div_success">
+                              <div class="col-md-12" style="align-content: center;">
+                                  <div class="row row-success">
+                                      <div class="col-md-12">
+                                          <div class="alert alert-success animated fadeIn">
+                                              <span aria-hidden="true" class="alert-icon icon_like"></span>
+                                              <span class="success_msg"></span>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h5 class="modal-title" style="text-align: center; color: rgb(72, 99, 160); font-weight: bold;" id="ModalEditLabel">EDIT PROFILE</h5>
+                              </div>
+                              <div class="modal-body">
+                                <div class="row">
+                                  <div class="col-md-12" style="color:black">
+                                    <label>Full Name</label>
+                                    <input type="text" name="fullname" 
+                                    data-msg-required="PLEASE ENTER FULL NAME" maxlength="30"
+                                    style="text-transform:uppercase" placeholder="FULL NAME"
+                                    class="form-control" id="fullname" value="{{$profile->fullname}}"  required>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-12" style="color:black">
+                                    <label>Address</label>
+                                    
+                                    <div class="mb-20">
+                                      <select class="form-control region" name="region" id="region" data-msg-required="PLEASE SELECT REGION" required>
+                                        <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT REGION</option>
+                                        <?php foreach ($data['tbl_region'] as $region): ?>
+                                        <option value="{{$region->regn_hash}}">{{$region->region}}</option>
+                                        <?php endforeach; ?> 
+                                      </select>
+                                    </div>
+                                    <div class="mb-20">
+                                      <select class="form-control location" name="province" id="province"  data-msg-required="PLEASE SELECT PROVINCE" required>
+                                        <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT PROVINCE</option>
+                                        <?php foreach ($data['tbl_province'] as $province): ?>
+                                        <option value="{{$province->prov_hash}}" data-region="{{$province->regn_hash}}">{{$province->province}}</option>
+                                        <?php endforeach; ?> 
+                                      </select>
+                                    </div>
+                                    <div class="mb-20">
+                                      <select class="form-control location" name="city" id="city" data-msg-required="PLEASE SELECT CITY" required>
+                                        <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT CITY</option>
+                                        <?php foreach ($data['tbl_city'] as $city): ?>
+                                        <option value="{{$city->city_hash}}" data-province="{{$city->prov_hash}}">{{$city->city}}</option>
+                                        <?php endforeach; ?> 
+                                        </select>
+                                    </div>
+                                    <div class="mb-20">
+                                      <select class="form-control location" name="barangay" id="barangay" data-msg-required="PLEASE SELECT BARANGAY" required>
+                                        <option selected  disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT BARANGAY</option>
+                                        <?php foreach ($data['tbl_brgy'] as $brgy): ?>
+                                        <option value="{{$brgy->brgy_hash}}" data-city="{{$brgy->city_hash}}">{{$brgy->barangay}}</option>
+                                        <?php endforeach; ?> 
+                                      </select>
+                                    </div>
+                                    <div class="mb-20">
+                                      <input type="text" data-msg-required="HOUSE NO, STREET, BLDG NO, ETC"
+                                      maxlength="100" class="form-control" name="address" id="address" placeholder="HOUSE NO, STREET, BLDG NO, ETC"
+                                      required>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-12" style="color:black">
+                                    <label>Contact No.</label>
+                                    <input type="number" placeholder="CONTACT NO."
+                                    data-msg-required="PLEASE ENTER CONTACT NO."
+                                    class="form-control" name="contact_no"
+                                    id="contact_no" value="{{$profile->contact_no}}" required>
+                                  </div>
+                                </div>
+                                <br>
+                              </div>
+                              <div class="modal-footer">
+                                {{-- <button type="button" id="btnedit" class="button medium blue">
+                                  <span class=""></span> <label class="btnedit_label">Save</label>
+                                </button> --}}
+                                <a href="/editprofile/{{$profile->user_hash }}" type="button" class="btn btn-primary">Save</a>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <?php endforeach; ?> 
+
+                      </div>
+                    </div>
+                </div>
+              </div>
+
             </div>
         </div>
     </div>
@@ -658,6 +842,238 @@
 @section('embeddedjs')
 <script type="text/javascript">
 
+$('.myacc').click(function() {
 
+    var x = document.getElementById("MyPurchase");
+    var y = document.getElementById("MyAccount");
+  if (y.style.display === "none") {
+    y.style.display = "block";
+    x.style.display = "none";
+  } 
+});
+
+$('.mypur').click(function() {
+
+var x = document.getElementById("MyPurchase");
+var y = document.getElementById("MyAccount");
+if (x.style.display === "none") {
+x.style.display = "block";
+y.style.display = "none";
+} 
+});
+
+var changeLocation = function(){
+
+$('select.location').prop('disabled', true);
+
+var region=$('#region option:selected').val();
+
+if(region!=0){
+    $('#province').prop('disabled', false);
+}else{
+    $('#province').prop('disabled', true);
+}
+
+// Province
+$('#province option').each(function(){
+    $(this).removeClass('hidden');
+    var p_region = $(this).data('region');
+    if(p_region!=region){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+
+var prov_id = $('#province').find("option:not(.hidden):eq(0)").val();
+$('#province').val(prov_id).trigger("change");
+
+// City
+$('#city option').each(function(){
+    $(this).removeClass('hidden');
+    var c_province = $(this).data('province');
+    if(c_province!=prov_id){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+
+var cit_id = $('#city').find("option:not(.hidden):eq(0)").val();
+$('#city').val(cit_id).trigger("change");
+
+// Barangay
+$('#barangay option').each(function(){
+    $(this).removeClass('hidden');
+    var b_city = $(this).data('city');
+    if(b_city!=cit_id){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+
+var brngy_id = $('#barangay').find("option:not(.hidden):eq(0)").val();
+$('#barangay').val(brngy_id).trigger("change");      
+
+
+};
+
+$('#region').on("change", function(){
+changeLocation();                
+}); 
+
+changeLocation();     
+
+
+$('#province').on("change", function(){
+
+var prov_id = $(this).val();
+
+if(prov_id!=0){
+    $('#city').prop('disabled', false);
+}else{
+    $('#city').prop('disabled', true);
+}
+
+// City
+$('#city option').each(function(){
+    $(this).removeClass('hidden');
+    var c_province = $(this).data('province');
+    if(c_province!=prov_id){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+
+var cit_id = $('#city').find("option:not(.hidden):eq(0)").val();
+$('#city').val(cit_id).trigger("change");
+
+// Barangay
+$('#barangay option').each(function(){
+    $(this).removeClass('hidden');
+    var b_city = $(this).data('city');
+    if(b_city!=cit_id){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+
+var brngy_id = $('#barangay').find("option:not(.hidden):eq(0)").val();
+$('#barangay').val(brngy_id).trigger("change");               
+});      
+
+$('#city').on("change", function(){
+var cit_id = $(this).val();
+
+if(cit_id!=0){
+    $('#barangay').prop('disabled', false);
+}else{
+    $('#barangay').prop('disabled', true);
+}
+
+// Barangay
+$('#barangay option').each(function(){
+    $(this).removeClass('hidden');
+    var b_city = $(this).data('city');
+    if(b_city!=cit_id){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+}); 
+
+var initializeControls = function() {
+        $('.row-error').hide();
+        $('.row-success').hide();
+        $('.div_success').hide();
+    }();
+
+
+    var validateRequiredFields = function(f) {
+        var stat = true;
+
+        $('.row-error').hide();
+        $('div.form-group').removeClass('has-error');
+        $('div.fg-line').removeClass('has-error');
+        $('input[required],textarea[required],select[required]', f).each(function() {
+
+            if ($(this).is('select')) {
+                if ($(this).val() == null || $(this).val() == "") {
+                    $('.error_msg').html($(this).data('msg-required'));
+                    $('.row-error').fadeIn(400);
+                    $(this).focus();
+                    stat = false;
+                    return false;
+                }
+            } else {
+                if ($(this).val() == 0 || $(this).val() == "") {
+                    $('.error_msg').html($(this).data('msg-required'));
+                    $('.row-error').fadeIn(400);
+                    $(this).closest('.fg-line').addClass('has-error');
+                    $(this).focus();
+                    stat = false;
+                    return false;
+                }
+            }
+
+        });
+
+        return stat;
+    };
+
+    var Edit = (function() {
+        var _data = $('#edit-form').serializeArray();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        return $.ajax({
+            "dataType": "json",
+            "type": "POST",
+            "url": "{{ url('/editprofile/') }}",
+            "data": _data
+        });
+    });
+
+    $('#btnedit').click(function() {
+     
+            if (validateRequiredFields($('#edit-form'))) {
+              Edit().done(function(response) {
+
+              if (response.stat == "success") {
+                  $('.div_success').show();
+                  $('.div_sign_up').hide();
+                  $('.success_msg').html(response.msg);
+                  $('.row-success').fadeIn(400);
+                  setTimeout(function() {
+                      window.location.href = "/profile";
+                  },1000);
+              } else {
+                    $('.row-error').show();
+                    $('.error_msg').html(response.msg.fullname);
+                    $('.error_msg').html(response.msg.contact_no);
+                    $('.row-error').fadeIn(400);
+                }
+              })
+            }
+
+    });
 </script>
 @endsection

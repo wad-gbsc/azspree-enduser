@@ -20,7 +20,42 @@
         </div>
       </div>
     </div> --}}
-
+    @section('embeddedcss')
+    <style scoped>
+     @keyframes heartbeat
+    {
+      0%
+      {
+        transform: scale( .75 );
+      }
+      20%
+      {
+        transform: scale( 1 );
+      }
+      40%
+      {
+        transform: scale( .75 );
+      }
+      60%
+      {
+        transform: scale( 1 );
+      }
+      80%
+      {
+        transform: scale( .75 );
+      }
+      100%
+      {
+        transform: scale( .75 );
+      }
+    }
+    
+    .beat
+    {
+      animation: heartbeat 3s infinite;
+    }
+    </style>
+    @endsection
     
     <div id="wrap" class="boxed ">
 			<div class="container-p-75 grey-bg"> <!-- Grey BG  -->	
@@ -40,6 +75,23 @@
                   </div>
                 </div><!-- End Container -->
               </li><!-- End item -->
+              {{-- <li style="background: url(/brands_try/gif.gif); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
+                <div class="container">
+                  <div class="contain">
+                    <div class="row" style="text-align: center">
+                      <br><br>
+                      <br><br>
+                      <br><br>
+                      <br><br>
+                      <br><br>
+                      <br><br>
+                      <br><br>
+                      &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; <a href="/"><img class="beat" src="/brands_try/btn_shopnow.png" style="height: 35%; width: 35%;" alt="img"></a>
+                    </div>
+                    
+                  </div>
+                </div><!-- End Container -->
+              </li><!-- End item --> --}}
 
               <li style="background: url(/brands_try/7.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
                 <div class="container">
