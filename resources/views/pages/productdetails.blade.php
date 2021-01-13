@@ -109,14 +109,14 @@
 
                             <div class="font-14 lh-20 mb-30">
                                 {{-- <div>Brand: <label style="color:black; bold"></label></div> --}}
-                                <div style="color:rgb(72, 99, 160); font-size: 18px" ><b>Shop: </b><label>{{ $data['products']->seller_name }}</label></div>
-                                <div>Category: <label style="color:black">{{ $data['products']->cat_name }}</label>
+                                <div style="color:rgb(72, 99, 160); font-size: 18px" ><b>Shop: </b><label>{{ $data['products']->shop_name }}</label></div>
+                                <div><b>Category:</b> <label style="color:black">{{ $data['products']->cat_name }}</label>
                                     <span class="slash-divider">></span> <label style="color:black">{{ $data['products']->subcat_name }}</label>
                                 </div>
                                 <?php if ($data['products']->available_qty <= '0'){ ?> 
                                     <div style="font-size:14px" class="label label-danger">Out of Stocks.</div> 
                                 <?php }else{ ?> 
-                                    <div>Available: <label style="color:black">{{$data['products']->available_qty}}</label></div>
+                                    <div><b>Available:</b> <label style="color:black">{{$data['products']->available_qty}}</label></div>
                                 <?php }?>
                                 
                                 {{-- <div>Tags: <a class="a-dark" href="#">WOMEN'S
@@ -127,7 +127,7 @@
 
                             <hr class="mt-0 mb-30">
 
-                            <div class="mb-30">
+                            <div class="mb-30" style="color: black">
                                 <label>{{ $data['products']->product_details }}</label><br>
                                 <label>Length: {{ $data['products']->length }}</label><br>
                                 <label>Width: {{ $data['products']->width }}</label><br>
@@ -197,6 +197,7 @@
                                         <div class="col-xs-8 col-sm-10 col-md-6">
                                             <div class="post-prev-more-cont clearfix">
                                                 <div class="shop-add-btn-cont">
+                                                    <input type="text" value="" name="visitcount">
                                                     <button type="button" id="btnadd" data-user-id="<?php echo session('user_hash'); ?>" 
                                                         <?php if ($data['products']->available_qty == '0'){ ?> disabled <?php   } ?> 
                                                         class="btn btn-lg btn-primary">
@@ -398,7 +399,7 @@
                                                         <div class="comment-item-title">
                                                             <div class="comment-author">
                                                                 {{$com->fullname}}
-                                                                <span class="slash-divider">-</span><span class="comment-date" >{{$com->created_datetime}}</span>
+                                                                <span class="slash-divider">-</span><span class="comment-date" >{{ date('F d, Y', strtotime($com->created_datetime))}} at {{ date('g:ia')}} </span>
                                                             </div>
                                                         <p class="pb-30">{{$com->comment}}</p>
                                                         </div>
