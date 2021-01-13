@@ -14,9 +14,15 @@
       </div>
     </div>
 </div>   --}}
-<div class="grey-dark-bg">
+
+<div class="page-section blue-bg font-white pt-100-b-30-cont" >
+  <div class="relative" >
+    <center><img src="/brands_try/deliver.gif" alt="img"></center>
+  </div>
+</div>
+{{-- <div class="grey-dark-bg">
   
   <div class="relative">
-    <img src="/brands_try/5.jpg" alt="img">
+    
 </div>
-</div>
+</div> --}}

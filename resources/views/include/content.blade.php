@@ -18,7 +18,7 @@
 </div>  
 
 <!-- CONTENT -->
-<div class="page-section p-100-cont pb-30 " >
+<div class="page-section p-100-cont pb-30" >
   <div class="container">
     <div class="row">
 
@@ -43,14 +43,6 @@
                 </div>
               </div>
             </div>
-
-            {{-- <div class="col-md-4 col-sm-4 shop-ad-img">
-              <div class="equal-height">
-                <img  src="" sizes="10px" alt="img">
-              </div>
-            </div> --}}
-            
-            
           </div>            
         </div>            
       </div>
@@ -69,69 +61,95 @@
             </div>
           </div>
           
-          <div class="col-sm3">
+          <div class="col-sm-3">
             <div class=" widget right">
                 <form method="get" action="/sortbyprice" class="form">
-                  {{-- {{ csrf_field() }} --}}
                     <select class="select-md form" name="sortbyprice" onchange="this.form.submit()">
                         <option selected disabled="disabled" selected="selected">Sort by Price</option>
                         <option value="desc">Price: High to Low</option>
                         <option value="asc">Price: Low to High</option>
                     </select>
-                  </form>
+                </form>
             </div>
           </div>
         </div>
-        
-        {{-- <div class="row" style="background-color: rgb(217, 255, 255); "> --}}
-          <div class="row" >
-          <!-- SHOP Item -->
-          <?php 
-            if(count($content) > 0){
-            foreach ($content as $products): ?>
-          <div class="col-md-2 pb-30 pt-30" >
-            <div>  
-              <a href="/productdetails/{{$products->inmr_hash}}" ><img style="height: 250px;" src="/images/products/{{$products->image_path}}" alt="img"></a>
-            </div>
-            
-            <div class="post-prev-title mb-5">
-              <h3 style="text-overflow: ellipsis;
-              white-space: nowrap;
-              overflow: hidden;" ><a class="font-norm a-inv" href="/productdetails/{{$products->inmr_hash}}">{{$products->product_name}}</a></h3>
-            </div>
-              
-            <div class="shop-price-cont" data-price={{ $products->cost_amt }}>
-              <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
-            </div>
-          </div>
 
-          <?php endforeach; ?>      
-          <?php }else{ ?>
-            <div class="row">
-                <div class="col-md-12 mb-110">
-                    <h4><strong><center>No Result for this Product</center></strong></h4>
-                </div>
-                <div class="col-md-12 mb-110">
-                </div>
-                <div class="col-md-12 mb-110">
-                </div>
-            </div>
-            <?php }?>    
-        
+        <div class="row">
+          <div class="col-sm-12">
+            {{-- <form id="count" method="POST" action="/visitorcount" class="form">
+          </form> --}}
+          </div>
+        </div>
+
+            <!-- SHOP Item -->
+            <div class="row" >
+            <?php 
+              if(count($content) > 0){
+              foreach ($content as $products): ?>
+                  <div class="col-md-3 pb-30 pt-30" style="min-height: 250px;">
+                      <div >  
+                        <a href="/productdetails/{{$products->inmr_hash}}" ><img style="height: 370px; width: 472px; " src="/images/products/{{$products->image_path}}" alt="img"></a>
+                      </div>
+                      
+                      <div class="post-prev-title mb-5">
+                        <h3 style="text-overflow: ellipsis;
+                        white-space: nowrap;
+                        overflow: hidden;" ><a class="font-norm a-inv" href="/productdetails/{{$products->inmr_hash}}">{{$products->product_name}}</a></h3>
+                      </div>
                         
-        <!-- PAGINATION -->
-        <div class="mt-0" style="float: right;">
+                      <div class="shop-price-cont" data-price={{ $products->cost_amt }}>
+                        <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
+                      </div>
+                  </div>
+              
+            <?php endforeach; ?>
+            </div>
+            <?php }else{ ?>
+              <div class="row">
+                  <div class="col-md-12 mb-110">
+                      <h4><strong><center>No Result for this Product</center></strong></h4>
+                  </div>
+                  <div class="col-md-12 mb-110">
+                  </div>
+                  <div class="col-md-12 mb-110">
+                  </div>
+              </div>
+            <?php }?>   
+            
+            <!-- PAGINATION -->
+        <div class="row mt-0" style="float: right;">
           <nav>
             {{ $content->links() }}
           </nav> 
         </div>
-      </div>
-    </div>
+        
+    </div> 
   </div>
 </div>
-
+        
 @section('embeddedjs')
 <script type="text/javascript">
+
+setTimeout(function(){
+  // let visitCount = document.getElementById('visit_count').value;
+  // let visitCountPlusOne = parseInt(visitCount) + 1;
+
+  // document.getElementById('visit_count').value = visitCountPlusOne;
+  var $formvar = $('#');
+
+  $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+      
+      return $.ajax({
+      url: '/visitorcount',
+      type: "PUT",
+      dataType: $formvar.serialize()
+      });
+
+}, 10);
 
 $(document).on("change", ".control", function() {
   var sortingMethod = $(this).val();

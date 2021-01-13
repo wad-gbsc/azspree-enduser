@@ -20,6 +20,25 @@
                 <div class=" shipping-address">
                   {{-- <div class="row mb-40">
                   </div> --}}
+                  <h4 class="blog-page-title mt-5 mb-25">CONTACTS</h4>
+
+                    <div class="mb-20">
+                      <input type="text" name="fullname"
+                        placeholder="FULL NAME"
+                        data-msg-required="Please enter your Full Name" maxlength="30"
+                        style="text-transform:uppercase"
+                        class="controled" id="fullname" required>
+                    </div>
+
+                    <div class="mb-20">
+                      <input type="number"
+                          data-msg-required="Please enter your Contact Number"
+                          placeholder="FORMAT MUST BE (09XXXXXXXXX)"
+                          class="controled" name="contact_no"
+                          id="contact_no" required>
+                    </div>
+
+
                   <h4 class="blog-page-title mt-5 mb-25">SHIPPING ADDRESS</h4>
 
                     <div class="mb-20">
@@ -110,7 +129,7 @@
                       
                     foreach ($data['supplier'] as $sumr): 
                   ?>
-                  <label>{{$sumr->seller_name}}</label>
+                  <label>{{$sumr->shop_name}}</label>
                       <?php 
                         $unit_total = 0; 
                         $order_subtotal = 0; 
@@ -122,6 +141,11 @@
                         $dimension = 0;
                         $weight = 0;
                         $total_kg = 0;
+                        $sub_1 = 0;
+                        $sub_2 = 0;
+                        $sub_3 = 0;
+                        $sub_4 = 0;
+                        $sub_5 = 0;
                       ?>
                       <?php
                       foreach ($data['comr'] as $comr): 
@@ -143,12 +167,18 @@
 
                             if ($dimension > $weight){
                                 if ($dimension > $max_kg){
-                                    $sub_1= ($dimension - $max_kg);
+                                    $sub_1 = ($dimension - $max_kg);
                                     $sub_2 = ($sub_1 * $excess_kg_fee );
                                     $total_kg = ($sub_2 * $addcart->qty );
                                 }else{
-                                    $total_kg = $dimension;
-
+                                  if($addcart->qty > 1){
+                                    $sub_3 = ($dimension * $addcart->qty );
+                                    $sub_4 = (round($sub_3) - $max_kg);
+                                    $sub_5 = ($sub_4 * $excess_kg_fee );
+                                    $total_kg = $sub_5;
+                                  }else{
+                                    $total_kg = 0;
+                                  }
                                 }
                             }else if($dimension = $weight){
                                 if ($weight > $max_kg){
@@ -156,8 +186,14 @@
                                     $sub_2 = ($sub_1 * $excess_kg_fee );
                                     $total_kg = ($sub_2 * $addcart->qty );
                                 }else{
-                                    $total_kg = $weight;
-
+                                  if($addcart->qty > 1){
+                                    $sub_3 = ($weight * $addcart->qty );
+                                    $sub_4 = (round($sub_3) - $max_kg);
+                                    $sub_5 = ($sub_4 * $excess_kg_fee );
+                                    $total_kg = $sub_5;
+                                  }else{
+                                    $total_kg = 0;
+                                  }
                                 }
                             }else{
                                 if ($weight > $max_kg){
@@ -165,8 +201,14 @@
                                     $sub_2 = ($sub_1 * $excess_kg_fee);
                                     $total_kg = ($sub_2 * $addcart->qty );
                                 }else{
-                                    $total_kg = $weight;
-
+                                  if($addcart->qty > 1){
+                                    $sub_3 = ($weight * $addcart->qty );
+                                    $sub_4 = (round($sub_3) - $max_kg);
+                                    $sub_5 = ($sub_4 * $excess_kg_fee );
+                                    $total_kg = $sub_5;
+                                  }else{
+                                    $total_kg = 0;
+                                  }
                                 }
                             }
                             $shipping_extra += $total_kg;
@@ -561,7 +603,11 @@ $('#barangay option').each(function(){
                   setTimeout(function() {
                       window.location.href = "/profile";
                   },1000);
-              } 
+              } else {
+                    $('.row-error').show();
+                    $('.error_msg').html(response.msg.contact_no);
+                    $('.row-error').fadeIn(400);
+                }
               })
               .always(function() {
               $(this).toggleClass('disabled');
