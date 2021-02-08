@@ -57,12 +57,12 @@ class CartController extends Controller
             ->orderBy('sumr.sumr_hash', 'desc')
             ->get();
 
-        // return view('pages.mycart', compact('visit'))->with('data', $data);
-        return view('pages.mycart')->with('data', $data);
+        return view('pages.mycart', compact('visit'))->with('data', $data);
+        // return view('pages.mycart')->with('data', $data);
     }else{
-        return view('pages.login');
-        // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-        // return view('pages.login', compact('visit'));
+        // return view('pages.login');
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        return view('pages.login', compact('visit'));
         }
     }
 
@@ -104,12 +104,12 @@ class CartController extends Controller
             $data['tbl_city'] =  DB::table('city')->get();
             $data['tbl_brgy'] =  DB::table('brgy')->get();
 
-            // return view('pages.checkout', compact('visit'))->with('data', $data);
-            return view('pages.checkout')->with('data', $data);
+            return view('pages.checkout', compact('visit'))->with('data', $data);
+            // return view('pages.checkout')->with('data', $data);
     }else{
-        return view('pages.login');
-        // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-        // return view('pages.login', compact('visit'));
+        // return view('pages.login');
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        return view('pages.login', compact('visit'));
         }
     }
 
@@ -505,8 +505,11 @@ class CartController extends Controller
             // ->where('soln.inmr_hash',$id)
             // ->orderBy('soln.sohr_hash', 'desc')
             ->paginate(5);
+
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            return view('pages/productdetails', compact('visit'))->with('data', $data);
         
-        return view('pages.productdetails')->with('data', $data);
+        // return view('pages.productdetails')->with('data', $data);
     }
 
     /**

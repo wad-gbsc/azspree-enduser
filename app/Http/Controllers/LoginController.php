@@ -245,9 +245,9 @@ class LoginController extends Controller
     public function logout()
     {
         Session::forget('user_hash');
-        return view('pages.login');
-        // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-        // return view('pages.login', compact('visit'));
+        // return view('pages.login');
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        return view('pages.login', compact('visit'));
     }
 
 

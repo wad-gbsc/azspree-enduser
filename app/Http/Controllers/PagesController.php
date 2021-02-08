@@ -131,12 +131,12 @@ class PagesController extends Controller
             $data['reason'] =  DB::table('urfc')->get();
 
 
-            // return view('pages.profile', compact('visit'))->with('data', $data);
-            return view('pages.profile')->with('data', $data);
+            return view('pages.profile', compact('visit'))->with('data', $data);
+            // return view('pages.profile')->with('data', $data);
         }else{
-            return view('pages.login');
-            // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-            // return view('pages.login', compact('visit'));
+            // return view('pages.login');
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            return view('pages.login', compact('visit'));
         }
     }
     
@@ -277,12 +277,12 @@ class PagesController extends Controller
             $data['reason'] =  DB::table('urfc')->get();
 
 
-            // return view('pages.profile', compact('visit'))->with('data', $data);
-            return view('pages.profile')->with('data', $data);
+            return view('pages.profile', compact('visit'))->with('data', $data);
+            // return view('pages.profile')->with('data', $data);
         }else{
-            return view('pages/signup');
-            // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-            // return view('pages/signup', compact('visit'));
+           // return view('pages/signup');
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            return view('pages/signup', compact('visit'));
         }
     }
 
@@ -294,17 +294,25 @@ class PagesController extends Controller
 
     public function checkout(){
         if(Session::has('user_hash')){
-            return view('pages/checkout');
+            // return view('pages/checkout');
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            return view('pages/checkout', compact('visit'));
         }else{
-            return view('pages/login');
+            // return view('pages/login');
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            return view('pages/login', compact('visit'));
         }
     }
 
     public function payment(){
         if(Session::has('user_hash')){
-            return view('pages/payment');
+            // return view('pages/payment');
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            return view('pages/payment', compact('visit'));
         }else{
-            return view('pages/login');
+            // return view('pages/login');
+            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            return view('pages/login', compact('visit'));
         }
     }
 
@@ -313,7 +321,9 @@ class PagesController extends Controller
     public function mycart()
     {
         $data['products'] = Product::where('is_deleted', 0)->get();
-        return view('pages.mycart')->with('data', $data);
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            return view('pages/mycart', compact('visit'))->with('data', $data);
+        // return view('pages.mycart')->with('data', $data);
     }
 
     public function verify()
@@ -326,6 +336,7 @@ class PagesController extends Controller
 
         $search = $request->keyword;
 
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
         $categories =  DB::table('inct')->where('is_deleted', 0)->get();
 
         $content=  DB::table('inmr')
@@ -339,13 +350,14 @@ class PagesController extends Controller
         // ->orwhere('insc.subcat_name','like',"%".$search."%")
         ->paginate(24);
 
-        return view ('welcome',compact('categories','content'));
+        return view ('welcome',compact('categories','content', 'visit'));
     }
 
     public function sortbyprice(Request $request)
     {
         $sortbyprice = $request->sortbyprice;
 
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
         $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
 
          if ($sortbyprice == 'asc'){
@@ -354,12 +366,13 @@ class PagesController extends Controller
             $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','desc')->paginate(24);
             }
 
-        return view ('welcome',compact('categories','content'));
+        return view ('welcome',compact('categories','content', 'visit' ));
     }
 
     public function sortbypricebycat(Request $request)
     {
 
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
         $sortbypricebycat = $request->sortbypricebycat;
         $id = $request->category;
 
@@ -383,7 +396,7 @@ class PagesController extends Controller
             $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->where('inmr.inct_hash', $id)->orderBy('cost_amt','desc')->paginate(24);
             }
 
-        return view ('pages.categories',compact('category','content','cat', 'cathash'));
+        return view ('pages.categories',compact('category','content','cat', 'cathash', 'visit'));
     }
     public function show($id)
     {
@@ -406,9 +419,10 @@ class PagesController extends Controller
         ->groupBy('cat_name')
         ->get();
     
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
         $category =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
 
-        return view ('pages.categories',compact('category','content','cat', 'cathash'));
+        return view ('pages.categories',compact('category','content','cat', 'cathash', 'visit'));
     }
 
     public function searchcat(Request $request)
@@ -442,14 +456,17 @@ class PagesController extends Controller
         ->get();
     
         $category =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
 
-        return view ('pages.categories',compact('category','content','cat', 'cathash'));
+        return view ('pages.categories',compact('category','content','cat', 'cathash', 'visit'));
     }
   
 
     public function profile()
     {
-        return view ('pages.profile');
+        // return view ('pages.profile');
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            return view('pages.profile', compact('visit'));
     }
 
     public function waybill()
@@ -459,9 +476,9 @@ class PagesController extends Controller
 
     public function welcomeseller()
     {
-        return view ('pages.welcomeseller');
-        // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-        // return view ('pages.welcomeseller', compact('visit'));
+        // return view ('pages.welcomeseller');
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        return view ('pages.welcomeseller', compact('visit'));
     }
 
 }

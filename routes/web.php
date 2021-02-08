@@ -41,7 +41,7 @@ Route::get('/get-barangay-list/{city_hash}','CartController@getBarangayList');
 Route::get('/checkout', 'PagesController@checkout');
 // Route::get('/payment', 'PagesController@payment');
 
-Route::get('/signup', 'PagesController@signup');
+// Route::get('/signup', 'PagesController@signup');
 Route::post('/users/create', 'UsersController@create');
 
 Route::get('/status/{id}','CartController@updateStatus');

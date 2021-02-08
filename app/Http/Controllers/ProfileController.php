@@ -139,12 +139,12 @@ class ProfileController extends Controller
             $data['reason'] =  DB::table('urfc')->get();
 
 
-        // return view('pages.profile', compact('visit'))->with('data', $data);
-        return view('pages.profile')->with('data', $data);
+        return view('pages.profile', compact('visit'))->with('data', $data);
+        // return view('pages.profile')->with('data', $data);
     }else{
-        // $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-        // return view('pages.login', compact('visit'));
-        return view('pages.login');
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        return view('pages.login', compact('visit'));
+        // return view('pages.login');
         }
     }
 

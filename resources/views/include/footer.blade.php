@@ -8,17 +8,17 @@
           <a href="/">
             <img src="/brands_try/azspreelogo.png" class="logo-img" alt="Azspree">
           </a>
-          {{-- </?php 
-            $total_visitor = 0; 
-          ?>
-          </?php foreach ($visit as $v):
-           $visitor = $v->times;
-           $total_visitor += $visitor;
-          ?>
-          </?php endforeach; ?>
-          <h4 style="color: rgb(66, 190, 178); 
-          font-weight: bold; font-size: 50px; text-align:center;" class="count-number" >{{$total_visitor}}</h4>
-          <h4>TOTAL VISITORS</h4> --}}
+          <?php 
+          $total_visitor = 0; 
+        ?>
+        <?php foreach ($visit as $v):
+         $visitor = $v->times;
+         $total_visitor += $visitor;
+        ?>
+        <?php endforeach; ?>
+        <h4 style="color: rgb(66, 190, 178); 
+        font-weight: bold; font-size: 50px; text-align:center;" class="count-number" >{{$total_visitor}}</h4>
+        <h4>TOTAL VISITORS</h4>
         </div>
         <div class="footer-2-text-cont">
           
