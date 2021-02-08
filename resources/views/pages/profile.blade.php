@@ -697,8 +697,14 @@
                                   <?php }?>
                               </div>
                               <div class="col-md-4">
-                                
-                                <img src="/brands_try/Contact.png" class="logo-img" alt="img">&nbsp;Contact No.&nbsp;<br><b style="color:black">{{ $data['profile']->contact_no }}</b>
+                                <?php if ($data['profile']->contact_no == 0 ) { ?>
+                                  <img src="/brands_try/Address.png" class="logo-img" alt="img">&nbsp;Contact No.&nbsp;<br>
+                                    <b style="color:black">No Contact No.</b>
+                                  <?php }else{ ?>
+                                    <img src="/brands_try/Address.png" class="logo-img" alt="img">&nbsp;Contact No.&nbsp;<br>
+                                    <b style="color:black">{{ $data['profile']->contact_no }}
+                                    </b>
+                                  <?php }?>
                               </div>
                             </div>
                           </div>
@@ -714,9 +720,9 @@
                                 
                               </div>
                               <div class="col-md-4 mt-100">
-                                <button type="button" id="change"  data-toggle="modal" data-target="#ModalEdit{{$data['profile']->user_hash}}"
+                                {{-- <button type="button" id="change"  data-toggle="modal" data-target="#ModalEdit{{$data['profile']->user_hash}}"
                                   class="button medium cyan"> <label class="change_label">EDIT PROFILE</label>
-                              </button>
+                              </button> --}}
                               </div>
                             </div>
                           </div>

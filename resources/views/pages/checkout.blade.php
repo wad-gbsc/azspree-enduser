@@ -99,11 +99,11 @@
                             style="width: 100%;" value="COD" name="cod" data-msg-required="PLEASE CHOOSE PAYMENT METHOD" required>
                           </div>
 
-                          <div class="col-sm-4 mb-20">
+                          {{-- <div class="col-sm-4 mb-20">
                             <button type="button" disabled="disabled" class="btn btn-lg btn-primary"
                             style="width: 100%;">  <label>GCASH</label>
                             </button>
-                          </div>
+                          </div> --}}
                           
                           </div>
                       </div>
