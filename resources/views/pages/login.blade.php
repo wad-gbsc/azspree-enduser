@@ -20,12 +20,12 @@
                   <div class="mb-40" style="text-align: center">
                     <img src="/brands_try/azspreelogo.png" class="" alt="Azspree">
                     <br><br><br><br>  
-                    <a href="{{ url('auth/facebook') }}" class="btn btn-primary" style="width: 80%" ><i class="fa fa-facebook" aria-hidden="true"></i> Login with Facebook</a>
+                    <a href="{{ url('auth/facebook') }}" class="btn btn-primary" style="width: 80%" ><i class="fa fa-facebook" aria-hidden="true"></i>Facebook</a>
                     <br>&nbsp;
                       <!-- DIVIDER -->
                       <hr class="mt-0 mb-10">
                       <br>&nbsp;
-                      <a href="{{ url('auth/google') }}" class="btn btn-danger" style="width: 80%" ><i class="fa fa-google" aria-hidden="true"></i> Login with Gmail
+                      <a href="{{ url('auth/google') }}" class="btn btn-danger" style="width: 80%" ><i class="fa fa-google" aria-hidden="true"></i>Gmail
                       {{-- <img src="/brands_try/azspree_logo.png" class="" alt="Azspree"> --}}
                     </a>
                   </div>
@@ -88,7 +88,7 @@
 
                         <div class="row">
                           <div class="col-md-12">
-                            <h5>Don't have an account? <a href="/signup" style="color:rgb(57, 57, 199)" ><u>Create an Account</u></a></h5>
+                            {{-- <h5>Don't have an account? <a href="/signup" style="color:rgb(57, 57, 199)" ><u>Create an Account</u></a></h5> --}}
                           </div>
                         </div>
 

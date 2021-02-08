@@ -197,7 +197,6 @@
                                         <div class="col-xs-8 col-sm-10 col-md-6">
                                             <div class="post-prev-more-cont clearfix">
                                                 <div class="shop-add-btn-cont">
-                                                    <input type="text" value="" name="visitcount">
                                                     <button type="button" id="btnadd" data-user-id="<?php echo session('user_hash'); ?>" 
                                                         <?php if ($data['products']->available_qty == '0'){ ?> disabled <?php   } ?> 
                                                         class="btn btn-lg btn-primary">
