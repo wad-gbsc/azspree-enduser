@@ -99,11 +99,7 @@
                             style="width: 100%;" value="COD" name="cod" data-msg-required="PLEASE CHOOSE PAYMENT METHOD" required>
                           </div>
 
-                          {{-- <div class="col-sm-4 mb-20">
-                            <button type="button" disabled="disabled" class="btn btn-lg btn-primary"
-                            style="width: 100%;">  <label>GCASH</label>
-                            </button>
-                          </div> --}}
+                          
                           
                           </div>
                       </div>
@@ -331,12 +327,12 @@
 
 $(document).ready(function() {
 
-  $('select[name="city"]').on('change', function() {
-      var city_hash = $('select[name="city"]').val();
+  $('select[name="barangay"]').on('change', function() {
+      var brgy_hash = $('select[name="barangay"]').val();
 
-      if(city_hash) {
+      if(brgy_hash) {
       $.ajax({
-      url: '/get-barangay-list/'+encodeURI(city_hash),
+      url: '/get-barangay-list/'+encodeURI(brgy_hash),
       type: "GET",
       dataType: "json",
       success:function(data) {

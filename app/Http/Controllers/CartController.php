@@ -136,7 +136,7 @@ class CartController extends Controller
     return response()->json($city);
     }
 
-    public function getBarangayList($city_hash)
+    public function getBarangayList($brgy_hash)
     {
     // $barangay =  DB::table('brgy')
     // ->leftJoin('regn', 'regn.regn_hash', '=', 'brgy.regn_hash')
@@ -145,9 +145,9 @@ class CartController extends Controller
     // ->select('brgy_hash','barangay')
     // ->where('brgy.city_hash', $city_hash )
     // ->get();
-    $ursf = DB::table('ursf')
-            ->select('shipping_fee', 'sumr_hash')
-            ->where('city_hash', $city_hash)
+    $ursf = DB::table('brgy')
+            ->select('shipping_fee')
+            ->where('brgy_hash', $brgy_hash)
             ->get();
     return response()->json($ursf);
     }
@@ -242,9 +242,9 @@ class CartController extends Controller
                 'contact_no' => 'required|regex:/(09)[0-9]{9}$/'
             ]);
             
-            $ursf = DB::table('ursf')
-            ->select('shipping_fee', 'sumr_hash')
-            ->where('city_hash', $request->input('city'))
+            $ursf = DB::table('brgy')
+            ->select('shipping_fee')
+            ->where('brgy_hash', $request->input('barangay'))
             // ->where('sumr_sumr', $request->input('city'))
             ->get();
 
@@ -335,7 +335,7 @@ class CartController extends Controller
                         $order_subtotal += $unit_total;
                         $total_qty += $mycart[$a]->qty;
 
-                        $city_sumr_hash= $ursf[0]->sumr_hash;
+                        // $city_sumr_hash= $ursf[0]->sumr_hash;
                         $shipping_city= $ursf[0]->shipping_fee;
                         $dimension = $mycart[$a]->dimension;
                         $weight = $mycart[$a]->weight;
@@ -431,7 +431,7 @@ class CartController extends Controller
                 $order->total_qty = $total_qty;
                 $order->order_subtotal = $order_subtotal;
                 $order->shipping_fee = $shipping;
-                $order->city_sumr_hash = $city_sumr_hash;
+                // $order->city_sumr_hash = $city_sumr_hash;
                 $order->total_excess_fee = $total_excess_fee;
                 $order->total_excess_kg = $total_excess_kg;
                 $order->disc_amt = 0;
