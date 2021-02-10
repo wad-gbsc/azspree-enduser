@@ -151,7 +151,7 @@
                                 <div class="row">
                                 {{-- SHOW ONCED RECEIVED ORDER --}}
                                 <?php 
-                                if($order->order_name = 'COMPLETED'){
+                                if($order_no->order_name == 'COMPLETED'){
                                 ?> 
                                 <div class="col-md-12" >
                                   <div style="float: right" >
@@ -390,7 +390,7 @@
                                 <div class="row">
                                   {{-- SHOW ONCED RECEIVED ORDER --}}
                                   <?php 
-                                  if($order->order_name = 'COMPLETED'){
+                                  if($order_no->order_name == 'COMPLETED'){
                                   ?> 
                                   <div class="col-md-12" >
                                     <div style="float: right" >
