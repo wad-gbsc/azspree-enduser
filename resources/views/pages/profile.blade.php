@@ -151,11 +151,11 @@
                                 <div class="row">
                                 {{-- SHOW ONCED RECEIVED ORDER --}}
                                 <?php 
-                                if($order->order_name == 'COMPLETED'){
+                                if($order->order_name = 'COMPLETED'){
                                 ?> 
                                 <div class="col-md-12" >
                                   <div style="float: right" >
-                                    <?php if($order->status_ratings === '0') { ?> 
+                                    <?php if($order->status_ratings == '0') { ?> 
                                       <a href="" data-toggle="modal" data-target="#ModalReview{{$order->inmr_hash}}" class="button medium blue w-100-100">RATE NOW</a>
                                       <span class="slash-divider"></span>
                                     <?php }?>
@@ -390,11 +390,11 @@
                                 <div class="row">
                                   {{-- SHOW ONCED RECEIVED ORDER --}}
                                   <?php 
-                                  if($order->order_name == 'COMPLETED'){
+                                  if($order->order_name = 'COMPLETED'){
                                   ?> 
                                   <div class="col-md-12" >
                                     <div style="float: right" >
-                                      <?php if($order->status_ratings === '0') { ?> 
+                                      <?php if($order->status_ratings == '0') { ?> 
                                         <a href="" data-toggle="modal" data-target="#ModalReview{{$order->inmr_hash}}" class="button medium blue w-100-100">RATE NOW</a>
                                         <span class="slash-divider"></span>
                                       <?php }?>
