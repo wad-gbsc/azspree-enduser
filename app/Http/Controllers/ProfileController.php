@@ -313,6 +313,17 @@ class ProfileController extends Controller
         $mpdf->Output();
     }
 
+    public function delivery()
+    {
+        $mpdf = new Mpdf();
+       
+        $content = view('pages.delivery');
+        // Write some HTML code:
+        $mpdf->WriteHTML($content);
+        // Output a PDF file directly to the browser
+        $mpdf->Output();
+    }
+
     public function logs()
     {
         $mpdf = new Mpdf();

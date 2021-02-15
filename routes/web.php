@@ -73,6 +73,7 @@ Route::post('/updateverification', 'LoginController@updateverification');
 // Route::get('/mycart', 'ProfileController@cart');
 Route::get('/sort', 'ProfileController@sort');
 Route::get('/waybill', 'ProfileController@waybill');
+Route::get('/delivery', 'ProfileController@delivery');
 Route::get('/logs', 'ProfileController@logs');
 
 Route::get('/welcomeseller', 'PagesController@welcomeseller');

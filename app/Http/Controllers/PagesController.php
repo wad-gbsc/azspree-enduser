@@ -339,15 +339,17 @@ class PagesController extends Controller
         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
         $categories =  DB::table('inct')->where('is_deleted', 0)->get();
 
-        $content=  DB::table('inmr')
+        $content=  DB::table('inmr')->select('*')
         ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
         ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
         ->where('inmr.is_deleted', 0)
         ->where('inmr.is_verified', 1)
-        ->where('inmr.product_name','like',"%".$search."%")
-        // ->where('inmr.product_details','like',"%".$search."%")
-        // ->orwhere('inct.cat_name','like',"%".$search."%")
-        // ->orwhere('insc.subcat_name','like',"%".$search."%")
+        ->where(function($query) use($search){
+            $query->where('inmr.product_name','like',"%".$search."%")
+            ->orwhere('inmr.product_details','like',"%".$search."%")
+            ->orwhere('inct.cat_name','like',"%".$search."%")
+            ->orwhere('insc.subcat_name','like',"%".$search."%");
+        })
         ->paginate(24);
 
         return view ('welcome',compact('categories','content', 'visit'));
@@ -437,10 +439,12 @@ class PagesController extends Controller
         ->where('inmr.is_deleted', 0)
         ->where('inmr.is_verified', 1)
         ->where('inmr.inct_hash', $id)
-        ->where('inmr.product_name','like',"%".$search."%")
-        // ->where('inmr.product_details','like',"%".$search."%")
-        // ->orwhere('inct.cat_name','like',"%".$search."%")
-        // ->orwhere('insc.subcat_name','like',"%".$search."%")
+        ->where(function($query) use($search){
+            $query->where('inmr.product_name','like',"%".$search."%")
+            ->orwhere('inmr.product_details','like',"%".$search."%")
+            ->orwhere('inct.cat_name','like',"%".$search."%")
+            ->orwhere('insc.subcat_name','like',"%".$search."%");
+        })
         ->paginate(24);
 
         $cat =  DB::table('inct')
@@ -472,6 +476,11 @@ class PagesController extends Controller
     public function waybill()
     {
         return view ('pages.waybill');
+    }
+
+    public function delivery()
+    {
+        return view ('pages.delivery');
     }
 
     public function welcomeseller()

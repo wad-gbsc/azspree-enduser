@@ -17,7 +17,7 @@
 
 <div class="page-section blue-bg font-white pt-100-b-30-cont" >
   <div class="relative" >
-    <center><img src="/brands_try/deliver.gif" alt="img"></center>
+    {{-- <center><img src="/brands_try/deliver.gif" alt="img"></center> --}}
   </div>
 </div>
 {{-- <div class="grey-dark-bg">
