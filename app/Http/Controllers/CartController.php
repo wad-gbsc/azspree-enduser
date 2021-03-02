@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Session;
 use DB;
+use Mail;
 
 
 class CartController extends Controller
@@ -71,41 +72,85 @@ class CartController extends Controller
         if(Session::has('user_hash')){
 
             $srhr_hash = session('user_hash');
-            $title = 'checkout';
-            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            $check = DB::table('srln')
+                ->select('*')
+                ->where('srhr_hash', $srhr_hash)
+                ->where('status', 0)
+                ->where('is_selected', 1)
+                ->where('is_deleted', 0)
+                ->get();
 
-            $data['comr'] = DB::table('comr')
-            ->select('excess_kg_fee', 'max_kg')
-            ->get();
-
-            $data['mycart'] = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
-            ->where('srln.srhr_hash', $srhr_hash)
-            ->where('srln.is_selected', 1)
-            ->where('srln.status', 0)
-            ->where('srln.is_deleted', 0)
-            ->orderBy('srln.srhr_hash', 'desc')
-            ->get();
-
-            $data['supplier'] =  CartDetail::leftJoin('sumr', 'sumr.sumr_hash', '=', 'srln.sumr_hash')
-            ->leftJoin('srhr', 'srhr.srhr_hash', '=', 'srln.srhr_hash')
-            ->where('srln.srhr_hash', $srhr_hash)
-            ->where('srln.is_selected', 1)
-            ->where('srln.status', 0)
-            ->where('srln.is_deleted', 0)
-            ->groupBy('srln.sumr_hash')
-            ->orderBy('sumr.sumr_hash', 'desc')
-            ->get();
-
-            // $data['address'] = DB::table('addr')->distinct('region')->distinct('province')->distinct('city')->distinct('barangay')->get();
-            // $data['region'] =  DB::table('addr')->select('region')->distinct()->where('addr.region', 'Region 3 Central Luzon')->get();
+            if($check[0]->is_selected == 1){
+                $srhr_hash = session('user_hash');
+                $title = 'checkout';
+                $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
     
-            $data['tbl_region'] =  DB::table('regn')->get();
-            $data['tbl_province'] =  DB::table('prov')->get();
-            $data['tbl_city'] =  DB::table('city')->get();
-            $data['tbl_brgy'] =  DB::table('brgy')->get();
+                $data['comr'] = DB::table('comr')
+                ->select('excess_kg_fee', 'max_kg')
+                ->get();
+    
+                $data['mycart'] = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
+                ->where('srln.srhr_hash', $srhr_hash)
+                ->where('srln.is_selected', 1)
+                ->where('srln.status', 0)
+                ->where('srln.is_deleted', 0)
+                ->orderBy('srln.srhr_hash', 'desc')
+                ->get();
+    
+                $data['supplier'] =  CartDetail::leftJoin('sumr', 'sumr.sumr_hash', '=', 'srln.sumr_hash')
+                ->leftJoin('srhr', 'srhr.srhr_hash', '=', 'srln.srhr_hash')
+                ->where('srln.srhr_hash', $srhr_hash)
+                ->where('srln.is_selected', 1)
+                ->where('srln.status', 0)
+                ->where('srln.is_deleted', 0)
+                ->groupBy('srln.sumr_hash')
+                ->orderBy('sumr.sumr_hash', 'desc')
+                ->get();
+        
+                $data['tbl_region'] =  DB::table('regn')->get();
+                $data['tbl_province'] =  DB::table('prov')->get();
+                $data['tbl_city'] =  DB::table('city')->get();
+                $data['tbl_brgy'] =  DB::table('brgy')->get();
+    
+                return view('pages.checkout', compact('visit'))->with('data', $data);
+                // return view('pages.checkout')->with('data', $data);
+            }else{
+                if(Session::has('user_hash')){
 
-            return view('pages.checkout', compact('visit'))->with('data', $data);
-            // return view('pages.checkout')->with('data', $data);
+                    $srhr_hash = session('user_hash');
+                    $title = 'MyCart';
+        
+                    $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        
+                    $data['mycart'] = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
+                    ->where('srln.srhr_hash', $srhr_hash)
+                    ->where('srln.status', 0)
+                    ->where('srln.is_deleted', 0)
+                    ->orderBy('srln.srhr_hash', 'desc')
+                    ->get();
+        
+                    $data['comr'] = DB::table('comr')
+                    ->select('excess_kg_fee', 'max_kg')
+                    ->get();
+        
+                    $data['supplier'] =  CartDetail::leftJoin('sumr', 'sumr.sumr_hash', '=', 'srln.sumr_hash')
+                    ->leftJoin('srhr', 'srhr.srhr_hash', '=', 'srln.srhr_hash')
+                    ->leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
+                    ->where('srln.srhr_hash', $srhr_hash)
+                    ->where('srln.status', 0)
+                    ->where('srln.is_deleted', 0)
+                    ->groupBy('srln.sumr_hash')
+                    ->orderBy('sumr.sumr_hash', 'desc')
+                    ->get();
+        
+                return view('pages.mycart', compact('visit'))->with('data', $data);
+                // return view('pages.mycart')->with('data', $data);
+            }else{
+                // return view('pages.login');
+                $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+                return view('pages.login', compact('visit'));
+                }
+            }    
     }else{
         // return view('pages.login');
         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
@@ -186,12 +231,12 @@ class CartController extends Controller
             $addcart->srhr_hash = $srhr_hash;
             $addcart->inmr_hash = $request['inmr_hash'];
             $addcart->sumr_hash = $request['sumr_hash'];
-            $addcart->unit_price = $request['cost_amt'];
+            // $addcart->unit_price = $request['cost_amt'];
             $addcart->qty = $request->input('qty');
             $addcart->variant_1 = $request->input('variant_1');
             $addcart->variant_2 = $request->input('variant_2');
-            $addcart->dimension = $request['dimension'];
-            $addcart->weight = $request['weight'];
+            // $addcart->dimension = $request['dimension'];
+            // $addcart->weight = $request['weight'];
             $addcart->create_datetime = Carbon::now();
             $addcart->save();
 
@@ -208,7 +253,7 @@ class CartController extends Controller
                 if(Session::has('user_hash')){
                     $user_hash = session('user_hash');
 
-                    $validator = Validator::make($request->all(),
+                    Validator::make($request->all(),
                     [
                         'comment' => 'required'
                     ]
@@ -221,6 +266,34 @@ class CartController extends Controller
                     $addcart->comment = $request->input('comment');
                     $addcart->created_datetime = Carbon::now();
                     $addcart->save();
+
+                    $email = DB::table('sumr')
+                    ->select('email')
+                    ->where('sumr_hash', $request['sumr_hash'])
+                    ->get();
+
+                    $product_name = DB::table('inmr')
+                    ->select('product_name')
+                    ->where('inmr_hash', $request['inmr_hash'])
+                    ->get();
+
+                    $seller_name = DB::table('sumr')
+                    ->select('seller_name')
+                    ->where('sumr_hash', $request['sumr_hash'])
+                    ->get();
+
+                    $data = array(
+                        'sumr_hash' => $request['sumr_hash'],
+                        'inmr_hash' => $request['inmr_hash'],
+                        'seller_name' => $seller_name[0]->seller_name
+                        
+                        );
+            
+                        Mail::send([], [], function ($message) use ($data, $email, $product_name ) {
+                            $message->to($email[0]->email)
+                                ->subject('New Comment')
+                                ->setBody('Someone gave a comment on your product '. $product_name[0]->product_name. ' Check Now https://azspree.com/productdetails/'.$data['inmr_hash'] .' Reply using your Merchant Account http://azspree.com:81/#/shop/Comments' , 'text/html'); // for HTML rich messages
+                        });
 
                     $response['stat']='success';
                     $response['msg']='<b>Your comment has been posted.</b>';
@@ -251,6 +324,8 @@ class CartController extends Controller
             $comr = DB::table('comr')
             ->select('excess_kg_fee', 'max_kg', 'azspree', 'dh')
             ->get();
+
+            
         
             $mycart = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
             ->where('srln.srhr_hash', $user_hash)
@@ -311,6 +386,7 @@ class CartController extends Controller
                 $order = new OrderHeader();
                 $order->order_no = date('Ymd').'-';
                 $order->order_date = date("Y-m-d");
+                $order->co_no = '01';
                 $order->regn_hash = $request->input('region');
                 $order->prov_hash = $request->input('province');
                 $order->city_hash = $request->input('city');
@@ -326,12 +402,12 @@ class CartController extends Controller
                 $order->save();
 
                 $sohr_hash = $order->sohr_hash;
-                
 
+                $line_no = 1;
                 for ($a=0; $a < count($mycart); $a++) { 
                     if($supplier[$i]->sumr_hash == $mycart[$a]->sumr_hash){
 
-                        $unit_total =$mycart[$a]->unit_price * $mycart[$a]->qty; 
+                        $unit_total =$mycart[$a]->cost_amt * $mycart[$a]->qty; 
                         $order_subtotal += $unit_total;
                         $total_qty += $mycart[$a]->qty;
 
@@ -409,7 +485,8 @@ class CartController extends Controller
                         $orderdetail->sohr_hash = $sohr_hash;
                         $orderdetail->inmr_hash = $mycart[$a]->inmr_hash;
                         $orderdetail->qty = $mycart[$a]->qty;
-                        $orderdetail->unit_price = $mycart[$a]->unit_price;
+                        $orderdetail->line_no = $line_no++;
+                        $orderdetail->unit_price = $mycart[$a]->cost_amt;
                         $orderdetail->dimension = $mycart[$a]->dimension;
                         $orderdetail->weight = $mycart[$a]->weight;
                         $orderdetail->excess_fee = $sub_2;
@@ -439,20 +516,43 @@ class CartController extends Controller
                 $order->azspree = $azspree;
                 $order->dh = $dh;
                 $order->save();
+
+                $email = DB::table('sumr')
+                ->select('email')
+                ->where('sumr_hash', $order->sumr_hash)
+                ->get();
+
+                $seller_name = DB::table('sumr')
+                ->select('seller_name')
+                ->where('sumr_hash', $order->sumr_hash)
+                ->get();
+
+                $data = array(
+                    'order_no' => $order->order_no,
+                    'sumr_hash' =>  $order->sumr_hash
+                    );
+        
+                    Mail::send([], [], function ($message) use ($data, $seller_name, $email ) {
+                        $message->to($email[0]->email)
+                            ->subject('New Order from AZSpree')
+                            ->setBody('Hi ' .$seller_name[0]->seller_name.', You have a new order, Order No. '.$data['order_no']. ' Check Now https://azspree.com:81 ', 'text/html'); // for HTML rich messages
+                      });
+                      
             }
 
-            $check = User::select('contact_no')
-            ->where('user_hash', $user_hash)
-            ->where('contact_no', null )
-            ->get(); 
+            // $check = User::select('contact_no')
+            // ->where('user_hash', $user_hash)
+            // ->where('contact_no', null )
+            // ->get(); 
 
-            if (count ($check) > 0){
-                $response['stat']='success';
+            // if (count ($check) > 0){
+            //     $response['stat']='success';
                
-            }else{
-                DB::table('user')->where('user_hash', $user_hash)->update(['contact_no' => $request->input('contact_no')]);  
+            // }else{
+            //     DB::table('user')->where('user_hash', $user_hash)->update(['contact_no' => $request->input('contact_no')]);  
                 
-            }
+            // }
+
             $response['stat']='success';
                 $response['msg']='<b>ORDER PLACED SUCCESSFULLY.</b>';
                 echo json_encode($response);
@@ -479,14 +579,12 @@ class CartController extends Controller
      */
     public function show($id)
     { 
-        // $data['products'] = Product::leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
-        // ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
-        // ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
-        // ->findOrFail($id);
+        $search = Product::select('product_name')->findOrFail($id);
 
         $data['products'] = Product::leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
-        ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
+        // ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
         ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+        ->where('inmr.is_deleted', 0)
         ->groupBy('inmr.sumr_hash')
         ->findOrFail($id);
 
@@ -505,9 +603,36 @@ class CartController extends Controller
             // ->where('soln.inmr_hash',$id)
             // ->orderBy('soln.sohr_hash', 'desc')
             ->paginate(5);
+            
+            $string = $data['products']->product_name;
 
-            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-            return view('pages/productdetails', compact('visit'))->with('data', $data);
+            // split on 1+ whitespace & ignore empty (eg. trailing space)
+            $searchValues = preg_split('/\s+/', $string, -1, PREG_SPLIT_NO_EMPTY); 
+            
+            $content =  DB::table('inmr')
+            ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+            ->where('inmr.is_deleted', 0)
+            ->where('inmr.is_verified', 1)
+            ->where('inct.inct_hash', $data['products']->inct_hash)
+            ->where(function ($q) use ($searchValues) {
+              foreach ($searchValues as $value) {
+                $q->orWhere('inmr.product_name', 'like', "%{$value}%");
+              }
+            })
+            ->inRandomOrder()
+            ->paginate(16);
+
+            
+            $shop =  DB::table('inmr')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_deleted', 0)
+            ->where('inmr.is_verified', 1)
+            ->where('sumr.sumr_hash', $data['products']->sumr_hash)
+            ->inRandomOrder()
+            ->paginate(16);
+        
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+            return view('pages/productdetails', compact('visit', 'content' , 'shop'))->with('data', $data);
         
         // return view('pages.productdetails')->with('data', $data);
     }

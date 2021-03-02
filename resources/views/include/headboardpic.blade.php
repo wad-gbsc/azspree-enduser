@@ -69,31 +69,15 @@
             <ul class="slides">
             
               <!-- SLIDE 1 -->
-              <li style="background: url(/brands_try/real.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
+              <li style="background: url(/brands_try/Tarpuline.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
                 <div class="container">
                   <div class="contain">
                   </div>
                 </div><!-- End Container -->
               </li><!-- End item -->
-              {{-- <li style="background: url(/brands_try/gif.gif); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
-                <div class="container">
-                  <div class="contain">
-                    <div class="row" style="text-align: center">
-                      <br><br>
-                      <br><br>
-                      <br><br>
-                      <br><br>
-                      <br><br>
-                      <br><br>
-                      <br><br>
-                      &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; <a href="/"><img class="beat" src="/brands_try/btn_shopnow.png" style="height: 35%; width: 35%;" alt="img"></a>
-                    </div>
-                    
-                  </div>
-                </div><!-- End Container -->
               </li><!-- End item --> --}}
 
-              <li style="background: url(/brands_try/7.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
+              {{-- <li style="background: url(/brands_try/ads1.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
                 <div class="container">
                   <div class="contain">
                   </div>
@@ -101,12 +85,12 @@
               </li><!-- End item -->
               
               <!-- SLIDE 2 -->  
-              <li style="background: url(/brands_try/Tarpuline.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
+              <li style="background: url(/brands_try/ads2.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
                 <div class="container">
                   <div class="sixteen columns contain">
                   </div>
                 </div><!-- End Container -->
-              </li><!-- End item -->
+              </li><!-- End item --> --}}
                
               <!-- SLIDE 3 -->
               {{-- <li style="background:url(/HTML/images/flexslider/shop3.jpg) no-repeat; background-position:50% 0">

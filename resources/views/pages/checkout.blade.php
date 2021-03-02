@@ -131,6 +131,7 @@
                         $order_subtotal = 0; 
                         $total_qty = 0; 
                         $shipping_fee = 0; 
+                        $shipping = 0;
                         $order_total = 0; 
                         $shipping_extra = 0;
                         $shipping_city = 0; 
@@ -153,7 +154,7 @@
                             foreach ($data['mycart'] as $addcart):
                             if($addcart->sumr_hash == $sumr->sumr_hash)
                             {
-                            $unit_total =$addcart->unit_price * $addcart->qty; 
+                            $unit_total =$addcart->cost_amt * $addcart->qty; 
                             $order_subtotal += $unit_total;
                             $total_qty += $addcart->qty;
 
@@ -221,11 +222,11 @@
                                       </div>
                                       <div class="col-md-8">  
                                       {{ $addcart->product_name }}<br>
-                                      {{ $addcart->qty }} x {{ number_format($addcart->unit_price, 2) }}
+                                      {{ $addcart->qty }} x {{ number_format($addcart->cost_amt, 2) }}
                                       <input type="hidden" value="{{ $addcart->dimension }}" name="dimension[]" id="items" />
                                       <input type="hidden" value="{{ $addcart->weight }}" name="weight[]" id="items" />
                                       <input type="hidden" value="{{ $addcart->qty }}" name="qty[]" id="items" />
-                                      <input type="hidden" value="{{ $addcart->unit_price }}" name="unit_price[]" id="items"/>
+                                      <input type="hidden" value="{{ $addcart->cost_amt }}" name="cost_amt[]" id="items"/>
                                       
 
                                       </div>
@@ -518,6 +519,8 @@ $('#barangay option').each(function(){
         }
     }
 });
+var brngy_id = $('#barangay').find("option:not(.hidden):eq(0)").val();
+$('#barangay').val(brngy_id).trigger("change");  
 }); 
 
 
@@ -601,6 +604,7 @@ $('#barangay option').each(function(){
                   },1000);
               } else {
                     $('.row-error').show();
+                    $('.error_msg').html(response.msg.fullname);
                     $('.error_msg').html(response.msg.contact_no);
                     $('.row-error').fadeIn(400);
                 }

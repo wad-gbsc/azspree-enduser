@@ -101,8 +101,8 @@
         </div>
                         
         <!-- PAGINATION -->
-        <div class="mt-0">
-          <nav class="blog-pag">
+        <div class="row mt-0" style="float: right;">
+          <nav>
             {{ $content->links() }}
           </nav> 
         </div>

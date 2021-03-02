@@ -78,18 +78,18 @@ class UsersController extends Controller
         $user_hash = $user->user_hash;
 
 
-        $data = array(
-            'user_hash' => $user->user_hash,
-            'email' => $request->input('email'),
-            'otp' => $otp,
-            'fullname' => $request->input('fullname')
-            );
+        // $data = array(
+        //     'user_hash' => $user->user_hash,
+        //     'email' => $request->input('email'),
+        //     'otp' => $otp,
+        //     'fullname' => $request->input('fullname')
+        //     );
 
-            Mail::send([], [], function ($message) use ($data) {
-                $message->to($data['email'])
-                    ->subject('Verify Email Address')
-                    ->setBody('Hi, ' .$data['fullname']. ' Welcome to Azspree! Please verify your account. Verification Code: '.$data['otp'] , 'text/html'); // for HTML rich messages
-              });
+        //     Mail::send([], [], function ($message) use ($data) {
+        //         $message->to($data['email'])
+        //             ->subject('Verify Email Address')
+        //             ->setBody('Hi, ' .$data['fullname']. ' Welcome to Azspree! Please verify your account. Verification Code: '.$data['otp'] , 'text/html'); // for HTML rich messages
+        //       });
                 
         $response['stat']='success';
         $response['msg']='<b>Successfully Signup.</b> Please check Your Registered Email for Verification Code to login.';

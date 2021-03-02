@@ -155,7 +155,7 @@
                                 ?> 
                                 <div class="col-md-12" >
                                   <div style="float: right" >
-                                    <?php if($order_no->status_ratings == 0) { ?> 
+                                    <?php if($order->status_ratings === 0) { ?> 
                                       <a href="" data-toggle="modal" data-target="#ModalReview{{$order->inmr_hash}}" class="button medium blue w-100-100">RATE NOW</a>
                                       <span class="slash-divider"></span>
                                     <?php }?>
@@ -394,7 +394,7 @@
                                   ?> 
                                   <div class="col-md-12" >
                                     <div style="float: right" >
-                                      <?php if($order_no->status_ratings == 0) { ?> 
+                                      <?php if($order->status_ratings === 0) { ?> 
                                         <a href="" data-toggle="modal" data-target="#ModalReview{{$order->inmr_hash}}" class="button medium blue w-100-100">RATE NOW</a>
                                         <span class="slash-divider"></span>
                                       <?php }?>
@@ -683,7 +683,7 @@
                                 <img src="/brands_try/User.png" class="logo-img" alt="img">&nbsp;Full Name&nbsp;<br><b style="color:black">{{ $data['profile']->fullname }}</b>
                               </div>
                               <div class="col-md-4">
-                                <?php if ($data['profile']->barangay == 0 ) { ?>
+                                <?php if ($data['profile']->barangay == null ) { ?>
                                   <img src="/brands_try/Address.png" class="logo-img" alt="img">&nbsp;Address&nbsp;<br>
                                     <b style="color:black">No Address</b>
                                   <?php }else{ ?>
@@ -697,7 +697,7 @@
                                   <?php }?>
                               </div>
                               <div class="col-md-4">
-                                <?php if ($data['profile']->contact_no == 0 ) { ?>
+                                <?php if ($data['profile']->contact_no == null ) { ?>
                                   <img src="/brands_try/Address.png" class="logo-img" alt="img">&nbsp;Contact No.&nbsp;<br>
                                     <b style="color:black">No Contact No.</b>
                                   <?php }else{ ?>
@@ -720,9 +720,9 @@
                                 
                               </div>
                               <div class="col-md-4 mt-100">
-                                {{-- <button type="button" id="change"  data-toggle="modal" data-target="#ModalEdit{{$data['profile']->user_hash}}"
+                                <button type="button" id="change"  data-toggle="modal" data-target="#ModalEdit{{$data['profile']->user_hash}}"
                                   class="button medium cyan"> <label class="change_label">EDIT PROFILE</label>
-                              </button> --}}
+                              </button>
                               </div>
                             </div>
                           </div>
@@ -732,33 +732,34 @@
                        <!-- Modal Edit -->
                        <div class="modal fade bootstrap-modal" id="ModalEdit{{$profile->user_hash}}" tabindex="-1" role="dialog" aria-labelledby="ModalEditLabel" aria-hidden="true">
                         <div class="modal-dialog">
+                          <form id="edit-form" autocomplete="off">
                           <div class="modal-body">
-                            <div class="row row-error">
-                              <div class="col-md-12">
-                                  <div class="alert alert-danger animated shake">
-                                      <span aria-hidden="true" class="alert-icon icon_blocked"></span>
-                                      <span class="error_msg"></span>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="row div_success">
-                              <div class="col-md-12" style="align-content: center;">
-                                  <div class="row row-success">
-                                      <div class="col-md-12">
-                                          <div class="alert alert-success animated fadeIn">
-                                              <span aria-hidden="true" class="alert-icon icon_like"></span>
-                                              <span class="success_msg"></span>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
                             <div class="modal-content">
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                 <h5 class="modal-title" style="text-align: center; color: rgb(72, 99, 160); font-weight: bold;" id="ModalEditLabel">EDIT PROFILE</h5>
                               </div>
                               <div class="modal-body">
+                                <div class="row row-error">
+                                  <div class="col-md-12">
+                                      <div class="alert alert-danger animated shake">
+                                          <span aria-hidden="true" class="alert-icon icon_blocked"></span>
+                                          <span class="error_msg"></span>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="row div_success">
+                                  <div class="col-md-12" style="align-content: center;">
+                                      <div class="row row-success">
+                                          <div class="col-md-12">
+                                              <div class="alert alert-success animated fadeIn">
+                                                  <span aria-hidden="true" class="alert-icon icon_like"></span>
+                                                  <span class="success_msg"></span>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
                                 <div class="row">
                                   <div class="col-md-12" style="color:black">
                                     <label>Full Name</label>
@@ -773,40 +774,82 @@
                                     <label>Address</label>
                                     
                                     <div class="mb-20">
-                                      <select class="form-control region" name="region" id="region" data-msg-required="PLEASE SELECT REGION" required>
-                                        <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT REGION</option>
-                                        <?php foreach ($data['tbl_region'] as $region): ?>
-                                        <option value="{{$region->regn_hash}}">{{$region->region}}</option>
-                                        <?php endforeach; ?> 
-                                      </select>
-                                    </div>
-                                    <div class="mb-20">
-                                      <select class="form-control location" name="province" id="province"  data-msg-required="PLEASE SELECT PROVINCE" required>
-                                        <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT PROVINCE</option>
-                                        <?php foreach ($data['tbl_province'] as $province): ?>
-                                        <option value="{{$province->prov_hash}}" data-region="{{$province->regn_hash}}">{{$province->province}}</option>
-                                        <?php endforeach; ?> 
-                                      </select>
-                                    </div>
-                                    <div class="mb-20">
-                                      <select class="form-control location" name="city" id="city" data-msg-required="PLEASE SELECT CITY" required>
-                                        <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT CITY</option>
-                                        <?php foreach ($data['tbl_city'] as $city): ?>
-                                        <option value="{{$city->city_hash}}" data-province="{{$city->prov_hash}}">{{$city->city}}</option>
-                                        <?php endforeach; ?> 
+                                      <?php if ($profile->regn_hash == null ) { ?>
+                                        <select class="form-control region" name="region" id="region" data-msg-required="PLEASE SELECT REGION" required>
+                                          <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT REGION</option>
+                                          <?php foreach ($data['tbl_region'] as $region): ?>
+                                          <option value="{{$region->regn_hash}}">{{$region->region}}</option>
+                                          <?php endforeach; ?> 
                                         </select>
+                                        <?php }else{ ?>
+                                          <select class="form-control region" name="region" id="region" data-msg-required="PLEASE SELECT REGION" required>
+                                            <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT REGION</option>
+                                            <option selected="selected" value="{{$profile->regn_hash}}">{{$profile->region}} (Selected)</option>
+                                            <?php foreach ($data['tbl_region'] as $region): ?>
+                                            <option value="{{$region->regn_hash}}">{{$region->region}}</option>
+                                            <?php endforeach; ?> 
+                                          </select>
+                                      <?php }?>
                                     </div>
                                     <div class="mb-20">
-                                      <select class="form-control location" name="barangay" id="barangay" data-msg-required="PLEASE SELECT BARANGAY" required>
-                                        <option selected  disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT BARANGAY</option>
-                                        <?php foreach ($data['tbl_brgy'] as $brgy): ?>
-                                        <option value="{{$brgy->brgy_hash}}" data-city="{{$brgy->city_hash}}">{{$brgy->barangay}}</option>
-                                        <?php endforeach; ?> 
-                                      </select>
+                                      <?php if ($profile->prov_hash == null ) { ?>
+                                        <select class="form-control location" name="province" id="province"  data-msg-required="PLEASE SELECT PROVINCE" required>
+                                          <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT PROVINCE</option>
+                                          <?php foreach ($data['tbl_province'] as $province): ?>
+                                          <option value="{{$province->prov_hash}}" data-region="{{$province->regn_hash}}">{{$province->province}}</option>
+                                          <?php endforeach; ?> 
+                                        </select>
+                                        <?php }else{ ?>
+                                          <select class="form-control location" name="province" id="province"  data-msg-required="PLEASE SELECT PROVINCE" required>
+                                            <option selected="selected" value="{{$profile->prov_hash}}" data-region="{{$profile->regn_hash}}">{{$profile->province}} (Selected)</option>
+                                            <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT PROVINCE</option>
+                                            <?php foreach ($data['tbl_province'] as $province): ?>
+                                            <option value="{{$province->prov_hash}}" data-region="{{$province->regn_hash}}">{{$province->province}}</option>
+                                            <?php endforeach; ?> 
+                                          </select>
+                                      <?php }?>
+                                    </div>
+                                    <div class="mb-20">
+                                      <?php if ($profile->city_hash == null ) { ?>
+                                        <select class="form-control location" name="city" id="city" data-msg-required="PLEASE SELECT CITY" required>
+                                          <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT CITY</option>
+                                          <?php foreach ($data['tbl_city'] as $city): ?>
+                                          <option value="{{$city->city_hash}}" data-province="{{$city->prov_hash}}">{{$city->city}}</option>
+                                          <?php endforeach; ?> 
+                                        </select>
+                                        <?php }else{ ?>
+                                          <select class="form-control location" name="city" id="city" data-msg-required="PLEASE SELECT CITY" required>
+                                            <option selected="selected" value="{{$profile->city_hash}}" data-province="{{$profile->prov_hash}}">{{$profile->city}} (Selected)</option>
+                                            <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT CITY</option>
+                                            <?php foreach ($data['tbl_city'] as $city): ?>
+                                            <option value="{{$city->city_hash}}" data-province="{{$city->prov_hash}}">{{$city->city}}</option>
+                                            <?php endforeach; ?> 
+                                          </select>
+                                      <?php }?>
+                                    </div>
+                                    <div class="mb-20">
+                                      <?php if ($profile->brgy_hash == null ) { ?>
+                                        <select class="form-control location" name="barangay" id="barangay" data-msg-required="PLEASE SELECT BARANGAY" required>
+                                          <option selected  disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT BARANGAY</option>
+                                          <?php foreach ($data['tbl_brgy'] as $brgy): ?>
+                                          <option value="{{$brgy->brgy_hash}}" data-city="{{$brgy->city_hash}}">{{$brgy->barangay}}</option>
+                                          <?php endforeach; ?> 
+                                        </select>
+                                        <?php }else{ ?>
+                                          <select class="form-control location" name="barangay" id="barangay" data-msg-required="PLEASE SELECT BARANGAY" required>
+                                            <option selected="selected" value="{{$profile->brgy_hash}}" data-city="{{$profile->city_hash}}">{{$profile->barangay}} (Selected)</option>
+                                            <option selected  disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT BARANGAY</option>
+                                            <?php foreach ($data['tbl_brgy'] as $brgy): ?>
+                                            <option value="{{$brgy->brgy_hash}}" data-city="{{$brgy->city_hash}}">{{$brgy->barangay}}</option>
+                                            <?php endforeach; ?> 
+                                          </select>
+                                      <?php }?>
                                     </div>
                                     <div class="mb-20">
                                       <input type="text" data-msg-required="HOUSE NO, STREET, BLDG NO, ETC"
-                                      maxlength="100" class="form-control" name="address" id="address" placeholder="HOUSE NO, STREET, BLDG NO, ETC"
+                                      value="{{$profile->address}}"
+                                      maxlength="100" class="form-control" name="address" id="address" 
+                                      placeholder="HOUSE NO, STREET, BLDG NO, ETC"
                                       required>
                                     </div>
                                   </div>
@@ -823,14 +866,15 @@
                                 <br>
                               </div>
                               <div class="modal-footer">
-                                {{-- <button type="button" id="btnedit" class="button medium blue">
+                                <button type="button" id="btnedit" class="btn btn-primary">
                                   <span class=""></span> <label class="btnedit_label">Save</label>
-                                </button> --}}
-                                <a href="/editprofile/{{$profile->user_hash }}" type="button" class="btn btn-primary">Save</a>
+                                </button>
+                                {{-- <a href="/editprofile/{{$profile->user_hash }}" type="button" class="btn btn-primary">Save</a> --}}
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                               </div>
                             </div>
                           </div>
+                          </form>
                         </div>
                       </div>
                       <?php endforeach; ?> 
@@ -868,6 +912,7 @@ y.style.display = "none";
 } 
 });
 
+
 var changeLocation = function(){
 
 $('select.location').prop('disabled', true);
@@ -893,8 +938,15 @@ $('#province option').each(function(){
     }
 });
 
+
 var prov_id = $('#province').find("option:not(.hidden):eq(0)").val();
 $('#province').val(prov_id).trigger("change");
+
+if(prov_id!=0){
+    $('#city').prop('disabled', false);
+}else{
+    $('#city').prop('disabled', true);
+}
 
 // City
 $('#city option').each(function(){
@@ -911,6 +963,12 @@ $('#city option').each(function(){
 
 var cit_id = $('#city').find("option:not(.hidden):eq(0)").val();
 $('#city').val(cit_id).trigger("change");
+
+if(cit_id!=0){
+    $('#barangay').prop('disabled', false);
+}else{
+    $('#barangay').prop('disabled', true);
+}
 
 // Barangay
 $('#barangay option').each(function(){
@@ -932,7 +990,7 @@ $('#barangay').val(brngy_id).trigger("change");
 };
 
 $('#region').on("change", function(){
-changeLocation();                
+changeLocation() ;                
 }); 
 
 changeLocation();     
@@ -1002,7 +1060,9 @@ $('#barangay option').each(function(){
         }
     }
 });
-}); 
+var brngy_id = $('#barangay').find("option:not(.hidden):eq(0)").val();
+$('#barangay').val(brngy_id).trigger("change");  
+});
 
 var initializeControls = function() {
         $('.row-error').hide();
@@ -1053,7 +1113,7 @@ var initializeControls = function() {
         return $.ajax({
             "dataType": "json",
             "type": "POST",
-            "url": "{{ url('/editprofile/') }}",
+            "url": "{{ url('/editprofile') }}",
             "data": _data
         });
     });
@@ -1081,5 +1141,6 @@ var initializeControls = function() {
             }
 
     });
+    
 </script>
 @endsection

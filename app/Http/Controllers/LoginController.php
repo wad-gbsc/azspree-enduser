@@ -155,6 +155,7 @@ class LoginController extends Controller
 
                 //For SRHR
                 $srhr = new CartHeader();
+                $srhr->co_no = '01';
                 $srhr->user_hash = $newUser->user_hash;
                 $srhr->create_datetime = Carbon::now();
                 $srhr->save();
@@ -213,7 +214,6 @@ class LoginController extends Controller
                 $newUser->type = 'US';
                 $newUser->status = 'A';
                 $newUser->facebook_id = $user->id;
-                $newUser->picture = $user->avatar;
                 $newUser->create_datetime = Carbon::now();
                 $newUser->save();
 
@@ -221,6 +221,7 @@ class LoginController extends Controller
 
                 //For SRHR
                 $srhr = new CartHeader();
+                $srhr->co_no = '01';
                 $srhr->user_hash = $newUser->user_hash;
                 $srhr->create_datetime = Carbon::now();
                 $srhr->save();

@@ -74,8 +74,10 @@ class PagesController extends Controller
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
-            ->where('sohr.status_user', '3')
-            ->orwhere('sohr.status_user', '4')
+            ->where(function($query){
+                $query->where('sohr.status_user', '3')
+                    ->orWhere('sohr.status_user', '4');
+            })
             ->groupBy('sohr.order_no')
             ->orderBy('sohr.sohr_hash', 'desc')
             ->get(); 
@@ -85,8 +87,10 @@ class PagesController extends Controller
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
-            ->where('sohr.status_user', '3')
-            ->orwhere('sohr.status_user', '4')
+            ->where(function($query){
+                $query->where('sohr.status_user', '3')
+                    ->orWhere('sohr.status_user', '4');
+            })
             ->orderBy('sohr.sohr_hash', 'desc')
             ->get(); 
 
@@ -220,8 +224,10 @@ class PagesController extends Controller
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
-            ->where('sohr.status_user', '3')
-            ->orwhere('sohr.status_user', '4')
+            ->where(function($query){
+                $query->where('sohr.status_user', '3')
+                    ->orWhere('sohr.status_user', '4');
+            })
             ->groupBy('sohr.order_no')
             ->orderBy('sohr.sohr_hash', 'desc')
             ->get(); 
@@ -231,8 +237,10 @@ class PagesController extends Controller
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
-            ->where('sohr.status_user', '3')
-            ->orwhere('sohr.status_user', '4')
+            ->where(function($query){
+                $query->where('sohr.status_user', '3')
+                    ->orWhere('sohr.status_user', '4');
+            })
             ->orderBy('sohr.sohr_hash', 'desc')
             ->get(); 
 
@@ -292,17 +300,17 @@ class PagesController extends Controller
         return view ('pages.try')->with('data', $data);
     }
 
-    public function checkout(){
-        if(Session::has('user_hash')){
-            // return view('pages/checkout');
-            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-            return view('pages/checkout', compact('visit'));
-        }else{
-            // return view('pages/login');
-            $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-            return view('pages/login', compact('visit'));
-        }
-    }
+    // public function checkout(){
+    //     if(Session::has('user_hash')){
+    //         // return view('pages/checkout');
+    //         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+    //         return view('pages/checkout', compact('visit'));
+    //     }else{
+    //         // return view('pages/login');
+    //         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+    //         return view('pages/login', compact('visit'));
+    //     }
+    // }
 
     public function payment(){
         if(Session::has('user_hash')){
@@ -339,18 +347,25 @@ class PagesController extends Controller
         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
         $categories =  DB::table('inct')->where('is_deleted', 0)->get();
 
-        $content=  DB::table('inmr')->select('*')
-        ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
-        ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
-        ->where('inmr.is_deleted', 0)
-        ->where('inmr.is_verified', 1)
-        ->where(function($query) use($search){
-            $query->where('inmr.product_name','like',"%".$search."%")
-            ->orwhere('inmr.product_details','like',"%".$search."%")
-            ->orwhere('inct.cat_name','like',"%".$search."%")
-            ->orwhere('insc.subcat_name','like',"%".$search."%");
-        })
-        ->paginate(24);
+            // split on 1+ whitespace & ignore empty (eg. trailing space)
+            $searchValues = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY); 
+            
+            $content=  DB::table('inmr')->select('*')
+            ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+            ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_deleted', 0)
+            ->where('inmr.is_verified', 1)
+            ->where(function ($q) use ($searchValues) {
+              foreach ($searchValues as $value) {
+                $q->orWhere('inmr.product_name', 'like', "%{$value}%");
+                $q->orWhere('inmr.product_details', 'like', "%{$value}%");
+                $q->orWhere('inct.cat_name', 'like', "%{$value}%");
+                $q->orWhere('insc.subcat_name', 'like', "%{$value}%");
+                $q->orWhere('sumr.shop_name', 'like', "%{$value}%");
+              }
+            })
+            ->paginate(24);
 
         return view ('welcome',compact('categories','content', 'visit'));
     }
@@ -363,9 +378,9 @@ class PagesController extends Controller
         $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
 
          if ($sortbyprice == 'asc'){
-            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','asc')->paginate(24);
+            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','asc')->paginate(12);
             } else {
-            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','desc')->paginate(24);
+            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','desc')->paginate(12);
             }
 
         return view ('welcome',compact('categories','content', 'visit' ));
@@ -407,6 +422,7 @@ class PagesController extends Controller
         ->where('inmr.is_deleted', 0)
         ->where('inmr.is_verified', 1)
         ->where('inmr.inct_hash', $id)
+        ->orderBy('inmr_hash','desc')
         ->paginate(24);
 
         $cat =  DB::table('inct')
@@ -433,19 +449,26 @@ class PagesController extends Controller
         $search = $request->keyword;
         $id = $request->category;
 
-        $content =  DB::table('inmr')
-        ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
-        ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
-        ->where('inmr.is_deleted', 0)
-        ->where('inmr.is_verified', 1)
-        ->where('inmr.inct_hash', $id)
-        ->where(function($query) use($search){
-            $query->where('inmr.product_name','like',"%".$search."%")
-            ->orwhere('inmr.product_details','like',"%".$search."%")
-            ->orwhere('inct.cat_name','like',"%".$search."%")
-            ->orwhere('insc.subcat_name','like',"%".$search."%");
-        })
-        ->paginate(24);
+        $searchValues = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY); 
+            
+            $content=  DB::table('inmr')->select('*')
+            ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+            ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_deleted', 0)
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.inct_hash', $id)
+            ->where(function ($q) use ($searchValues) {
+              foreach ($searchValues as $value) {
+                $q->orWhere('inmr.product_name', 'like', "%{$value}%");
+                $q->orWhere('inmr.product_details', 'like', "%{$value}%");
+                $q->orWhere('inct.cat_name', 'like', "%{$value}%");
+                $q->orWhere('insc.subcat_name', 'like', "%{$value}%");
+                $q->orWhere('sumr.shop_name', 'like', "%{$value}%");
+              }
+            })
+            ->paginate(24);
+            
 
         $cat =  DB::table('inct')
         ->where('is_deleted', 0)

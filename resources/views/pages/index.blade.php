@@ -8,7 +8,7 @@
 		<meta name="keywords" content="Azspree" > 
 		<meta name="description" content="Azspree" > 
         <meta name="author" content="Geko Business Solutions Corp.">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
+        <meta name="viewport" content="width=device-width, initial-scale=0.3, maximum-scale=1"> 
         <meta name="csrf-token" content="{{ csrf_token() }}">
         
         @include('include.favicon')

@@ -8,7 +8,7 @@
         <div class="row mb-30" >
           <div class="owl-clients-nav owl-carousel owl-arrows-bg" >
             <?php foreach ($categories as $category): ?> 
-            <div class="item m-bot-0 text-center"><a href="/categories/{{$category->inct_hash}}" class="widget-title" style="font-size: 20px;">{{$category->cat_name}}<br><img src="/images/category/{{$category->img_path}}" alt="img"></a></div>
+            <div class="item m-bot-0 text-center"><a href="/categories/{{$category->inct_hash}}" class="widget-title">{{$category->cat_name}}<br><img src="/images/category/{{$category->img_path}}" alt="img"></a></div>
              <?php endforeach; ?>
           </div>
         </div>
@@ -21,7 +21,24 @@
 <div class="page-section p-100-cont pb-30" >
   <div class="container">
     <div class="row">
-
+{{-- 
+      <div class="row mb-30" >
+        <div class="owl-clients-auto owl-carousel"  >
+          <div style="width: 230%; height: 300px; padding-right:80px;"><img src="/brands_try/ads1.jpg" ></div><br>
+          <div style="width: 230%; height: 300px; padding-right:80px;"><img src="/brands_try/ads2.jpg" ></div><br>
+          <div style="width: 230%; height: 300px; padding-right:80px;"><img src="/brands_try/ads1.jpg" ></div><br>
+          <div style="width: 230%; height: 300px; padding-right:80px;"><img src="/brands_try/ads2.jpg" ></div><br>
+        </div>
+      </div> --}}
+      <div class="row mb-30" >
+        <div class="owl-clients-auto owl-carousel"  >
+          @foreach(File::glob(public_path('images/promotion/').'/*') as $path)
+          <div style="width: 230%; height: 300px; padding-right:80px;">
+                  <img src="{{ str_replace(public_path(''), '', $path ) }}" alt="img">
+          </div><br>
+          @endforeach
+        </div>
+      </div>
       <!-- SHOP AD -->
       <div class="page-section" style="background-image: url('/brands_try/cabalen.jpg'); background-repeat: no-repeat; background-size: 100% 100%;">
         <div class="container">
@@ -122,7 +139,7 @@
             {{ $content->links() }}
           </nav> 
         </div>
-        
+
     </div> 
   </div>
 </div>

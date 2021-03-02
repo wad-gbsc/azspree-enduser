@@ -12,6 +12,7 @@ use Mpdf\Mpdf;
 use Carbon\Carbon;
 use Session;
 use DB;
+use Mail;
 
 
 class ProfileController extends Controller
@@ -89,8 +90,10 @@ class ProfileController extends Controller
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
             ->leftJoin('oust', 'oust.oust_hash', '=', 'sohr.status_user')
             ->where('sohr.user_hash', $user_hash)
-            ->where('sohr.status_user', '3')
-            ->orwhere('sohr.status_user', '4')
+            ->where(function($query){
+                $query->where('sohr.status_user', '3')
+                    ->orWhere('sohr.status_user', '4');
+            })
             ->groupBy('sohr.order_no')
             ->orderBy('sohr.sohr_hash', 'desc')
             ->get(); 
@@ -98,8 +101,10 @@ class ProfileController extends Controller
             $data['delivered'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
             ->where('sohr.user_hash', $user_hash)
-            ->where('sohr.status_user', '3')
-            ->orwhere('sohr.status_user', '4')
+            ->where(function($query){
+                $query->where('sohr.status_user', '3')
+                    ->orWhere('sohr.status_user', '4');
+            })
             ->orderBy('sohr.sohr_hash', 'desc')
             ->get(); 
 
@@ -156,6 +161,27 @@ class ProfileController extends Controller
             $order->is_comp = '1';
             $order->save();
 
+            $email = DB::table('sumr')
+            ->select('email')
+            ->where('sumr_hash', $order->sumr_hash)
+            ->get();
+
+            $seller_name = DB::table('sumr')
+            ->select('seller_name')
+            ->where('sumr_hash', $order->sumr_hash)
+            ->get();
+
+            $data = array(
+                'order_no' => $order->order_no,
+                'sumr_hash' =>  $order->sumr_hash
+                );
+    
+                Mail::send([], [], function ($message) use ($data, $seller_name, $email ) {
+                    $message->to($email[0]->email)
+                        ->subject('The buyer has receive your parcel')
+                        ->setBody('Hi ' .$seller_name[0]->seller_name.', The buyer has receive your parcel, Order No. '.$data['order_no'] , 'text/html'); // for HTML rich messages
+                  });
+
             // $points = $order->order_total / 100;
             // DB::table('user')->where('user_hash', $order->user_hash)->increment('az_pouch',$points);
 
@@ -208,30 +234,61 @@ class ProfileController extends Controller
 
              DB::table('inmr')->where('inmr_hash', $order->inmr_hash)->increment('total_ratings', $order->rating);    
              Product::where('inmr_hash', $order->inmr_hash)->update(['number_ratings' => DB::raw('number_ratings + 1')]);
-            //  DB::table('sohr')->where('sohr_hash', $order->sohr_hash)->update(['status' => 'COMPLETED']);   
+            //  DB::table('sohr')->where('sohr_hash', $order->sohr_hash)->update(['status' => 'COMPLETED']);  
+            
+            $email = DB::table('soln')
+            ->select('email')
+            ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'sohr.sumr_hash')
+            ->where('soln_hash', $order->soln_hash)
+            ->get();
+
+            $data = array(
+                'inmr_hash' => $order->inmr_hash,
+                'rating' => $order->rating
+                );
+
+                Mail::send([], [], function ($message) use ($data, $email) {
+                    $message->to($email[0]->email)
+                        ->subject('You have a ' .$data['rating']. ' star rating')
+                        ->setBody('You have a ' .$data['rating']. ' star rating on your product https://azspree.com/productdetails/'.$data['inmr_hash'] , 'text/html'); // for HTML rich messages
+                });
 
             return redirect('/profile');
     }  
     
-    public function editprofile(Request $request, $id)
+    public function editprofile(Request $request)
     {       
+        $user_hash = session('user_hash');
 
         $validator= Validator::make($request->all(),
             [
                 'fullname' => 'required|regex:/^[a-zA-Z\s]+$/',
-                'contact_no' => 'required|regex:/(09)[0-9]{9}$/'
+                'contact_no' => 'required|regex:/(09)[0-9]{9}$/',
             ]
         );
+
         if($validator->fails()){
-            return redirect('/profile')->with('status', 'Required.');
+            $response['stat']='error';
+            $response['msg'] =$validator->errors();
+            echo json_encode($response);
         } else {
+            DB::table('user')->where('user_hash', $user_hash)
+            ->update([
+                'fullname' => $request['fullname'], 
+                'contact_no' => $request['contact_no'],
+                'regn_hash' => $request->input('region'),
+                'prov_hash' => $request->input('province'),
+                'city_hash' => $request->input('city'),
+                'brgy_hash' => $request->input('barangay'),
+                'address' => $request->input('address'),
+                'update_datetime' => Carbon::now()
+                    ]);
 
-            $profile = User::where('is_deleted', 0)->findOrFail($id);
-            $profile->fullname = $request->input('fullname');
-            $profile->contact_no = $request->input('contact_no');
-            $profile->save(); 
-
-            return redirect('/profile')->with('status', 'else to.');
+                $response['stat']='success';
+                $response['msg']='<b>UPDATE SUCCESSFUL.</b>';
+                echo json_encode($response);
+            // return redirect('/profile')->with('status', 'Success to');
         }
     }  
 

@@ -109,14 +109,14 @@
 
                             <div class="font-14 lh-20 mb-30">
                                 {{-- <div>Brand: <label style="color:black; bold"></label></div> --}}
-                                <div style="color:rgb(72, 99, 160); font-size: 18px" ><b>Shop: </b><label>{{ $data['products']->shop_name }}</label></div>
-                                <div><b>Category:</b> <label style="color:black">{{ $data['products']->cat_name }}</label>
-                                    <span class="slash-divider">></span> <label style="color:black">{{ $data['products']->subcat_name }}</label>
+                                <div style="color: black;" ><b>Shop: </b><label style="color:rgb(72, 99, 160); font-size: 18px" >{{ $data['products']->shop_name }}</label></div>
+                                <div><b style="color: black">Category:</b> <label><a style="color:rgb(72, 99, 160); font-size: 18px" href="/categories/{{$data['products']->inct_hash}}"> {{ $data['products']->cat_name }}</a></label>
+                                     {{-- <label style="color:black">{{ $data['products']->subcat_name }}</label> --}}
                                 </div>
                                 <?php if ($data['products']->available_qty <= '0'){ ?> 
                                     <div style="font-size:14px" class="label label-danger">Out of Stocks.</div> 
                                 <?php }else{ ?> 
-                                    <div><b>Available:</b> <label style="color:black">{{$data['products']->available_qty}}</label></div>
+                                    <div><b style="color: black">Available:</b> <label style="color:rgb(72, 99, 160); font-size: 18px">{{$data['products']->available_qty}}</label></div>
                                 <?php }?>
                                 
                                 {{-- <div>Tags: <a class="a-dark" href="#">WOMEN'S
@@ -128,11 +128,11 @@
                             <hr class="mt-0 mb-30">
 
                             <div class="mb-30" style="color: black">
-                                <label>{{ $data['products']->product_details }}</label><br>
-                                <label>Length: {{ $data['products']->length }}</label><br>
-                                <label>Width: {{ $data['products']->width }}</label><br>
-                                <label>Height: {{ $data['products']->height }}</label><br>
-                                <label>Weight: {{ $data['products']->weight }}</label><br>
+                                <span style="display: block; white-space: pre-line;">{{ $data['products']->product_details }}</span><br>
+                                <span>Length: {{ $data['products']->lengthsize }}</span><br>
+                                <span>Width: {{ $data['products']->width }}</span><br>
+                                <span>Height: {{ $data['products']->height }}</span><br>
+                                <span>Weight: {{ $data['products']->weight }}</span><br>
                                 {{-- Product Description --}}
                             </div>
 
@@ -219,9 +219,9 @@
                 </div>
             </div>
 
-            <hr class="mt-0 mb-80">
+            <hr class="mt-0 mb-40">
 
-    <div class="container mb-100">
+    <div class="container mb-40">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row" >&nbsp;
@@ -324,7 +324,7 @@
         </div>
     </div>
 
-            <div class="container mb-100">
+            <div class="container mb-40">
                 <div class="row row-success2">
                     <div class="col-md-12">
                             <div class="alert alert-success animated fadeIn">
@@ -371,7 +371,12 @@
                                                 </div>
                                                 <div class="row-md-12">
                                                     <div class="col-md-12">
-                                                    &nbsp;&nbsp;<input type="button" id="btnmsg" value="SEND QUESTION"  class="button medium blue" >
+                                                        &emsp;
+                                                        <button type="button" id="btnmsg" data-user-id="<?php echo session('user_hash'); ?>" 
+                                                            class="button medium blue">
+                                                            <span class=""></span> <label class="btnadd_label">SEND QUESTION</label>
+                                                        </button>
+                                                    {{-- &nbsp;&nbsp;<input type="button" id="btnmsg" value="SEND QUESTION"  class="button medium blue" > --}}
                                                     </div>
                                                 </div>
                                                 <?php }else{?>
@@ -439,9 +444,73 @@
                 </div>
                 <!-- END tabs  -->
   
+                <!-- SAME SHOP -->
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <h4 class="blog-page-title mt-0 mb-40">From The Same Shop</h4>
+              </div>
+                <div class="owl-3items-nav owl-carousel owl-arrows-bg" >
+                    <?php 
+                    foreach ($shop as $products): ?>
+                    <div class="item mb-0 text-center">
+                        <!-- SHOP Item 1 -->
+                        <div>
+                        <div class="post-prev-img">
+                            <a href="/productdetails/{{$products->inmr_hash}}" ><img style="height: 370px; width: 472px; " src="/images/products/{{$products->image_path}}" alt="img"></a>
+                        </div>
+        
+                        <div class="post-prev-title mb-5">
+                            <h3 style="text-overflow: ellipsis;
+                            white-space: nowrap;
+                            overflow: hidden;" ><a class="font-norm a-inv" href="/productdetails/{{$products->inmr_hash}}">{{$products->product_name}}</a></h3>
+                          </div>
+                            
+                        <div class="shop-price-cont">
+                            <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
+                        </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+          </div>
+          <br>
+
+                <!-- RELATED PRODUCTS -->
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <h4 class="blog-page-title mt-0 mb-40">RELATED PRODUCTS</h4>
+              </div>
+                <div class="owl-3items-nav owl-carousel owl-arrows-bg" >
+                    <?php 
+                    foreach ($content as $products): ?>
+                    <div class="item mb-0 text-center">
+                        <!-- SHOP Item 1 -->
+                        <div>
+                        <div class="post-prev-img">
+                            <a href="/productdetails/{{$products->inmr_hash}}" ><img style="height: 370px; width: 472px; " src="/images/products/{{$products->image_path}}" alt="img"></a>
+                        </div>
+        
+                        <div class="post-prev-title mb-5">
+                            <h3 style="text-overflow: ellipsis;
+                            white-space: nowrap;
+                            overflow: hidden;" ><a class="font-norm a-inv" href="/productdetails/{{$products->inmr_hash}}">{{$products->product_name}}</a></h3>
+                          </div>
+                            
+                        <div class="shop-price-cont">
+                            <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
+                        </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+          </div>
+
               </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -594,6 +663,9 @@
             window.location.href = "/login";
         }else{
             if (validateRequiredFields2($('#msg-form'))) {
+                $(this).toggleClass('disabled');
+                $(this).find('span').toggleClass('fa fa-spinner fa-spin');
+                $('.btnadd_label').html('SENDING QUESTION');
 
             AddMsg().done(function(response) {
 

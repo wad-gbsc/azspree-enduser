@@ -73,13 +73,13 @@
                          ?>
                          <tbody>
                       <tr>
-                          <td colspan="8">&nbsp;<input type="checkbox" class="selectAll"> {{$sumr->seller_name}}</td>
+                          <td colspan="8">&nbsp;<input type="checkbox" class="selectAll"> {{$sumr->shop_name}}</td>
                       </tr>
                           <?php 
                             foreach ($data['mycart'] as $addcart):
                             if($addcart->sumr_hash == $sumr->sumr_hash)
                             {
-                            $unit_total =$addcart->unit_price * $addcart->qty; 
+                            $unit_total =$addcart->cost_amt * $addcart->qty; 
                             // $sub_total +=$unit_total; 
                             // $shipping =$sub_total * 0.05;
                             // $order_total = $sub_total +$shipping; 
@@ -97,9 +97,9 @@
                                 </a>
                             </td>
                             <td><a href="/productdetails/{{$addcart->inmr_hash}}" >{{ $addcart->product_name }}</a></td>
-                            <td>{{ number_format($addcart->unit_price, 2) }}</td>
+                            <td>{{ number_format($addcart->cost_amt, 2) }}</td>
                             <td>
-                              <input type="number" id="line_qty_{{ $addcart->srln_hash }}" data-orig-price="{{ $addcart->unit_price }}" 
+                              <input type="number" id="line_qty_{{ $addcart->srln_hash }}" data-orig-price="{{ $addcart->cost_amt }}" 
                               data-srln-hash="{{ $addcart->srln_hash }}" data-inmr-hash="{{ $addcart->inmr_hash }}"
                               class="input-border white-bg qty" style="width: 80px;" min="1" name="qty" value={{ $addcart->qty }}>
                             </td>
@@ -321,6 +321,8 @@ $(document).ready(function () {
               // setTimeout(function() {
               //     window.location.href = "/login";
               // },1000);
+          }else{
+            window.location.href = "/checkout";
           }
 
 
@@ -377,12 +379,11 @@ $(document).ready(function () {
               $('#line_qty_'+srln_hash).val(response.qty);  
               total_line_price = parseFloat(response.qty * orig_price);
               $('#line_total_price_'+srln_hash).html(accounting.formatNumber(total_line_price,2));
-              // setTimeout(function() {
-              //     window.location.href = "/login";
-              // },1000);
+            
             qty_status = 0;
           }else{
             qty_status = 1;
+            window.location.href = "/checkout";
           }
 
 

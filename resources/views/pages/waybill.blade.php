@@ -101,21 +101,19 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3"  style="font-size: 16px">
-                <div><br><br><center>No of Delivery Attemps</center><br><br></div>
-                <div>
-                    <tr>
-                    <td colspan="1" >
-                        <center>1</center>
-                    </td>
-                    <td colspan="1" >
-                        <center>2</center>
-                    </td>
-                    <td colspan="1" >
-                        <center>3</center>
-                    </td>
-                    </tr>
-                </div>
+            <td colspan="12"  style="font-size: 16px">
+                <br><br><center>No of Delivery Attemps</center><br><br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="1" >
+                <center>1</center>
+            </td>
+            <td colspan="1" >
+                <center>2</center>
+            </td>
+            <td colspan="1" >
+                <center>3</center>
             </td>
             <td colspan="9"  style="font-size: 16px">
                 <div>Mode of Payment:</div><br>

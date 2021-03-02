@@ -38,10 +38,10 @@ Route::get('/get-city-list/{prov_hash}','CartController@getCityList');
 Route::get('/get-barangay-list/{city_hash}','CartController@getBarangayList');
 
 // Route::get('/try', 'PagesController@try');
-Route::get('/checkout', 'PagesController@checkout');
+// Route::get('/checkout', 'PagesController@checkout');
 // Route::get('/payment', 'PagesController@payment');
 
-// Route::get('/signup', 'PagesController@signup');
+Route::get('/signup', 'PagesController@signup');
 Route::post('/users/create', 'UsersController@create');
 
 Route::get('/status/{id}','CartController@updateStatus');
@@ -51,7 +51,8 @@ Route::get('/checkout', 'CartController@indexcheckout');
 Route::get('/delete/{id}', 'CartController@delete');
 Route::get('/updatestatus/{id}', 'ProfileController@updatestatus');
 Route::get('/updatecancel/{id}', 'ProfileController@updatecancel');
-Route::get('/editprofile/{id}', 'ProfileController@editprofile');
+// Route::get('/editprofile/{id}', 'ProfileController@editprofile');
+Route::post('/editprofile', 'ProfileController@editprofile');
 Route::get('/review/{id}', 'ProfileController@review');
 Route::post('/cart/create', 'CartController@create');
 Route::post('/cart/createmsg', 'CartController@createmsg');
