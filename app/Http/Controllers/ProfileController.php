@@ -64,6 +64,7 @@ class ProfileController extends Controller
             ->get(); 
 
             $data['order'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
+            ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'soln.vrnt_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
             ->where('sohr.user_hash', $user_hash)
             ->orderBy('sohr.sohr_hash', 'desc')
@@ -79,6 +80,7 @@ class ProfileController extends Controller
             ->get(); 
 
             $data['ship'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
+            ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'soln.vrnt_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
             ->where('sohr.user_hash', $user_hash)
             ->where('sohr.status_user', '2')
@@ -99,6 +101,7 @@ class ProfileController extends Controller
             ->get(); 
 
             $data['delivered'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
+            ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'soln.vrnt_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
             ->where('sohr.user_hash', $user_hash)
             ->where(function($query){
@@ -119,6 +122,7 @@ class ProfileController extends Controller
             ->get(); 
 
             $data['completed'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
+            ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'soln.vrnt_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
             ->where('sohr.user_hash', $user_hash)
             ->where('sohr.status_user', '5')
@@ -135,6 +139,7 @@ class ProfileController extends Controller
             ->get(); 
 
             $data['cancelled'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
+            ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'soln.vrnt_hash')
             ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
             ->where('sohr.user_hash', $user_hash)
             ->where('sohr.status_user', '6')
@@ -208,13 +213,15 @@ class ProfileController extends Controller
             $order->user_decline_datetime = Carbon::now();
             $order->save();
 
-                $myorder = OrderDetail::select('inmr_hash', 'qty')
+                $myorder = OrderDetail::select('inmr_hash', 'vrnt_hash', 'qty')
                 ->where('soln.sohr_hash', $id)
                 ->get(); 
             
                 foreach ($myorder as $order)
                 {
-                    DB::table('inmr')->where('inmr_hash', $order->inmr_hash)->increment('available_qty',$order->qty);
+                    DB::table('vrnt')->where('inmr_hash', $order->inmr_hash)
+                    ->where('vrnt_hash', $order->vrnt_hash)
+                    ->increment('available_qty',$order->qty);
                 }
                 return redirect('/profile')->with('status', 'Success, This order has been cancelled.');
         }
@@ -275,7 +282,7 @@ class ProfileController extends Controller
         } else {
             DB::table('user')->where('user_hash', $user_hash)
             ->update([
-                'fullname' => $request['fullname'], 
+                'fullname' => ucwords($request['fullname']), 
                 'contact_no' => $request['contact_no'],
                 'regn_hash' => $request->input('region'),
                 'prov_hash' => $request->input('province'),

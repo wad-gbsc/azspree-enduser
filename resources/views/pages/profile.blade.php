@@ -139,6 +139,8 @@
                                 <div class="col-md-6">
                                   <b style="color:black">{{ $order->product_name }}</b>
                                   <br>
+                                  <label style="color:black">{{ $order->var_name }} </label>
+                                  <br>
                                   <label style="color:black"> x {{ $order->qty }} </label>
                                   <br>
                                   <br>
@@ -579,6 +581,10 @@
                                   </div>
                                   <div class="col-md-10">
                                     <b style="color: rgb(72, 99, 160)">{{ $order->product_name }}</b>
+                                    <br>
+                                    <b style="color: rgb(72, 99, 160)">{{ $order->var_name }}</b>
+                                    <br>
+                                    x <b style="color: rgb(72, 99, 160)">{{ $order->qty }}</b>
                                   </div>
                                 </div>
                                 <?php } ?>
@@ -765,7 +771,7 @@
                                     <label>Full Name</label>
                                     <input type="text" name="fullname" 
                                     data-msg-required="PLEASE ENTER FULL NAME" maxlength="30"
-                                    style="text-transform:uppercase" placeholder="FULL NAME"
+                                    style="text-transform:capitalize" placeholder="FULL NAME"
                                     class="form-control" id="fullname" value="{{$profile->fullname}}"  required>
                                   </div>
                                 </div>

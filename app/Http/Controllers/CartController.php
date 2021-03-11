@@ -38,6 +38,7 @@ class CartController extends Controller
             $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
 
             $data['mycart'] = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
+            ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'srln.vrnt_hash')
             ->where('srln.srhr_hash', $srhr_hash)
             ->where('srln.status', 0)
             ->where('srln.is_deleted', 0)
@@ -90,7 +91,7 @@ class CartController extends Controller
                 ->get();
     
                 $data['mycart'] = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
-                ->where('srln.srhr_hash', $srhr_hash)
+                ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'srln.vrnt_hash')
                 ->where('srln.is_selected', 1)
                 ->where('srln.status', 0)
                 ->where('srln.is_deleted', 0)
@@ -98,6 +99,7 @@ class CartController extends Controller
                 ->get();
     
                 $data['supplier'] =  CartDetail::leftJoin('sumr', 'sumr.sumr_hash', '=', 'srln.sumr_hash')
+                ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'srln.vrnt_hash')
                 ->leftJoin('srhr', 'srhr.srhr_hash', '=', 'srln.srhr_hash')
                 ->where('srln.srhr_hash', $srhr_hash)
                 ->where('srln.is_selected', 1)
@@ -121,18 +123,19 @@ class CartController extends Controller
                     $title = 'MyCart';
         
                     $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-        
+
                     $data['mycart'] = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
+                    ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'srln.vrnt_hash')
                     ->where('srln.srhr_hash', $srhr_hash)
                     ->where('srln.status', 0)
                     ->where('srln.is_deleted', 0)
                     ->orderBy('srln.srhr_hash', 'desc')
                     ->get();
-        
+
                     $data['comr'] = DB::table('comr')
                     ->select('excess_kg_fee', 'max_kg')
                     ->get();
-        
+
                     $data['supplier'] =  CartDetail::leftJoin('sumr', 'sumr.sumr_hash', '=', 'srln.sumr_hash')
                     ->leftJoin('srhr', 'srhr.srhr_hash', '=', 'srln.srhr_hash')
                     ->leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
@@ -142,7 +145,7 @@ class CartController extends Controller
                     ->groupBy('srln.sumr_hash')
                     ->orderBy('sumr.sumr_hash', 'desc')
                     ->get();
-        
+
                 return view('pages.mycart', compact('visit'))->with('data', $data);
                 // return view('pages.mycart')->with('data', $data);
             }else{
@@ -158,17 +161,6 @@ class CartController extends Controller
         }
     }
 
-    public function getProvinceList($regn_hash)
-    {
-    $province =  DB::table('prov')
-    ->leftJoin('regn', 'regn.regn_hash', '=', 'prov.regn_hash')
-    ->select('prov_hash','province')
-    ->where('prov.regn_hash', $regn_hash )
-    ->get();
-
-    return response()->json($province);
-    }
-
     public function getCityList($prov_hash)
     {
     $city =  DB::table('city')
@@ -181,15 +173,19 @@ class CartController extends Controller
     return response()->json($city);
     }
 
-    public function getBarangayList($brgy_hash)
+    public function getVariant($vrnt_hash)
     {
-    // $barangay =  DB::table('brgy')
-    // ->leftJoin('regn', 'regn.regn_hash', '=', 'brgy.regn_hash')
-    // ->leftJoin('prov', 'prov.prov_hash', '=', 'brgy.prov_hash')
-    // ->leftJoin('city', 'city.city_hash', '=', 'brgy.city_hash')
-    // ->select('brgy_hash','barangay')
-    // ->where('brgy.city_hash', $city_hash )
-    // ->get();
+
+    $variant =  DB::table('vrnt')
+            ->select('cost_amt' , 'available_qty')
+            ->where('vrnt_hash', $vrnt_hash )
+            ->get();
+    return response()->json($variant);
+    }
+
+    public function getBarangayList($brgy_hash)
+    { 
+
     $ursf = DB::table('brgy')
             ->select('shipping_fee')
             ->where('brgy_hash', $brgy_hash)
@@ -211,9 +207,12 @@ class CartController extends Controller
         $title = 'MyCart';
         $data['mycart'] =  User::where('is_deleted', 0)->findOrFail($srhr_hash);
           
-        $products = Product::where('inmr_hash', $request['inmr_hash'])->firstOrFail();
+        $products =DB::table('vrnt')
+        ->where('inmr_hash', $request['inmr_hash'])
+        ->where('vrnt_hash', $request['variant'])
+        ->get();
    
-        $qty = $products->available_qty;
+        $qty = $products[0]->available_qty;
 
         $validator = Validator::make($request->all(),
         [
@@ -231,10 +230,8 @@ class CartController extends Controller
             $addcart->srhr_hash = $srhr_hash;
             $addcart->inmr_hash = $request['inmr_hash'];
             $addcart->sumr_hash = $request['sumr_hash'];
-            // $addcart->unit_price = $request['cost_amt'];
+            $addcart->vrnt_hash = $request['variant'];
             $addcart->qty = $request->input('qty');
-            $addcart->variant_1 = $request->input('variant_1');
-            $addcart->variant_2 = $request->input('variant_2');
             // $addcart->dimension = $request['dimension'];
             // $addcart->weight = $request['weight'];
             $addcart->create_datetime = Carbon::now();
@@ -328,6 +325,7 @@ class CartController extends Controller
             
         
             $mycart = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
+            ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'srln.vrnt_hash')
             ->where('srln.srhr_hash', $user_hash)
             ->where('srln.is_selected', 1)
             ->where('srln.status', 0)
@@ -336,6 +334,7 @@ class CartController extends Controller
             ->get();
 
             $supplier =  CartDetail::leftJoin('sumr', 'sumr.sumr_hash', '=', 'srln.sumr_hash')
+            ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'srln.vrnt_hash')
             ->leftJoin('srhr', 'srhr.srhr_hash', '=', 'srln.srhr_hash')
             ->where('srln.srhr_hash', $user_hash)
             ->where('srln.is_selected', 1)
@@ -393,7 +392,7 @@ class CartController extends Controller
                 $order->brgy_hash = $request->input('barangay');
                 $order->address = $request->input('address');
                 $order->user_hash = $user_hash;
-                $order->fullname = $request->input('fullname');
+                $order->fullname = ucwords($request->input('fullname'));
                 $order->contact_no = $request->input('contact_no');
                 $order->sumr_hash = $supplier[$i]->sumr_hash;
                 $order->payment_method = $request->input('payment_method');
@@ -484,6 +483,7 @@ class CartController extends Controller
                         $orderdetail = new OrderDetail();
                         $orderdetail->sohr_hash = $sohr_hash;
                         $orderdetail->inmr_hash = $mycart[$a]->inmr_hash;
+                        $orderdetail->vrnt_hash = $mycart[$a]->vrnt_hash;
                         $orderdetail->qty = $mycart[$a]->qty;
                         $orderdetail->line_no = $line_no++;
                         $orderdetail->unit_price = $mycart[$a]->cost_amt;
@@ -496,7 +496,9 @@ class CartController extends Controller
 
 
                         DB::table('srln')->where('srln_hash', $mycart[$a]->srln_hash)->update(['status' => '1']);   
-                        DB::table('inmr')->where('inmr_hash', $mycart[$a]->inmr_hash)->decrement('available_qty',$orderdetail->qty);
+                        DB::table('vrnt')->where('vrnt_hash', $mycart[$a]->vrnt_hash)
+                        ->where('inmr_hash', $mycart[$a]->inmr_hash)
+                        ->decrement('available_qty',$orderdetail->qty);
            
                     }   
 
@@ -581,10 +583,31 @@ class CartController extends Controller
     { 
         $search = Product::select('product_name')->findOrFail($id);
 
-        $data['products'] = Product::leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
-        // ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
+        $variant = DB::table('vrnt')
+        ->select('vrnt.*')
+        ->leftJoin('inmr', 'inmr.inmr_hash', '=', 'vrnt.inmr_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('inmr.is_verified', 1)
+        ->where('vrnt.is_deleted', 0)
+        ->where('vrnt.inmr_hash', $id)
+        ->get();
+
+        $data['var_max'] = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
         ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
         ->where('inmr.is_deleted', 0)
+        ->orderBy('vrnt.cost_amt','desc')
+        ->findOrFail($id);
+
+        $data['var_min'] = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+        ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+        ->where('inmr.is_deleted', 0)
+        ->orderBy('vrnt.cost_amt','asc')
+        ->findOrFail($id);
+
+        $data['products'] = Product::leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('inmr.is_verified', 1)
         ->groupBy('inmr.sumr_hash')
         ->findOrFail($id);
 
@@ -604,6 +627,21 @@ class CartController extends Controller
             // ->orderBy('soln.sohr_hash', 'desc')
             ->paginate(5);
             
+
+            $var_max = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.is_deleted', 0)
+            ->orderBy('vrnt.cost_amt','desc')
+            ->get();
+
+            $var_min = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.is_deleted', 0)
+            ->orderBy('vrnt.cost_amt','asc')
+            ->get();
+
             $string = $data['products']->product_name;
 
             // split on 1+ whitespace & ignore empty (eg. trailing space)
@@ -632,7 +670,7 @@ class CartController extends Controller
             ->paginate(16);
         
         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
-            return view('pages/productdetails', compact('visit', 'content' , 'shop'))->with('data', $data);
+            return view('pages/productdetails', compact('visit', 'content' , 'shop', 'variant', 'var_min', 'var_max'))->with('data', $data);
         
         // return view('pages.productdetails')->with('data', $data);
     }
@@ -688,7 +726,12 @@ class CartController extends Controller
     public function updateqty(Request $request)
     {       
 
-            $products = Product::where('inmr_hash', $request['inmr_hash'])->firstOrFail();
+            $products = Product::
+            leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->where('vrnt.inmr_hash', $request['inmr_hash'])
+            ->where('vrnt.vrnt_hash', $request['vrnt_hash'])
+            ->firstOrFail();
+            
             $qty = $products->available_qty;
             $id = $request->srln_hash;
             

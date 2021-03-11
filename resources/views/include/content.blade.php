@@ -2,7 +2,7 @@
 
 <div id="wrap" class="boxed ">
   <div class="container-p-75 grey-bg" > <!-- Grey BG  -->	
-     <div class="page-section indent-header">
+     <div class="page-section">
       <div class="relative">
         <h5 class="widget-title" style="color: rgb(72, 99, 160);">Categories</h5>	
         <div class="row mb-30" >
@@ -113,10 +113,38 @@
                         white-space: nowrap;
                         overflow: hidden;" ><a class="font-norm a-inv" href="/productdetails/{{$products->inmr_hash}}">{{$products->product_name}}</a></h3>
                       </div>
+
+                      <?php 
+                      $minimum = 0;
+                      foreach ($var_min as $min):
+                      if($products->inmr_hash == $min->inmr_hash)
+                      {
+                        $minimum = $min->cost_amt; 
+                      ?>
+                      <?php } ?>
+                      <?php endforeach; ?>
+
+                      <?php 
+                      $maximum = 0;
+                        foreach ($var_max as $max):
+                        if($products->inmr_hash == $max->inmr_hash)
+                        {
+                          $maximum = $max->cost_amt; 
+                        ?>
+                          <?php } ?>
+                          <?php endforeach; ?>
+                      
+                      <div class="shop-price-cont">
                         
-                      <div class="shop-price-cont" data-price={{ $products->cost_amt }}>
-                        <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
+                        <?php if ($minimum === $maximum){ ?> 
+                          <strong>&#8369; {{ number_format($minimum, 2) }}</strong>
+                        <?php }else{ ?> 
+                          <strong>&#8369; {{ number_format($maximum, 2) }} - {{ number_format($minimum, 2) }}</strong>
+                        <?php }?>
+                        {{-- <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong> --}}
+                        
                       </div>
+                    
                   </div>
               
             <?php endforeach; ?>

@@ -18,12 +18,33 @@ class PagesController extends Controller
     {
         $title = 'Azspree';
         $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
-        $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->orderBy('inmr_hash','desc')->paginate(24);
+        $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->inRandomOrder()->paginate(24);
+        
+        $variant =  DB::table('vrnt')
+        ->leftJoin('inmr', 'inmr.inmr_hash', '=', 'vrnt.inmr_hash')
+        ->where('inmr.is_verified', 1)
+        ->where('inmr.is_deleted', 0)
+        ->orderBy('vrnt.cost_amt','asc')
+        ->get();
+
+        $var_max = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+        ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+        ->where('inmr.is_verified', 1)
+        ->where('inmr.is_deleted', 0)
+        ->orderBy('vrnt.cost_amt','desc')
+        ->get();
+
+        $var_min = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+        ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+        ->where('inmr.is_verified', 1)
+        ->where('inmr.is_deleted', 0)
+        ->orderBy('vrnt.cost_amt','asc')
+        ->get();
 
         $visitcount =  DB::table('cntr')->where('is_deleted', 0)->where('ip_address', $request->ip())->get();
         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
         // $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->inRandomOrder()->paginate(24);
-        return view('welcome', compact('categories','content','visitcount', 'visit'));
+        return view('welcome', compact('categories','content','visitcount', 'visit','var_min', 'var_max', 'variant'));
     }
     public function login(){
         if(Session::has('user_hash')){
@@ -353,6 +374,7 @@ class PagesController extends Controller
             $content=  DB::table('inmr')->select('*')
             ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
             ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
+            ->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
             ->where('inmr.is_deleted', 0)
             ->where('inmr.is_verified', 1)
@@ -367,7 +389,20 @@ class PagesController extends Controller
             })
             ->paginate(24);
 
-        return view ('welcome',compact('categories','content', 'visit'));
+            $var_max = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.is_deleted', 0)
+            ->orderBy('vrnt.cost_amt','desc')
+            ->get();
+
+            $var_min = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.is_deleted', 0)
+            ->orderBy('vrnt.cost_amt','asc')
+            ->get();
+        return view ('welcome',compact('categories','content', 'visit', 'var_max' , 'var_min'));
     }
 
     public function sortbyprice(Request $request)
@@ -378,12 +413,25 @@ class PagesController extends Controller
         $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
 
          if ($sortbyprice == 'asc'){
-            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','asc')->paginate(12);
+            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')->where('inmr.is_deleted', 0)->where('inmr.is_verified', 1)->orderBy('vrnt.cost_amt','asc')->groupBy('vrnt.inmr_hash')->paginate(12);
             } else {
-            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','desc')->paginate(12);
+            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')->where('inmr.is_deleted', 0)->where('inmr.is_verified', 1)->orderBy('vrnt.cost_amt','desc')->groupBy('vrnt.inmr_hash')->paginate(12);
             }
 
-        return view ('welcome',compact('categories','content', 'visit' ));
+            $var_max = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.is_deleted', 0)
+            ->orderBy('vrnt.cost_amt','desc')
+            ->get();
+
+            $var_min = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.is_deleted', 0)
+            ->orderBy('vrnt.cost_amt','asc')
+            ->get();
+        return view ('welcome',compact('categories','content', 'visit', 'var_max', 'var_min' ));
     }
 
     public function sortbypricebycat(Request $request)
@@ -408,12 +456,25 @@ class PagesController extends Controller
         $category =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
 
         if ($sortbypricebycat == 'asc'){
-            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->where('inmr.inct_hash', $id)->orderBy('cost_amt','asc')->paginate(24);
+            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')->where('inmr.is_deleted', 0)->where('inmr.is_verified', 1)->orderBy('vrnt.cost_amt','asc')->groupBy('vrnt.inmr_hash')->paginate(12);
             } else {
-            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->where('inmr.inct_hash', $id)->orderBy('cost_amt','desc')->paginate(24);
+            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')->where('inmr.is_deleted', 0)->where('inmr.is_verified', 1)->orderBy('vrnt.cost_amt','desc')->groupBy('vrnt.inmr_hash')->paginate(12);
             }
 
-        return view ('pages.categories',compact('category','content','cat', 'cathash', 'visit'));
+            $var_max = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.is_deleted', 0)
+            ->orderBy('vrnt.cost_amt','desc')
+            ->get();
+
+            $var_min = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.is_deleted', 0)
+            ->orderBy('vrnt.cost_amt','asc')
+            ->get();
+        return view ('pages.categories',compact('category','content','cat', 'cathash', 'visit', 'var_max', 'var_min'));
     }
     public function show($id)
     {
@@ -424,6 +485,20 @@ class PagesController extends Controller
         ->where('inmr.inct_hash', $id)
         ->orderBy('inmr_hash','desc')
         ->paginate(24);
+
+        $var_max = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+        ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+        ->where('inmr.is_verified', 1)
+        ->where('inmr.is_deleted', 0)
+        ->orderBy('vrnt.cost_amt','desc')
+        ->get();
+
+        $var_min = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+        ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+        ->where('inmr.is_verified', 1)
+        ->where('inmr.is_deleted', 0)
+        ->orderBy('vrnt.cost_amt','asc')
+        ->get();
 
         $cat =  DB::table('inct')
         ->where('is_deleted', 0)
@@ -440,7 +515,7 @@ class PagesController extends Controller
         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
         $category =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
 
-        return view ('pages.categories',compact('category','content','cat', 'cathash', 'visit'));
+        return view ('pages.categories',compact('category','content','cat', 'cathash', 'visit', 'var_max', 'var_min'));
     }
 
     public function searchcat(Request $request)
@@ -454,6 +529,7 @@ class PagesController extends Controller
             $content=  DB::table('inmr')->select('*')
             ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
             ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
+            ->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
             ->where('inmr.is_deleted', 0)
             ->where('inmr.is_verified', 1)
@@ -482,10 +558,24 @@ class PagesController extends Controller
         ->groupBy('cat_name')
         ->get();
     
+        $var_max = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+        ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+        ->where('inmr.is_verified', 1)
+        ->where('inmr.is_deleted', 0)
+        ->orderBy('vrnt.cost_amt','desc')
+        ->get();
+
+        $var_min = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+        ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
+        ->where('inmr.is_verified', 1)
+        ->where('inmr.is_deleted', 0)
+        ->orderBy('vrnt.cost_amt','asc')
+        ->get();
+
         $category =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
 
-        return view ('pages.categories',compact('category','content','cat', 'cathash', 'visit'));
+        return view ('pages.categories',compact('category','content','cat', 'cathash', 'visit', 'var_max', 'var_min'));
     }
   
 

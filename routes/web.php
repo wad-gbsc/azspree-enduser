@@ -33,9 +33,10 @@ Route::get('/login', 'PagesController@login');
 Route::post('/validatelogin', 'LoginController@login');
 Route::get('/logout', 'LoginController@logout');
 
-Route::get('/get-province-list/{regn_hash}','CartController@getProvinceList');
+Route::get('/variant/{vrnt_hash}','CartController@getVariant');
 Route::get('/get-city-list/{prov_hash}','CartController@getCityList');
 Route::get('/get-barangay-list/{city_hash}','CartController@getBarangayList');
+
 
 // Route::get('/try', 'PagesController@try');
 // Route::get('/checkout', 'PagesController@checkout');

@@ -17,7 +17,7 @@
 
                         <div class="post-prev-img popup-gallery">
                             <a href="/images/products/{{$data['products']->image_path}}">
-                                <img src="/images/products/{{$data['products']->image_path}}"
+                                <img id="ProdImg" style="height: 430px; width: 472px;" src="/images/products/{{$data['products']->image_path}}"
                                     alt="img"></a>
                         </div>
 
@@ -30,7 +30,7 @@
                                 @foreach(File::glob(public_path('images/products/'.$data['products']->sumr_hash).'/'.$data['products']->inmr_hash.'/*') as $path)
                                 <div class="col-xs-4 post-prev-img">
                                     <a href="{{ str_replace(public_path(''), '', $path) }}">
-                                        <img src="{{ str_replace(public_path(''), '', $path ) }}" alt="img">
+                                        <img style="height: 150px; width: 100px;" src="{{ str_replace(public_path(''), '', $path ) }}" alt="img">
                                     </a>
                                 </div>
                                 @endforeach
@@ -51,16 +51,28 @@
                             <hr class="mt-0 mb-30">
                             <div class="row">
 
-                                <div class="col-xs-4  mt-0 mb-30">
+                                <div class="col-xs-5  mt-0 mb-30">
                                     {{-- <del>$130.00</del>
                                     --}}
-                                    <strong><label class="item-price">&#8369; {{ number_format($data['products']->cost_amt, 2) }}</label></strong>
-                                    <input type="hidden" name="cost_amt" value="{{ $data['products']->cost_amt }}" />
+                                    <?php if ($data['var_min']->cost_amt == $data['var_max']->cost_amt){ ?> 
+                                        <strong><span name="cost_amt" class="item-price">&#8369; {{ number_format($data['var_max']->cost_amt, 2) }}</span></strong>
+                                        <input type="hidden" name="cost_amt" value="{{ $data['products']->cost_amt }}" />
+                                    <?php }else{ ?> 
+                                        <strong><span name="cost_amt" class="item-price">&#8369; {{ number_format($data['var_min']->cost_amt, 2) }} - {{ number_format($data['var_max']->cost_amt, 2) }}</span></strong>
+                                        <input type="hidden" name="cost_amt" value="{{ $data['products']->cost_amt }}" />
+                                    <?php }?>
+                                    
                                 </div>
 
-                                <div class="col-xs-8 text-right">
+                                <div class="col-xs-7 text-right">
+                                    <?php 
+                                    $sales = 0;
+                                    foreach ($variant as $var): 
+                                    $sales += $var->sales;
+                                    ?> 
+                                    <?php endforeach; ?>
                                     <label style="color:rgb(72, 99, 160); font-size: 18px" >
-                                        {{$data['products']->sales}} <span
+                                        {{$sales}} <span
                                         class="display-none-767">Sold</span>
                                         <span class="slash-divider">/</span> 
                                     </label>
@@ -113,16 +125,42 @@
                                 <div><b style="color: black">Category:</b> <label><a style="color:rgb(72, 99, 160); font-size: 18px" href="/categories/{{$data['products']->inct_hash}}"> {{ $data['products']->cat_name }}</a></label>
                                      {{-- <label style="color:black">{{ $data['products']->subcat_name }}</label> --}}
                                 </div>
-                                <?php if ($data['products']->available_qty <= '0'){ ?> 
+                                <?php 
+                                $available = 0;
+                                foreach ($variant as $var): 
+                                $available += $var->available_qty;
+                                ?> 
+                               
+                                <?php endforeach; ?>
+                                <?php if ($available <= '0'){ ?> 
                                     <div style="font-size:14px" class="label label-danger">Out of Stocks.</div> 
                                 <?php }else{ ?> 
-                                    <div><b style="color: black">Available:</b> <label style="color:rgb(72, 99, 160); font-size: 18px">{{$data['products']->available_qty}}</label></div>
+                                    <div><b style="color: black">Available:</b> <label name="qty" style="color:rgb(72, 99, 160); font-size: 18px">{{$available}}</label></div>
                                 <?php }?>
                                 
                                 {{-- <div>Tags: <a class="a-dark" href="#">WOMEN'S
                                         SHOES</a>, <a class="a-dark" href="#">blue shirt</a>,
                                     <a class="a-dark" href="#">men</a></div>
                                 <div>SKU: 8084</div> --}}
+                            </div>
+
+                            <hr class="mt-0 mb-30">
+
+                            <div class="row">
+                                <div class="col-sm-3 mb-30" ><b style="color: black">Variant:</b></div>
+                            </div>
+                            <div class="row">
+                                <?php foreach ($variant as $var): ?> 
+                                <div class="col-sm-4 mb-30" >
+                                    <button type="button" style="width: 190px;" 
+                                    class="btn btn-lg btn-info btn_variant" 
+                                    value="{{$var->vrnt_hash}}"
+                                    >{{$var->var_name}}</button>
+                                </div>
+                                <?php endforeach; ?>
+                                <input type="hidden" name="variant" data-msg-required="PLEASE SELECT VARIANT" required>
+                                <div id="div_var" style="display:none;">
+                                  </div>
                             </div>
 
                             <hr class="mt-0 mb-30">
@@ -135,30 +173,6 @@
                                 <span>Weight: {{ $data['products']->weight }}</span><br>
                                 {{-- Product Description --}}
                             </div>
-
-                            <hr class="mt-0 mb-30">
-
-                            {{-- <div class="row">
-                                <div class="col-sm-6 mb-30">
-                                        <select class="select-md input-border w-100" name="variant_1" data-msg-required="Please enter Size" required>
-                                            <option>Select size</option>
-                                            <option>XXL</option>
-                                            <option>XL</option>
-                                            <option>L</option>
-                                            <option>M</option>
-                                            <option>S</option>
-                                        </select>
-                                </div>
-
-                                <div class="col-sm-6 mb-30">
-                                        <select class="select-md input-border w-100" name="variant_2" data-msg-required="Please enter Color" required>
-                                            <option>Select color</option>
-                                            <option>Black</option>
-                                            <option>Blue</option>
-                                            <option>White</option>
-                                        </select>
-                                </div>
-                            </div> --}}
 
                             <hr class="mt-0 mb-30">
 
@@ -189,8 +203,8 @@
                             
                                         <div class="col-xs-4 col-sm-2 col-md-2 ">
                                              <input type="number" pattern=" 0+\.[0-9]*[1-9][0-9]*$" 
-                                             style="<?php if ($data['products']->available_qty == '0'){ ?> cursor: no-drop; <?php } ?>"
-                                             <?php if ($data['products']->available_qty == '0'){ ?> disabled <?php   } ?>
+                                             style="<?php if ($available == '0'){ ?> cursor: no-drop; <?php } ?>"
+                                             <?php if ($available == '0'){ ?> disabled <?php   } ?>
                                              onkeypress="return event.charCode >= 48 && event.charCode <= 57" data-msg-required="Please enter Quantity"
                                              min="1" max="100" class="input-border" name="qty" id="qty" value="1" required>
                                         </div>
@@ -198,7 +212,7 @@
                                             <div class="post-prev-more-cont clearfix">
                                                 <div class="shop-add-btn-cont">
                                                     <button type="button" id="btnadd" data-user-id="<?php echo session('user_hash'); ?>" 
-                                                        <?php if ($data['products']->available_qty == '0'){ ?> disabled <?php   } ?> 
+                                                        <?php if ($available == '0'){ ?> disabled <?php   } ?> 
                                                         class="btn btn-lg btn-primary">
                                                         <span class=""></span> <label class="btnadd_label">ADD TO CART</label>
                                                     </button>
@@ -382,7 +396,7 @@
                                                 <?php }else{?>
                                                     <div class="row-md-12">
                                                         <div class="col-md-12">
-                                                            &nbsp;<a style="color:rgb(57, 57, 199)" href="/login">Login</a> or <a style="color:rgb(57, 57, 199)" href="/signup">Register</a> to ask questions
+                                                            &nbsp;<a style="color:rgb(57, 57, 199)" href="/login">Login/Register</a> to ask questions
                                                         </div>
                                                     </div>
                                                 <?php }?>
@@ -443,7 +457,7 @@
                       </div>
                 </div>
                 <!-- END tabs  -->
-  
+
                 <!-- SAME SHOP -->
           <div class="container">
             <div class="row">
@@ -465,9 +479,32 @@
                             white-space: nowrap;
                             overflow: hidden;" ><a class="font-norm a-inv" href="/productdetails/{{$products->inmr_hash}}">{{$products->product_name}}</a></h3>
                           </div>
+                          <?php 
+                            $minimum = 0;
+                            foreach ($var_min as $min):
+                            if($products->inmr_hash == $min->inmr_hash)
+                            {
+                            $minimum = $min->cost_amt; 
+                            ?>
+                            <?php } ?>
+                            <?php endforeach; ?>
+                    
+                            <?php 
+                            $maximum = 0;
+                            foreach ($var_max as $max):
+                            if($products->inmr_hash == $max->inmr_hash)
+                            {
+                                $maximum = $max->cost_amt; 
+                            ?>
+                            <?php } ?>
+                            <?php endforeach; ?>
                             
                         <div class="shop-price-cont">
-                            <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
+                            <?php if ($minimum === $maximum){ ?> 
+                                <strong>&#8369; {{ number_format($minimum, 2) }}</strong>
+                            <?php }else{ ?> 
+                                <strong>&#8369; {{ number_format($maximum, 2) }} - {{ number_format($minimum, 2) }}</strong>
+                            <?php }?>
                         </div>
                         </div>
                     </div>
@@ -476,6 +513,7 @@
             </div>
           </div>
           <br>
+
 
                 <!-- RELATED PRODUCTS -->
           <div class="container">
@@ -498,9 +536,29 @@
                             white-space: nowrap;
                             overflow: hidden;" ><a class="font-norm a-inv" href="/productdetails/{{$products->inmr_hash}}">{{$products->product_name}}</a></h3>
                           </div>
-                            
+                          <?php 
+                          foreach ($var_min as $min):
+                          if($products->inmr_hash == $min->inmr_hash)
+                          {
+                          $minimum = $min->cost_amt; 
+                          ?>
+                          <?php } ?>
+                          <?php endforeach; ?>
+                  
+                          <?php 
+                          foreach ($var_max as $max):
+                          if($products->inmr_hash == $max->inmr_hash)
+                          {
+                              $maximum = $max->cost_amt; 
+                          ?>
+                          <?php } ?>
+                          <?php endforeach; ?>
                         <div class="shop-price-cont">
-                            <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
+                            <?php if ($minimum === $maximum){ ?> 
+                                <strong>&#8369; {{ number_format($minimum, 2) }}</strong>
+                            <?php }else{ ?> 
+                                <strong>&#8369; {{ number_format($maximum, 2) }} - {{ number_format($minimum, 2) }}</strong>
+                            <?php }?>
                         </div>
                         </div>
                     </div>
@@ -518,6 +576,7 @@
 
 
 @section('embeddedjs')
+<script src="/formatter/accounting.js"></script>
 <script type="text/javascript">
     var initializeControls = function() {
         $('.row-error').hide();
@@ -586,6 +645,35 @@
         return stat;
     };
 
+    $('.btn_variant').click(function() {
+    var clicked_button = $(this).val();
+    // alert(clicked_button);
+
+    $('input[name="variant"]').val(clicked_button);
+
+    if(clicked_button) {
+    $.ajax({
+    url: '/variant/'+encodeURI(clicked_button),
+    type: "GET",
+    dataType: "json",
+    success:function(data) {
+    // console.log(data);
+        $.each(data, function(key, value) {
+        // $('span[name="shipping"]').trigger("change");
+        var cost_amt = parseFloat(value.cost_amt);
+        
+        $('span[name="cost_amt"]').html('&#8369; '+ accounting.formatNumber(cost_amt,2));
+
+        var available_qty = parseFloat(value.available_qty);
+        
+        $('label[name="qty"]').html(available_qty);
+        });
+    }
+    });
+    }
+
+    });
+
     var AddCart = (function() {
         var _data = $('#add-form').serializeArray();
         $.ajaxSetup({
@@ -613,6 +701,13 @@
             $(this).find('span').toggleClass('fa fa-spinner fa-spin');
             $('.btnadd_label').html('ADDING TO CART');  
 
+            var variant = $('input[name="variant"]').val();
+            
+            if(variant == ""){
+                $('.error_msg').html($(this).data('msg-required'));
+                $('.row-error').fadeIn(400);
+
+            }else{
 
             AddCart().done(function(response) {
 
@@ -634,6 +729,8 @@
                 $('#btnadd').find('span').toggleClass('fa fa-spinner fa-spin');
                 $('.btnadd_label').html('ADD TO CART');  
             });
+            }
+
             }
         }
 

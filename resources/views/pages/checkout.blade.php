@@ -26,7 +26,7 @@
                       <input type="text" name="fullname"
                         placeholder="FULL NAME"
                         data-msg-required="Please enter your Full Name" maxlength="30"
-                        style="text-transform:uppercase"
+                        style="text-transform:capitalize"
                         class="controled" id="fullname" required>
                     </div>
 
@@ -222,6 +222,7 @@
                                       </div>
                                       <div class="col-md-8">  
                                       {{ $addcart->product_name }}<br>
+                                      <small>{{ $addcart->var_name }}</small><br>
                                       {{ $addcart->qty }} x {{ number_format($addcart->cost_amt, 2) }}
                                       <input type="hidden" value="{{ $addcart->dimension }}" name="dimension[]" id="items" />
                                       <input type="hidden" value="{{ $addcart->weight }}" name="weight[]" id="items" />

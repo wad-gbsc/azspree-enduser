@@ -96,11 +96,11 @@
                                 <img style="height: 60px; width: 45px;" src="/images/products/{{$addcart->image_path}}" alt="img">
                                 </a>
                             </td>
-                            <td><a href="/productdetails/{{$addcart->inmr_hash}}" >{{ $addcart->product_name }}</a></td>
+                            <td><a href="/productdetails/{{$addcart->inmr_hash}}" >{{ $addcart->product_name }} <br><small>{{ $addcart->var_name }}</small></a></td>
                             <td>{{ number_format($addcart->cost_amt, 2) }}</td>
                             <td>
                               <input type="number" id="line_qty_{{ $addcart->srln_hash }}" data-orig-price="{{ $addcart->cost_amt }}" 
-                              data-srln-hash="{{ $addcart->srln_hash }}" data-inmr-hash="{{ $addcart->inmr_hash }}"
+                              data-srln-hash="{{ $addcart->srln_hash }}" data-inmr-hash="{{ $addcart->inmr_hash }}"  data-vrnt-hash="{{ $addcart->vrnt_hash }}"
                               class="input-border white-bg qty" style="width: 80px;" min="1" name="qty" value={{ $addcart->qty }}>
                             </td>
                             <td><div class="font-black" id="line_total_price_{{ $addcart->srln_hash }}"> {{ number_format($unit_total, 2) }} </div></td>
@@ -246,12 +246,13 @@ $(document).ready(function () {
         computeItems();
     });
 
-    var UpdateQty = (function(srln_hash,qty,inmr_hash){
+    var UpdateQty = (function(srln_hash,qty,inmr_hash, vrnt_hash){
             var _data=$('#').serializeArray();
 
             _data.push({name : "srln_hash" ,value : srln_hash});
             _data.push({name : "qty" ,value : qty});
             _data.push({name : "inmr_hash" ,value : inmr_hash});
+            _data.push({name : "vrnt_hash" ,value : vrnt_hash});
 
             $.ajaxSetup({
                 headers: {
@@ -281,6 +282,7 @@ $(document).ready(function () {
         var srln_hash = $(this).data("srln-hash");
         var orig_price = $(this).data("orig-price");
         var inmr_hash = $(this).data("inmr-hash");
+        var vrnt_hash = $(this).data("vrnt-hash");
         var qty = $(this).val();
 
         if (qty >= 1){
@@ -298,7 +300,7 @@ $(document).ready(function () {
         $('.err-panel-'+srln_hash ).addClass('hidden');
         $('.sold_out_'+srln_hash).addClass('hidden');
 
-        UpdateQty(srln_hash,qty,inmr_hash).done(function(response){
+        UpdateQty(srln_hash,qty,inmr_hash,vrnt_hash).done(function(response){
 
           if (response.stat == "error") {
             
@@ -321,8 +323,8 @@ $(document).ready(function () {
               // setTimeout(function() {
               //     window.location.href = "/login";
               // },1000);
-          }else{
-            window.location.href = "/checkout";
+          // }else{
+          //   // window.location.href = "/checkout";
           }
 
 
@@ -340,6 +342,7 @@ $(document).ready(function () {
         var srln_hash = $(this).data("srln-hash");
         var orig_price = $(this).data("orig-price");
         var inmr_hash = $(this).data("inmr-hash");
+        var vrnt_hash = $(this).data("vrnt-hash");
         var qty = $(this).val();
 
         if (qty >= 1){
@@ -359,7 +362,7 @@ $(document).ready(function () {
 
         if($('.chckbx_'+srln_hash).prop("checked") == true){
 
-        UpdateQty(srln_hash,qty,inmr_hash).done(function(response){
+        UpdateQty(srln_hash,qty,inmr_hash,vrnt_hash).done(function(response){
 
           if (response.stat == "error") {
             
