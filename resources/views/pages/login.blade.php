@@ -1,9 +1,9 @@
 @extends('pages.index')
 
 @section('content')
-<div class="white-bg clearfix">    
+<div class="white-bg clearfix" >    
     <!-- COTENT CONTAINER -->
-    <div class="container white-bg mt-80 mb-10 " >
+    <div class="container mt-80 mb-10 " >
       <div class="row">
         <div class="col-md-12">
           <br>
@@ -12,123 +12,50 @@
         </div>
       </div>
 
-          <div class="col-md-6">
+      <div class="col-md-3" style="float: center">
+      </div>
+          <div class="col-md-6" style="float: center">
             <div class="relative">
-              <div class="col-md-12" style="align-content: center;">
-                  <div class="mt-80 mb-10">
-                  <!-- TITLE -->
-                  <div class="mb-40" style="text-align: center">
-                    <img src="/brands_try/azspreelogo.png" class="" alt="Azspree">
-                    <br><br><br><br>  
-                    <a href="{{ url('auth/facebook') }}" class="btn btn-primary" style="width: 80%" ><i class="fa fa-facebook" aria-hidden="true"></i> Facebook</a>
-                    <br>&nbsp;
-                      <!-- DIVIDER -->
-                      <hr class="mt-0 mb-10">
-                      <br>&nbsp;
-                      <a href="{{ url('auth/google') }}" class="btn btn-danger" style="width: 80%" ><i class="fa fa-google" aria-hidden="true"></i> Gmail
-                      {{-- <img src="/brands_try/azspree_logo.png" class="" alt="Azspree"> --}}
-                    </a>
-                  </div>
-                  </div>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="col-md-6">
-            <div class="relative">
-              <div class="col-md-12" style="align-content: center;">
-                  <div class="mt-80 mb-10">
+              <div class="col-md-12  white-bg" style="align-content: center;">
+                  <div class="mt-20 mb-10">
                     <!-- TITLE -->
-                    <div class="mb-40">
-                      <h2 class="bold" style="color:rgb(57, 57, 199)">LOG <span style="color:black">IN</span> </h2>
-                      <label>Hello, Welcome to your account.</label>
+                    <br><br>
+                    <div style="text-align: center">
+                      <img src="/brands_try/azspreelogo.png" class="" alt="Azspree">
+                    </div>
+                    <div class="mb-10">
+                      <h2 class="bold" style="color:rgb(57, 57, 199); padding-left: 50px">LOG <span style="color:black">IN</span> </h2>
+                      <span style="padding-left: 50px">Hello, Welcome to your account.</span>
                     </div>      
                     <!-- LOGIN FORM -->
                     <div>
-                      <form id="login_form" autocomplete="off">
-                        <div class="row">
-                          <div class="col-md-12 mb-30">
-                            <!-- <label>Your name *</label> -->
-                            <input type="text"  name="email" value="" data-msg-required="Please enter your email" maxlength="100" class="controled" name="email" id="email" placeholder="EMAIL" required>
-                          </div>
-                        </div>
-                        
-                        <div class="row">    
-                          <div class="col-md-12 mb-30">
-                            <input type="password"  name="password" value="" data-msg-required="Please enter your password" data-msg-password="Please enter a password" maxlength="100" class="controled" name="password" id="password" placeholder="PASSWORD" required>
-                            <br>
-                            <input type="checkbox" onclick="myFunction()"><span style="color:rgb(57, 57, 199)"> Show Password </span>
-                            </div>
-                        </div>
-                        
-
-                        <div class="row row-error">
-                          <div class="col-md-12">
-                            <div class="alert alert-danger animated shake">
-                              <span aria-hidden="true" class="alert-icon icon_blocked"></span><span class="msg">Invalid email or password.</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row row-success">
-                          <div class="col-md-12">
-                            <div class="alert alert-success animated fadeIn">
-                              <span aria-hidden="true" class="alert-icon icon_like"></span>Successfully Logged In.
-                            </div>
-                          </div>
-                        </div> 
-
-                        <div class="row">
-                          <div class="col-md-12 text-center-xxs">
-                              <button type="button" class="button medium blue" id="btnlogin" style="width: 100%">
-                                Log In
-                              </button>
-                          </div>
-                        </div>
-
-                        <div class="row">
-                          <div class="col-md-12">
-                            {{-- <h5>Don't have an account? <a href="/signup" style="color:rgb(57, 57, 199)" ><u>Create an Account</u></a></h5> --}}
-                          </div>
-                        </div>
-
-                        <div class="row">
-                          <div class="col-md-12">
-                            <br>
-                            &nbsp;
-                            <br>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-12">
-                            <br>
-                            &nbsp;
-                            <br>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-12">
-                            <br>
-                            &nbsp;
-                            <br>
-                          </div>
-                        </div>
-                      </form>	
-                    </div>
-
-                    {{-- <div id="otpdiv" >
-                      <div class="form-group">
-                        <label for="emotpail">OTP:</label>
-                        <input type="otp" class="form-control" id="otp" placeholder="Enter OTP" name="otp">
+                      <div class="mb-60" style="text-align: center">
+                        <br><br>
+                        <a href="{{ url('auth/facebook') }}" class="btn btn-primary" style="width: 80%" ><i class="fa fa-facebook" aria-hidden="true"></i> Facebook</a>
+                        <br>&nbsp;
+                          <!-- DIVIDER -->
+                          <hr class="mt-0 mb-10">
+                          <br>&nbsp;
+                          <a href="{{ url('auth/google') }}" class="btn btn-danger" style="width: 80%" ><i class="fa fa-google" aria-hidden="true"></i> Gmail
+                          {{-- <img src="/brands_try/azspree_logo.png" class="" alt="Azspree"> --}}
+                        </a>
+                        <br><br>
                       </div>
-                      <button id="otpSubmit" class="btn btn-primary">Submit</button>
-                  </div> --}}
-
+                    </div>
                   </div>
                 </div>
             </div>
           </div>
+          <div class="col-md-3" style="float: center">
+          </div>
 
+          <div class="row">
+            <div class="col-md-12">
+              <br>
+              &nbsp;
+              <br>
+            </div>
+          </div>
     </div>
 </div>
 @stop
