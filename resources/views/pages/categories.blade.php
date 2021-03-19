@@ -123,7 +123,7 @@
           <?php }else{ ?>
             <div>
               <h3>
-                <center>No Result for this Category</center>
+                <img src="/brands_try/sorry1.jpg" alt="img">
               </h3>
             </div>
             <?php }?>      

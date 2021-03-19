@@ -151,13 +151,13 @@
             </div>
             <?php }else{ ?>
               <div class="row">
-                  <div class="col-md-12 mb-110">
-                      <h4><strong><center>No Result for this Product</center></strong></h4>
+                  <div class="col-md-12 mb-50">
+                    <img src="/brands_try/sorry1.jpg" alt="img">
+                  </div>
+                  {{-- <div class="col-md-12 mb-110">
                   </div>
                   <div class="col-md-12 mb-110">
-                  </div>
-                  <div class="col-md-12 mb-110">
-                  </div>
+                  </div> --}}
               </div>
             <?php }?>   
             

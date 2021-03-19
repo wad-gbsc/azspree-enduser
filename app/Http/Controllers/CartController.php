@@ -379,6 +379,8 @@ class CartController extends Controller
                 $sub_2 = 0;
                 $sub_3 = 0;
                 $sub_4 = 0;
+                $total_dimension = 0;
+                $total_weight = 0;
                 $sub_5 = 0;
 
 
@@ -412,68 +414,56 @@ class CartController extends Controller
 
                         // $city_sumr_hash= $ursf[0]->sumr_hash;
                         $shipping_city= $ursf[0]->shipping_fee;
-                        $dimension = $mycart[$a]->dimension;
-                        $weight = $mycart[$a]->weight;
+
+                        $dimension = $mycart[$a]->dimension * $mycart[$a]->qty;
+                        $total_dimension += $dimension;
+
+                        $weight = $mycart[$a]->weight * $mycart[$a]->qty;
+                        $total_weight += $weight;
 
                         if ($dimension > $weight){
-                            if ($dimension > $max_kg){
-                                $sub_1= ($dimension - $max_kg);
-                                $xkf= (($sub_1 * $mycart[$a]->qty) * $excess_kg_fee);
-                                $xk= ($sub_1 * $mycart[$a]->qty);
-                                $sub_2 = ($sub_1 * $excess_kg_fee );
-                                $total_kg = ($sub_2 * $mycart[$a]->qty );
+                            if ($total_dimension > $max_kg){
+                                $sub_1 = ($total_dimension - $max_kg);
+                                $total_kg = ($sub_1 * $excess_kg_fee);
                             }else{
-                                if($mycart[$a]->qty > 1){
-                                    $sub_3 = ($dimension * $mycart[$a]->qty );
-                                    $sub_4 = (round($sub_3) - $max_kg);
-                                    $sub_5 = ($sub_4 * $excess_kg_fee );
-                                    $total_kg = $sub_5;
-                                  }else{
-                                    $total_kg = 0;
-                                  }
-                                }
-                        }else if($dimension = $weight){
-                            if ($weight > $max_kg){
-                                $sub_1= ($weight - $max_kg);
-                                $xkf= (($sub_1 * $mycart[$a]->qty) * $excess_kg_fee);
-                                $xk= ($sub_1 * $mycart[$a]->qty);
-                                $sub_2 = ($sub_1 * $excess_kg_fee );
-                                $total_kg = ($sub_2 * $mycart[$a]->qty );
+                              if($mycart[$a]->qty > 1){
+                                $sub_3 = ($total_dimension * $mycart[$a]->qty );
+                                $sub_4 = (round($sub_3) - $max_kg);
+                                $total_kg = ($sub_4 * $excess_kg_fee );
+                              }else{
+                                $total_kg = 0;
+                              }
+                            }
+                        }else if($dimension == $weight){
+                            if ($total_weight > $max_kg){
+                                $sub_1 = ($total_weight - $max_kg);
+                                $total_kg = ($sub_1 * $excess_kg_fee);
                             }else{
-                                if($mycart[$a]->qty > 1){
-                                    $sub_3 = ($weight * $mycart[$a]->qty );
-                                    $sub_4 = (round($sub_3) - $max_kg);
-                                    $sub_5 = ($sub_4 * $excess_kg_fee );
-                                    $total_kg = $sub_5;
-                                  }else{
-                                    $total_kg = 0;
-                                  }
+                              if($mycart[$a]->qty > 1){
+                                $sub_3 = ($total_weight * $mycart[$a]->qty );
+                                $sub_4 = (round($sub_3) - $max_kg);
+                                $total_kg = ($sub_4 * $excess_kg_fee );
+                              }else{
+                                $total_kg = 0;
+                              }
                             }
                         }else{
-                            if ($weight > $max_kg){
-                                $sub_1= ($weight - $max_kg);
-                                $xkf= (($sub_1 * $mycart[$a]->qty) * $excess_kg_fee);
-                                $xk= ($sub_1 * $mycart[$a]->qty);
-                                $sub_2 = ($sub_1 * $excess_kg_fee);
-                                $total_kg = ($sub_2 * $mycart[$a ]->qty );
+                            if ($total_weight > $max_kg){
+                                $sub_1 = ($total_weight - $max_kg);
+                                $total_kg = ($sub_1 * $excess_kg_fee);
                             }else{
-                                if($weight >= 1){
-                                    $total_kg = $weight;
-                                }else{
-                                    if($mycart[$a]->qty > 1){
-                                        $sub_3 = ($weight * $mycart[$a]->qty );
-                                        $sub_4 = (round($sub_3) - $max_kg);
-                                        $sub_5 = ($sub_4 * $excess_kg_fee );
-                                        $total_kg = $sub_5;
-                                      }else{
-                                        $total_kg = 0;
-                                      }
-                                }
+                              if($mycart[$a]->qty > 1){
+                                $sub_3 = ($total_weight * $mycart[$a]->qty );
+                                $sub_4 = (round($sub_3) - $max_kg);
+                                $total_kg = ($sub_4 * $excess_kg_fee );
+                              }else{
+                                $total_kg = 0;
+                              }
                             }
                         }
-                        $shipping_extra += $total_kg;
-                        $total_excess_kg += $xk;
-                        $total_excess_fee += $xkf;
+                        $shipping_extra = $total_kg;
+                        $total_excess_kg = $sub_1;
+                        $total_excess_fee = $total_kg;
                         $shipping = $shipping_extra + $shipping_city;
                         $order_total = $order_subtotal+$shipping; 
                         $azspree = $order_total * $azspree_percent;
@@ -489,8 +479,8 @@ class CartController extends Controller
                         $orderdetail->unit_price = $mycart[$a]->cost_amt;
                         $orderdetail->dimension = $mycart[$a]->dimension;
                         $orderdetail->weight = $mycart[$a]->weight;
-                        $orderdetail->excess_fee = $sub_2;
-                        $orderdetail->excess_kg = $sub_1;
+                        // $orderdetail->excess_fee = $sub_2;
+                        // $orderdetail->excess_kg = $sub_1;
                         $orderdetail->create_datetime = Carbon::now();
                         $orderdetail->save();
 

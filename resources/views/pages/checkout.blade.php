@@ -138,6 +138,8 @@
                         $dimension = 0;
                         $weight = 0;
                         $total_kg = 0;
+                        $total_dimension = 0;
+                        $total_weight = 0;
                         $sub_1 = 0;
                         $sub_2 = 0;
                         $sub_3 = 0;
@@ -159,56 +161,53 @@
                             $total_qty += $addcart->qty;
 
                             $shipping_city= $shipping_fee;
-                            $dimension = $addcart->dimension;
-                            $weight = $addcart->weight;
+                            $dimension = $addcart->dimension * $addcart->qty;
+                            $total_dimension += $dimension;
 
-                            if ($dimension > $weight){
-                                if ($dimension > $max_kg){
-                                    $sub_1 = ($dimension - $max_kg);
-                                    $sub_2 = ($sub_1 * $excess_kg_fee );
-                                    $total_kg = ($sub_2 * $addcart->qty );
+                            $weight = $addcart->weight * $addcart->qty;
+                            $total_weight += $weight;
+
+                            if ($total_dimension > $total_weight){
+                                if ($total_dimension > $max_kg){
+                                    $sub_1 = ($total_dimension - $max_kg);
+                                    $total_kg = ($sub_1 * $excess_kg_fee);
                                 }else{
                                   if($addcart->qty > 1){
-                                    $sub_3 = ($dimension * $addcart->qty );
+                                    $sub_3 = ($total_dimension * $addcart->qty );
                                     $sub_4 = (round($sub_3) - $max_kg);
-                                    $sub_5 = ($sub_4 * $excess_kg_fee );
-                                    $total_kg = $sub_5;
+                                    $total_kg = ($sub_4 * $excess_kg_fee );
                                   }else{
                                     $total_kg = 0;
                                   }
                                 }
-                            }else if($dimension = $weight){
-                                if ($weight > $max_kg){
-                                    $sub_1= ($weight - $max_kg);
-                                    $sub_2 = ($sub_1 * $excess_kg_fee );
-                                    $total_kg = ($sub_2 * $addcart->qty );
+                            }else if($total_weight == $total_dimension){
+                                if ($total_weight > $max_kg){
+                                    $sub_1 = ($total_weight - $max_kg);
+                                    $total_kg = ($sub_1 * $excess_kg_fee);
                                 }else{
                                   if($addcart->qty > 1){
-                                    $sub_3 = ($weight * $addcart->qty );
+                                    $sub_3 = ($total_weight * $addcart->qty );
                                     $sub_4 = (round($sub_3) - $max_kg);
-                                    $sub_5 = ($sub_4 * $excess_kg_fee );
-                                    $total_kg = $sub_5;
+                                    $total_kg = ($sub_4 * $excess_kg_fee );
                                   }else{
                                     $total_kg = 0;
                                   }
                                 }
                             }else{
-                                if ($weight > $max_kg){
-                                    $sub_1= ($weight - $max_kg);
-                                    $sub_2 = ($sub_1 * $excess_kg_fee);
-                                    $total_kg = ($sub_2 * $addcart->qty );
+                                if ($total_weight > $max_kg){
+                                    $sub_1 = ($total_weight - $max_kg);
+                                    $total_kg = ($sub_1 * $excess_kg_fee);
                                 }else{
                                   if($addcart->qty > 1){
-                                    $sub_3 = ($weight * $addcart->qty );
+                                    $sub_3 = ($total_weight * $addcart->qty );
                                     $sub_4 = (round($sub_3) - $max_kg);
-                                    $sub_5 = ($sub_4 * $excess_kg_fee );
-                                    $total_kg = $sub_5;
+                                    $total_kg = ($sub_4 * $excess_kg_fee );
                                   }else{
                                     $total_kg = 0;
                                   }
                                 }
                             }
-                            $shipping_extra += $total_kg;
+                            $shipping_extra = $total_kg;
                             $shipping = $shipping_extra + $shipping_city;
                             $order_total = $order_subtotal+$shipping; 
                           ?>

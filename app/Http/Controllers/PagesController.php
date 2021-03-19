@@ -371,13 +371,14 @@ class PagesController extends Controller
             // split on 1+ whitespace & ignore empty (eg. trailing space)
             $searchValues = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY); 
             
-            $content=  DB::table('inmr')->select('*')
+            $content=  DB::table('inmr')
             ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
             ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
             ->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
             ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
             ->where('inmr.is_deleted', 0)
             ->where('inmr.is_verified', 1)
+            ->where('vrnt.is_deleted', 0)
             ->where(function ($q) use ($searchValues) {
               foreach ($searchValues as $value) {
                 $q->orWhere('inmr.product_name', 'like', "%{$value}%");
@@ -387,6 +388,7 @@ class PagesController extends Controller
                 $q->orWhere('sumr.shop_name', 'like', "%{$value}%");
               }
             })
+            ->groupBy('vrnt.inmr_hash')
             ->paginate(24);
 
             $var_max = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
@@ -413,9 +415,9 @@ class PagesController extends Controller
         $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
 
          if ($sortbyprice == 'asc'){
-            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')->where('inmr.is_deleted', 0)->where('inmr.is_verified', 1)->orderBy('vrnt.cost_amt','asc')->groupBy('vrnt.inmr_hash')->paginate(12);
+            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')->where('inmr.is_deleted', 0)->where('vrnt.is_deleted', 0)->where('inmr.is_verified', 1)->orderBy('vrnt.cost_amt','asc')->groupBy('vrnt.inmr_hash')->paginate(24);
             } else {
-            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')->where('inmr.is_deleted', 0)->where('inmr.is_verified', 1)->orderBy('vrnt.cost_amt','desc')->groupBy('vrnt.inmr_hash')->paginate(12);
+            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')->where('inmr.is_deleted', 0)->where('vrnt.is_deleted', 0)->where('inmr.is_verified', 1)->orderBy('vrnt.cost_amt','desc')->groupBy('vrnt.inmr_hash')->paginate(24);
             }
 
             $var_max = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
@@ -456,9 +458,27 @@ class PagesController extends Controller
         $category =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
 
         if ($sortbypricebycat == 'asc'){
-            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')->where('inmr.is_deleted', 0)->where('inmr.is_verified', 1)->orderBy('vrnt.cost_amt','asc')->groupBy('vrnt.inmr_hash')->paginate(12);
+            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+            ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
+            ->where('inmr.is_deleted', 0)
+            ->where('vrnt.is_deleted', 0)
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.inct_hash', $id)
+            ->orderBy('vrnt.cost_amt','asc')
+            ->groupBy('vrnt.inmr_hash')
+            ->paginate(24);
             } else {
-            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')->where('inmr.is_deleted', 0)->where('inmr.is_verified', 1)->orderBy('vrnt.cost_amt','desc')->groupBy('vrnt.inmr_hash')->paginate(12);
+            $content = DB::table('inmr')->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
+            ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+            ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
+            ->where('inmr.is_deleted', 0)
+            ->where('vrnt.is_deleted', 0)
+            ->where('inmr.is_verified', 1)
+            ->where('inmr.inct_hash', $id)
+            ->orderBy('vrnt.cost_amt','desc')
+            ->groupBy('vrnt.inmr_hash')
+            ->paginate(24);
             }
 
             $var_max = Product::leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
@@ -526,7 +546,7 @@ class PagesController extends Controller
 
         $searchValues = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY); 
             
-            $content=  DB::table('inmr')->select('*')
+            $content=  DB::table('inmr')
             ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
             ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
             ->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
@@ -534,6 +554,7 @@ class PagesController extends Controller
             ->where('inmr.is_deleted', 0)
             ->where('inmr.is_verified', 1)
             ->where('inmr.inct_hash', $id)
+            ->where('vrnt.is_deleted', 0)
             ->where(function ($q) use ($searchValues) {
               foreach ($searchValues as $value) {
                 $q->orWhere('inmr.product_name', 'like', "%{$value}%");
@@ -543,6 +564,7 @@ class PagesController extends Controller
                 $q->orWhere('sumr.shop_name', 'like', "%{$value}%");
               }
             })
+            ->groupBy('vrnt.inmr_hash')
             ->paginate(24);
             
 

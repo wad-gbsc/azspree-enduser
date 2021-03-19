@@ -16,7 +16,7 @@
                     <div class="col-md-4 col-sm-12 mb-50">
 
                         <div class="post-prev-img popup-gallery">
-                            <a href="/images/products/{{$data['products']->image_path}}">
+                            <a style="height: 430px; width: 472px;" href="/images/products/{{$data['products']->image_path}}">
                                 <img id="ProdImg" style="height: 430px; width: 472px;" src="/images/products/{{$data['products']->image_path}}"
                                     alt="img"></a>
                         </div>
@@ -26,9 +26,9 @@
                         </div> --}}
 
                         <div class="row">
-                            <div class="popup-gallery">
+                            <div class="popup-gallery"  >
                                 @foreach(File::glob(public_path('images/products/'.$data['products']->sumr_hash).'/'.$data['products']->inmr_hash.'/*') as $path)
-                                <div class="col-xs-4 post-prev-img">
+                                <div class="col-xs-4 post-prev-img" >
                                     <a href="{{ str_replace(public_path(''), '', $path) }}">
                                         <img style="height: 150px; width: 100px;" src="{{ str_replace(public_path(''), '', $path ) }}" alt="img">
                                     </a>

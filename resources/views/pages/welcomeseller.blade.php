@@ -127,7 +127,7 @@
         <div class="col-sm-6 col-md-3 col-lg-3 wow fadeIn pb-70" >
             
           <div class="post-prev-img">
-            <img src="/brands_try/step1.png" alt="Step1">
+            <img src="/brands_try/Step1.png" alt="Step1">
           </div>
             
           <div class="post-prev-title">
@@ -140,7 +140,7 @@
         <div class="col-sm-6 col-md-3 col-lg-3 wow fadeIn pb-70" >
             
           <div class="post-prev-img">
-            <img src="/brands_try/step2.png" alt="Step2">
+            <img src="/brands_try/Step2.png" alt="Step2">
           </div>
             
           <div class="post-prev-title">
@@ -153,7 +153,7 @@
         <div class="col-sm-6 col-md-3 col-lg-3 wow fadeIn pb-70" >
             
           <div class="post-prev-img">
-            <img src="/brands_try/step3.png" alt="Step3">
+            <img src="/brands_try/Step3.png" alt="Step3">
           </div>
             
           <div class="post-prev-title">
@@ -166,7 +166,7 @@
         <div class="col-sm-6 col-md-3 col-lg-3 wow fadeIn pb-70" >
             
           <div class="post-prev-img">
-            <img src="/brands_try/step4.png" alt="Step4">
+            <img src="/brands_try/Step4.png" alt="Step4">
           </div>
             
           <div class="post-prev-title">
