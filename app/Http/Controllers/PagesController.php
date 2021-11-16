@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Category;
-use App\Models\SubCategory;
+use App\Models\Comment;
+use App\Models\OrderHeader;
 use App\Models\Product;
 use App\Models\VisitorCounter;
 use App\Models\OrderDetail;
+use App\Models\CartDetail;
+use Illuminate\Support\Facades\Response;
+use File;
+use Storage;
+use Mail;
 use Session;
 use DB;
 
@@ -18,7 +23,7 @@ class PagesController extends Controller
     {
         $title = 'Azspree';
         $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
-        $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->inRandomOrder()->paginate(24);
+        $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->orderBy('inmr_hash','desc')->paginate(24);
         
         $variant =  DB::table('vrnt')
         ->leftJoin('inmr', 'inmr.inmr_hash', '=', 'vrnt.inmr_hash')
@@ -46,6 +51,7 @@ class PagesController extends Controller
         // $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->inRandomOrder()->paginate(24);
         return view('welcome', compact('categories','content','visitcount', 'visit','var_min', 'var_max', 'variant'));
     }
+
     public function login(){
         if(Session::has('user_hash')){
             $user_hash = session('user_hash');
@@ -164,7 +170,23 @@ class PagesController extends Controller
             return view('pages.login', compact('visit'));
         }
     }
-    
+
+    static function getCartCount()
+    {
+        if(Session::has('user_hash')){
+            $user_hash = Session('user_hash');
+
+            $cartcount =  CartDetail::leftJoin('srhr', 'srhr.srhr_hash', '=', 'srln.srhr_hash')
+            ->where('srln.srhr_hash', $user_hash)
+            ->where('srln.status', 0)
+            ->where('srln.is_deleted', 0)
+            ->get();
+                   
+            return $cartcount->count();
+
+        }
+
+    }
 
     public function update(Request $request){
         // $ip = $this->server->get('REMOTE_ADDR');
@@ -318,7 +340,8 @@ class PagesController extends Controller
     public function try()
     {
         $data['addition'] =  DB::table('add')->where('is_deleted', 0)->inRandomOrder()->get();
-        return view ('pages.try')->with('data', $data);
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        return view ('pages.try', compact('visit'))->with('data', $data);
     }
 
     // public function checkout(){
@@ -623,6 +646,24 @@ class PagesController extends Controller
         // return view ('pages.welcomeseller');
         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
         return view ('pages.welcomeseller', compact('visit'));
+    }
+
+    public function mobile()
+    {
+        $file= public_path(). "/download/app-debug.apk";
+
+        $headers = array(
+                'Content-Type: application/apk',
+                );
+
+        return Response::download($file, 'AzspreeMobileApp.apk', $headers);
+    }
+
+    public function updateAzspree()
+    {
+        // return view ('pages.welcomeseller');
+        $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
+        return view ('pages.updateAzspree', compact('visit'));
     }
 
 }

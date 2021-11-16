@@ -17,7 +17,7 @@
 
 <div class="page-section blue-bg font-white pt-100-b-30-cont" >
   <div class="relative" >
-    <center><img src="/brands_try/new_gif.jpg" alt="img"></center>
+    <center><img style="object-fit: cover; " src="/brands_try/new_gif.jpg" alt="Cash on Delivery"></center>
   </div>
 </div>
 {{-- <div class="grey-dark-bg">

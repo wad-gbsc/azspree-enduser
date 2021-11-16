@@ -12,7 +12,7 @@ jQuery(document).ready(function($) {
             animation: 'fade',
             animationLoop: true, //Boolean: Should the animation loop? If false, directionNav will received "disable" classes at either end
             slideshow: true, //Boolean: Animate slider automatically
-            slideshowSpeed: 2500, //Integer: Set the speed of the slideshow cycling, in milliseconds
+            slideshowSpeed: 6000, //Integer: Set the speed of the slideshow cycling, in milliseconds
             animationSpeed: 800, //Boolean: Pause the slideshow when interacting with control elements, highly recommended.
             pauseOnHover: true,
             pauseOnAction: false,

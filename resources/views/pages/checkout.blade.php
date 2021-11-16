@@ -12,6 +12,7 @@
               <div >
                 <h3 class="mt-0 mb-50">SHIPPING INFORMATION</h3>
               </div>
+             
             <div class="row">
               <form id="add-form" autocomplete="off">
               <div class="col-sm-6">
@@ -22,12 +23,13 @@
                   </div> --}}
                   <h4 class="blog-page-title mt-5 mb-25">CONTACTS</h4>
 
+                  <?php foreach ($data['prof'] as $profile): ?>
                     <div class="mb-20">
                       <input type="text" name="fullname"
                         placeholder="FULL NAME"
                         data-msg-required="Please enter your Full Name" maxlength="30"
                         style="text-transform:capitalize"
-                        class="controled" id="fullname" required>
+                        class="controled" id="fullname"  value="{{$profile->fullname}}" required>
                     </div>
 
                     <div class="mb-20">
@@ -35,57 +37,125 @@
                           data-msg-required="Please enter your Contact Number"
                           placeholder="FORMAT MUST BE (09XXXXXXXXX)"
                           class="controled" name="contact_no"
-                          id="contact_no" required>
+                          id="contact_no" value="{{$profile->contact_no}}" required>
                     </div>
 
 
                   <h4 class="blog-page-title mt-5 mb-25">SHIPPING ADDRESS</h4>
 
                     <div class="mb-20">
-                      <select class="controled region" name="region" id="region" data-msg-required="PLEASE SELECT REGION" required>
+                      <?php if ($profile->regn_hash == null ) { ?>
+                        <select class="controled region" name="region" id="region" data-msg-required="PLEASE SELECT REGION" required>
+                          <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT REGION</option>
+                          <?php foreach ($data['tbl_region'] as $region): ?>
+                          <option value="{{$region->regn_hash}}">{{$region->region}}</option>
+                          <?php endforeach; ?> 
+                        </select>
+                        <?php }else{ ?>
+                          <select class="controled region" name="region" id="region" data-msg-required="PLEASE SELECT REGION" required>
+                            <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT REGION</option>
+                            <option selected="selected" value="{{$profile->regn_hash}}">{{$profile->region}} (Selected)</option>
+                            <?php foreach ($data['tbl_region'] as $region): ?>
+                            <option value="{{$region->regn_hash}}">{{$region->region}}</option>
+                            <?php endforeach; ?> 
+                          </select>
+                      <?php }?>
+
+                      {{-- <select class="controled region" name="region" id="region" data-msg-required="PLEASE SELECT REGION" required>
                         <option selected disabled="disabled" selected="selected" value="0" class="default">SELECT REGION</option>
-                        <?php foreach ($data['tbl_region'] as $region): ?>
+                        </?php foreach ($data['tbl_region'] as $region): ?>
                         <option value="{{$region->regn_hash}}">{{$region->region}}</option>
-                        <?php endforeach; ?> 
-                      </select>
+                        </?php endforeach; ?> 
+                      </select> --}}
                     </div>
 
                     <div class="mb-20">
+                      <?php if ($profile->prov_hash == null ) { ?>
+                        <select class="controled location" name="province" id="province"  data-msg-required="PLEASE SELECT PROVINCE" required>
+                          <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT PROVINCE</option>
+                          <?php foreach ($data['tbl_province'] as $province): ?>
+                          <option value="{{$province->prov_hash}}" data-region="{{$province->regn_hash}}">{{$province->province}}</option>
+                          <?php endforeach; ?> 
+                        </select>
+                        <?php }else{ ?>
+                          <select class="controled location" name="province" id="province"  data-msg-required="PLEASE SELECT PROVINCE" required>
+                            <option selected="selected" value="{{$profile->prov_hash}}" data-region="{{$profile->regn_hash}}">{{$profile->province}} (Selected)</option>
+                            <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT PROVINCE</option>
+                            <?php foreach ($data['tbl_province'] as $province): ?>
+                            <option value="{{$province->prov_hash}}" data-region="{{$province->regn_hash}}">{{$province->province}}</option>
+                            <?php endforeach; ?> 
+                          </select>
+                      <?php }?>
+                      {{-- 
                       <select class="controled location" name="province" id="province"  data-msg-required="PLEASE SELECT PROVINCE" required>
                         <option selected disabled="disabled" selected="selected" value="0" class="default">SELECT PROVINCE</option>
-                        <?php foreach ($data['tbl_province'] as $province): ?>
+                        </?php foreach ($data['tbl_province'] as $province): ?>
                         <option value="{{$province->prov_hash}}" data-region="{{$province->regn_hash}}">{{$province->province}}</option>
-                        <?php endforeach; ?> 
-                      </select>
+                        </?php endforeach; ?> 
+                      </select> --}}
                     </div>
 
                     <div class="row">
                       <div class="col-sm-6 mb-20">
-                        <select class="controled location" name="city" id="city" data-msg-required="PLEASE SELECT CITY" required>
-                          <option selected disabled="disabled" selected="selected" value="0" class="default">SELECT CITY</option>
-                          <?php foreach ($data['tbl_city'] as $city): ?>
-                          <option value="{{$city->city_hash}}" data-province="{{$city->prov_hash}}">{{$city->city}}</option>
-                          {{-- <input type="text" value="{{ $city->sumr_hash }}" name="sumr_hash" /> --}}
-                          <?php endforeach; ?> 
+                        <?php if ($profile->city_hash == null ) { ?>
+                          <select class="controled location" name="city" id="city" data-msg-required="PLEASE SELECT CITY" required>
+                            <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT CITY</option>
+                            <?php foreach ($data['tbl_city'] as $city): ?>
+                            <option value="{{$city->city_hash}}" data-province="{{$city->prov_hash}}">{{$city->city}}</option>
+                            <?php endforeach; ?> 
                           </select>
+                          <?php }else{ ?>
+                            <select class="controled location" name="city" id="city" data-msg-required="PLEASE SELECT CITY" required>
+                              <option selected="selected" value="{{$profile->city_hash}}" data-province="{{$profile->prov_hash}}">{{$profile->city}} (Selected)</option>
+                              <option selected disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT CITY</option>
+                              <?php foreach ($data['tbl_city'] as $city): ?>
+                              <option value="{{$city->city_hash}}" data-province="{{$city->prov_hash}}">{{$city->city}}</option>
+                              <?php endforeach; ?> 
+                            </select>
+                        <?php }?>
+                        {{-- <select class="controled location" name="city" id="city" data-msg-required="PLEASE SELECT CITY" required>
+                          <option selected disabled="disabled" selected="selected" value="0" class="default">SELECT CITY</option>
+                          </?php foreach ($data['tbl_city'] as $city): ?>
+                          <option value="{{$city->city_hash}}" data-province="{{$city->prov_hash}}">{{$city->city}}</option>
+                         //comment <input type="text" value="{{ $city->sumr_hash }}" name="sumr_hash" /> 
+                          </?php endforeach; ?> 
+                          </select> --}}
                       </div>
 
                       <div class="col-sm-6 mb-20">
-                        <select class="controled location" name="barangay" id="barangay" data-msg-required="PLEASE SELECT BARANGAY" required>
+                        <?php if ($profile->brgy_hash == null ) { ?>
+                          <select class="controled location" name="barangay" id="barangay" data-msg-required="PLEASE SELECT BARANGAY" required>
+                            <option selected  disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT BARANGAY</option>
+                            <?php foreach ($data['tbl_brgy'] as $brgy): ?>
+                            <option value="{{$brgy->brgy_hash}}" data-city="{{$brgy->city_hash}}">{{$brgy->barangay}}</option>
+                            <?php endforeach; ?> 
+                          </select>
+                          <?php }else{ ?>
+                            <select class="controled location" name="barangay" id="barangay" data-msg-required="PLEASE SELECT BARANGAY" required>
+                              <option selected="selected" value="{{$profile->brgy_hash}}" data-city="{{$profile->city_hash}}">{{$profile->barangay}} (Selected)</option>
+                              <option selected  disabled="disabled" selected="selected" value="0" class="default">PLEASE SELECT BARANGAY</option>
+                              <?php foreach ($data['tbl_brgy'] as $brgy): ?>
+                              <option value="{{$brgy->brgy_hash}}" data-city="{{$brgy->city_hash}}">{{$brgy->barangay}}</option>
+                              <?php endforeach; ?> 
+                            </select>
+                        <?php }?>
+                        {{-- <select class="controled location" name="barangay" id="barangay" data-msg-required="PLEASE SELECT BARANGAY" required>
                           <option selected  disabled="disabled" selected="selected" value="0" class="default">SELECT BARANGAY</option>
-                          <?php foreach ($data['tbl_brgy'] as $brgy): ?>
+                          </?php foreach ($data['tbl_brgy'] as $brgy): ?>
                           <option value="{{$brgy->brgy_hash}}" data-city="{{$brgy->city_hash}}">{{$brgy->barangay}}</option>
-                          <?php endforeach; ?> 
-                        </select>
+                          </?php endforeach; ?> 
+                        </select> --}}
                       </div>
                     </div>
 
                     <div class="mb-20">
                       <input type="text" data-msg-required="HOUSE NO, STREET, BLDG NO, ETC"
                         maxlength="100" class="controled" name="address" id="address" placeholder="HOUSE NO, STREET, BLDG NO, ETC"
-                        required>
+                        value="{{$profile->address}}" required>
                         {{-- <input placeholder="HOUSE NO, STREET, BLDG NO, ETC" class=" controled" type="text" pattern=".{3,100}"> --}}
                       </div>
+                      
+                    <?php endforeach; ?> 
 
                         <!-- DIVIDER -->
                       <hr class="mt-0 mb-10">
@@ -170,11 +240,10 @@
                             if ($total_dimension > $total_weight){
                                 if ($total_dimension > $max_kg){
                                     $sub_1 = ($total_dimension - $max_kg);
-                                    $total_kg = ($sub_1 * $excess_kg_fee);
+                                    $total_kg = (round($sub_1) * $excess_kg_fee);
                                 }else{
                                   if($addcart->qty > 1){
-                                    $sub_3 = ($total_dimension * $addcart->qty );
-                                    $sub_4 = (round($sub_3) - $max_kg);
+                                    $sub_4 = (round($total_dimension) - $max_kg);
                                     $total_kg = ($sub_4 * $excess_kg_fee );
                                   }else{
                                     $total_kg = 0;
@@ -183,11 +252,10 @@
                             }else if($total_weight == $total_dimension){
                                 if ($total_weight > $max_kg){
                                     $sub_1 = ($total_weight - $max_kg);
-                                    $total_kg = ($sub_1 * $excess_kg_fee);
+                                    $total_kg = (round($sub_1) * $excess_kg_fee);
                                 }else{
                                   if($addcart->qty > 1){
-                                    $sub_3 = ($total_weight * $addcart->qty );
-                                    $sub_4 = (round($sub_3) - $max_kg);
+                                    $sub_4 = (round($total_weight) - $max_kg);
                                     $total_kg = ($sub_4 * $excess_kg_fee );
                                   }else{
                                     $total_kg = 0;
@@ -196,11 +264,10 @@
                             }else{
                                 if ($total_weight > $max_kg){
                                     $sub_1 = ($total_weight - $max_kg);
-                                    $total_kg = ($sub_1 * $excess_kg_fee);
+                                    $total_kg = (round($sub_1) * $excess_kg_fee);
                                 }else{
                                   if($addcart->qty > 1){
-                                    $sub_3 = ($total_weight * $addcart->qty );
-                                    $sub_4 = (round($sub_3) - $max_kg);
+                                    $sub_4 = (round($total_weight) - $max_kg);
                                     $total_kg = ($sub_4 * $excess_kg_fee );
                                   }else{
                                     $total_kg = 0;
@@ -238,7 +305,9 @@
                                 <!-- DIVIDER -->
                                 <hr class="mt-0 mb-10">
           
-                          <?php }?> {{-- END OF SAME SELLER/SUPPLIER --}}
+                          <?php 
+                        }
+                        ?> {{-- END OF SAME SELLER/SUPPLIER --}}
                       <?php 
                     
                     endforeach; ?> {{-- END OF CART --}}
@@ -324,15 +393,16 @@
 
 @section('embeddedjs')
 <script src="/formatter/accounting.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
 
 $(document).ready(function() {
 
-  $('select[name="barangay"]').on('change', function() {
-      var brgy_hash = $('select[name="barangay"]').val();
+  var brgy_hash = $('select[name="barangay"]').val();
 
-      if(brgy_hash) {
-      $.ajax({
+  var UpdateBrgy = (function(brgy_hash){
+            
+    $.ajax({
       url: '/get-barangay-list/'+encodeURI(brgy_hash),
       type: "GET",
       dataType: "json",
@@ -377,6 +447,21 @@ $(document).ready(function() {
           });
         }
         });
+        });
+
+        if(brgy_hash) {
+     
+        UpdateBrgy(brgy_hash);
+          // }else{
+          // $('span[name="shipping"]').empty();
+          }
+
+  $('select[name="barangay"]').on('change', function() {
+      var brgy_hash = $('select[name="barangay"]').val();
+
+      if(brgy_hash) {
+     
+        UpdateBrgy(brgy_hash);
       // }else{
       // $('span[name="shipping"]').empty();
       }
@@ -413,6 +498,12 @@ $('#province option').each(function(){
 var prov_id = $('#province').find("option:not(.hidden):eq(0)").val();
 $('#province').val(prov_id).trigger("change");
 
+if(prov_id!=0){
+    $('#city').prop('disabled', false);
+}else{
+    $('#city').prop('disabled', true);
+}
+
 // City
 $('#city option').each(function(){
     $(this).removeClass('hidden');
@@ -428,6 +519,12 @@ $('#city option').each(function(){
 
 var cit_id = $('#city').find("option:not(.hidden):eq(0)").val();
 $('#city').val(cit_id).trigger("change");
+
+if(cit_id!=0){
+    $('#barangay').prop('disabled', false);
+}else{
+    $('#barangay').prop('disabled', true);
+}
 
 // Barangay
 $('#barangay option').each(function(){
@@ -458,7 +555,6 @@ changeLocation();
 $('#province').on("change", function(){
 
 var prov_id = $(this).val();
-
 if(prov_id!=0){
     $('#city').prop('disabled', false);
 }else{

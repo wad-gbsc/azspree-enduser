@@ -3,6 +3,7 @@
     <head>
         {{-- <script data-ad-client="ca-pub-9911749335545567" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> --}}
         <title>{{config('app.name', 'Azspree')}}</title>
+        <link rel="shortcut icon" type="image/x-icon" href="logo_icon.ico"/>
         <meta charset=utf-8 >
 		<meta name="robots" content="index, follow" > 
 		<meta name="keywords" content="Azspree" > 
@@ -10,6 +11,7 @@
         <meta name="author" content="Geko Business Solutions Corp.">
         <meta name="viewport" content="width=device-width, initial-scale=0.3, maximum-scale=1"> 
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        
         
         @include('include.favicon')
         

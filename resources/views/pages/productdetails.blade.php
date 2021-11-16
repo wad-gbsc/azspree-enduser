@@ -18,7 +18,7 @@
                         <div class="post-prev-img popup-gallery">
                             <a style="height: 430px; width: 472px;" href="/images/products/{{$data['products']->image_path}}">
                                 <img id="ProdImg" style="height: 430px; width: 472px;" src="/images/products/{{$data['products']->image_path}}"
-                                    alt="img"></a>
+                                    alt="{{$data['products']->product_name}}"></a>
                         </div>
 
                         {{-- <div class="sale-label-cont">
@@ -30,7 +30,7 @@
                                 @foreach(File::glob(public_path('images/products/'.$data['products']->sumr_hash).'/'.$data['products']->inmr_hash.'/*') as $path)
                                 <div class="col-xs-4 post-prev-img" >
                                     <a href="{{ str_replace(public_path(''), '', $path) }}">
-                                        <img style="height: 150px; width: 100px;" src="{{ str_replace(public_path(''), '', $path ) }}" alt="img">
+                                        <img style="height: 150px; width: 100px;" src="{{ str_replace(public_path(''), '', $path ) }}" alt="{{$data['products']->product_name}}">
                                     </a>
                                 </div>
                                 @endforeach
@@ -152,7 +152,9 @@
                             <div class="row">
                                 <?php foreach ($variant as $var): ?> 
                                 <div class="col-sm-4 mb-30" >
-                                    <button type="button" style="width: 190px;" 
+                                    <button type="button" style="width: 190px; text-overflow: ellipsis;
+                                    white-space: nowrap;
+                                    overflow: hidden;" 
                                     class="btn btn-lg btn-info btn_variant" 
                                     value="{{$var->vrnt_hash}}"
                                     >{{$var->var_name}}</button>
@@ -388,7 +390,7 @@
                                                         &emsp;
                                                         <button type="button" id="btnmsg" data-user-id="<?php echo session('user_hash'); ?>" 
                                                             class="button medium blue">
-                                                            <span class=""></span> <label class="btnadd_label">SEND QUESTION</label>
+                                                            <span class=""></span> <label class="btnmsg_label">SEND QUESTION</label>
                                                         </button>
                                                     {{-- &nbsp;&nbsp;<input type="button" id="btnmsg" value="SEND QUESTION"  class="button medium blue" > --}}
                                                     </div>
@@ -470,7 +472,7 @@
                     <div class="item mb-0 text-center">
                         <!-- SHOP Item 1 -->
                         <div>
-                        <div class="post-prev-img">
+                        <div class="shop-dep-item">
                             <a href="/productdetails/{{$products->inmr_hash}}" ><img style="height: 370px; width: 472px; " src="/images/products/{{$products->image_path}}" alt="img"></a>
                         </div>
         
@@ -527,7 +529,7 @@
                     <div class="item mb-0 text-center">
                         <!-- SHOP Item 1 -->
                         <div>
-                        <div class="post-prev-img">
+                        <div class="shop-dep-item">
                             <a href="/productdetails/{{$products->inmr_hash}}" ><img style="height: 370px; width: 472px; " src="/images/products/{{$products->image_path}}" alt="img"></a>
                         </div>
         
@@ -665,8 +667,13 @@
         $('span[name="cost_amt"]').html('&#8369; '+ accounting.formatNumber(cost_amt,2));
 
         var available_qty = parseFloat(value.available_qty);
-        
-        $('label[name="qty"]').html(available_qty);
+
+       // $('label[name="qty"]').html(available_qty);
+        if (available_qty <= 0){
+            $('label[name="qty"]').html("Out of Stocks.").addClass('label label-danger').css({"color": "white","font-size":"14px"});
+        }else{
+            $('label[name="qty"]').html(available_qty).removeClass('label label-danger').css({"color":"rgb(72, 99, 160)","font-size": "18px"});
+        }
         });
     }
     });
@@ -762,7 +769,7 @@
             if (validateRequiredFields2($('#msg-form'))) {
                 $(this).toggleClass('disabled');
                 $(this).find('span').toggleClass('fa fa-spinner fa-spin');
-                $('.btnadd_label').html('SENDING QUESTION');
+                $('.btnmsg_label').html('SENDING QUESTION');
 
             AddMsg().done(function(response) {
 

@@ -707,7 +707,7 @@ function initPageSliders() {
 
             //Set AutoPlay to 3 seconds
             autoPlay: 3000,
-            items: 5,
+            items: 6,
             itemsDesktop: [1000, 4],
             itemsDesktopSmall: [900, 3],
             itemsTablet: [470, 1],
@@ -764,7 +764,7 @@ function initPageSliders() {
 
             //Set AutoPlay to 3 seconds
             //autoPlay : 5000,
-            items: 5,
+            items: 6,
             itemsDesktop: [1000, 4],
             itemsDesktopSmall: [900, 3],
             itemsTablet: [470, 1],

@@ -92,10 +92,11 @@
       
       <!-- Copyright -->
       <div class="left" style="font-size: 14px">
-        <a class="footer-2-copy" href="https://www.facebook.com/AZSpree" target="_blank">&copy; AZSPREE. 2020</a>
+        <a class="footer-2-copy" href="https://www.facebook.com/AZSpree" target="_blank">&copy; AZSPREE. 2020</a><br>
+        <a class="footer-2-copy" href='https://www.freepik.com/photos/cards'>Cards photo created by jcomp - www.freepik.com</a>
       </div>
       
-
+     
     </div>
             
   </div>

@@ -35,10 +35,10 @@ Route::get('/logout', 'LoginController@logout');
 
 Route::get('/variant/{vrnt_hash}','CartController@getVariant');
 Route::get('/get-city-list/{prov_hash}','CartController@getCityList');
-Route::get('/get-barangay-list/{city_hash}','CartController@getBarangayList');
+Route::get('/get-barangay-list/{brgy_hash}','CartController@getBarangayList');
 
 
-// Route::get('/try', 'PagesController@try');
+Route::get('/try', 'PagesController@try');
 // Route::get('/checkout', 'PagesController@checkout');
 // Route::get('/payment', 'PagesController@payment');
 
@@ -78,5 +78,33 @@ Route::get('/waybill', 'ProfileController@waybill');
 Route::get('/delivery', 'ProfileController@delivery');
 Route::get('/logs', 'ProfileController@logs');
 
-Route::get('/welcomeseller', 'PagesController@welcomeseller');
+//Route::get('/welcomeseller', 'PagesController@welcomeseller');
+Route::get('download/azspreeMobileApp', 'PagesController@mobile');
+Route::get('/updateAzspreeMobileApp', 'PagesController@updateAzspree');
+
+//For Android Use
+Route::post('/loginAndroid', 'AndroidController@loginAndroid');
+Route::post('/editProfileInfo', 'AndroidController@editprofile');
+Route::post('/addToCartProducts', 'AndroidController@AddToCart');
+Route::post('/updateCartQty', 'AndroidController@updateCartQty');
+Route::post('/updateSelected', 'AndroidController@updateSelected');
+Route::post('/placeOrder', 'AndroidController@placeOrder');
+Route::get('/removeItem/{id}', 'AndroidController@removeItem');
+Route::get('/getComr', 'AndroidController@getComr');
+Route::get('/getCategories', 'AndroidController@getCategories');
+Route::get('/getCartList/{id}', 'AndroidController@getCartList');
+Route::get('/getProducts', 'AndroidController@getProducts');
+Route::get('/getVariant/{id}','AndroidController@getVariant');
+Route::get('/getReviews/{id}','AndroidController@getReviews');
+Route::get('/getProfile/{email}','AndroidController@getProfile');
+Route::get('/getOrders/{id}','AndroidController@getOrders');
+Route::get('/getQuestions/{id}','AndroidController@getQuestions');
+Route::get('/updateOrderReceive/{id}', 'AndroidController@updatestatusOR');
+Route::get('/updateReview/{id}', 'AndroidController@updateReview');
+Route::get('/getRegion', 'AndroidController@getRegion');
+Route::get('/getProvince', 'AndroidController@getProvince');
+Route::get('/getCity', 'AndroidController@getCity');
+Route::get('/getBrgy', 'AndroidController@getBrgy');
+
+
 

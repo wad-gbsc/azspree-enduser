@@ -18,7 +18,7 @@
           </div>
         </div>
       </div> --}}
-      
+
               <!-- CONTENT -->
               <div class="page-section p-140-cont">
         <div class="container">
@@ -44,7 +44,9 @@
                     </div>
                 </div>
                   <div class="col-md-12">
-                    
+                    <div class="card">
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
                     <div class="table-responsive">
                       <form id="checkout-form">
                       <table class="table table-striped shopping-cart-table">
@@ -70,13 +72,15 @@
                         <?php 
                         if(count($data['mycart']) > 0){
                           foreach ($data['supplier'] as $sumr): 
+                         
                          ?>
                          <tbody>
                       <tr>
                           <td colspan="8">&nbsp;<input type="checkbox" class="selectAll"> {{$sumr->shop_name}}</td>
                       </tr>
-                          <?php 
+                          <?php   
                             foreach ($data['mycart'] as $addcart):
+                            //if Same Supplier
                             if($addcart->sumr_hash == $sumr->sumr_hash)
                             {
                             $unit_total =$addcart->cost_amt * $addcart->qty; 
@@ -113,10 +117,16 @@
                             <span></span>
                           </td>
                         </tr>
-                      <?php }?> {{-- END OF SAME SELLER/SUPLIER --}}
+                      <?php
+                      }
+                      ?> {{-- END OF SAME SELLER/SUPLIER --}}
                       <?php endforeach; ?> {{-- END OF CART --}}
-                      <?php endforeach; ?> {{-- END OF SUPPLIER --}}
-                      <?php }else{ ?>
+                      <?php  
+                      // break; 
+                     endforeach; ?> {{-- END OF SUPPLIER --}}
+                      <?php 
+                    }else{ 
+                      ?>
                         <tr>
                           <td colspan="8">
                             <center>YOUR SHOPPING CART IS EMPTY</center><br>
@@ -128,8 +138,9 @@
                       </table>
                       </form>
                     </div>
+                        </li>
                   </div>
-                
+                  </div>
                 </div>
           
           <!-- DIVIDER -->

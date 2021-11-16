@@ -42,7 +42,7 @@ class CartController extends Controller
             ->where('srln.srhr_hash', $srhr_hash)
             ->where('srln.status', 0)
             ->where('srln.is_deleted', 0)
-            ->orderBy('srln.srhr_hash', 'desc')
+            ->orderBy('srln.srln_hash', 'desc')
             ->get();
 
             $data['comr'] = DB::table('comr')
@@ -55,9 +55,20 @@ class CartController extends Controller
             ->where('srln.srhr_hash', $srhr_hash)
             ->where('srln.status', 0)
             ->where('srln.is_deleted', 0)
-            ->groupBy('srln.sumr_hash')
-            ->orderBy('sumr.sumr_hash', 'desc')
+            //->groupBy('srln.sumr_hash')
+            ->orderBy('srln.srln_hash', 'desc')
             ->get();
+
+            //new
+            // $data['supplier'] =  CartDetail::leftJoin('sumr', 'sumr.sumr_hash', '=', 'srln.sumr_hash')
+            // ->leftJoin('srhr', 'srhr.srhr_hash', '=', 'srln.srhr_hash')
+            // ->leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
+            // ->where('srln.srhr_hash', $srhr_hash)
+            // ->where('srln.status', 0)
+            // ->where('sumr.shop_name', 'Aito by Kai')
+            // ->where('srln.is_deleted', 0)
+            // ->orderBy('srln.srln_hash', 'desc')
+            // ->get();
 
         return view('pages.mycart', compact('visit'))->with('data', $data);
         // return view('pages.mycart')->with('data', $data);
@@ -71,8 +82,18 @@ class CartController extends Controller
     public function indexcheckout()
     {
         if(Session::has('user_hash')){
+            
 
             $srhr_hash = session('user_hash');
+
+            $data['prof'] =  User::where('is_deleted', 0) 
+            ->leftJoin('regn', 'regn.regn_hash', '=', 'user.regn_hash')
+            ->leftJoin('prov', 'prov.prov_hash', '=', 'user.prov_hash')
+            ->leftJoin('city', 'city.city_hash', '=', 'user.city_hash')
+            ->leftJoin('brgy', 'brgy.brgy_hash', '=', 'user.brgy_hash')
+            ->where('user.user_hash', $srhr_hash)
+            ->get();
+
             $check = DB::table('srln')
                 ->select('*')
                 ->where('srhr_hash', $srhr_hash)
@@ -80,6 +101,7 @@ class CartController extends Controller
                 ->where('is_selected', 1)
                 ->where('is_deleted', 0)
                 ->get();
+                
 
             if($check[0]->is_selected == 1){
                 $srhr_hash = session('user_hash');
@@ -92,6 +114,7 @@ class CartController extends Controller
     
                 $data['mycart'] = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
                 ->leftJoin('vrnt', 'vrnt.vrnt_hash', '=', 'srln.vrnt_hash')
+                ->where('srln.srhr_hash', $srhr_hash)
                 ->where('srln.is_selected', 1)
                 ->where('srln.status', 0)
                 ->where('srln.is_deleted', 0)
@@ -240,9 +263,9 @@ class CartController extends Controller
             $response['stat']='success';
             $response['msg']='<b>Successfully Added To Cart.</b>';
             echo json_encode($response);
-        }        
+            }        
+        }
     }
-}
 
 
         public function createmsg(Request $request)
@@ -408,7 +431,7 @@ class CartController extends Controller
                 for ($a=0; $a < count($mycart); $a++) { 
                     if($supplier[$i]->sumr_hash == $mycart[$a]->sumr_hash){
 
-                        $unit_total =$mycart[$a]->cost_amt * $mycart[$a]->qty; 
+                        $unit_total = $mycart[$a]->cost_amt * $mycart[$a]->qty; 
                         $order_subtotal += $unit_total;
                         $total_qty += $mycart[$a]->qty;
 
@@ -421,27 +444,25 @@ class CartController extends Controller
                         $weight = $mycart[$a]->weight * $mycart[$a]->qty;
                         $total_weight += $weight;
 
-                        if ($dimension > $weight){
+                        if ($total_dimension > $total_weight){
                             if ($total_dimension > $max_kg){
                                 $sub_1 = ($total_dimension - $max_kg);
-                                $total_kg = ($sub_1 * $excess_kg_fee);
+                                $total_kg = (round($sub_1) * $excess_kg_fee);
                             }else{
                               if($mycart[$a]->qty > 1){
-                                $sub_3 = ($total_dimension * $mycart[$a]->qty );
-                                $sub_4 = (round($sub_3) - $max_kg);
+                                $sub_4 = (round($total_dimension) - $max_kg);
                                 $total_kg = ($sub_4 * $excess_kg_fee );
                               }else{
                                 $total_kg = 0;
                               }
                             }
-                        }else if($dimension == $weight){
+                        }else if($total_dimension == $total_weight){
                             if ($total_weight > $max_kg){
                                 $sub_1 = ($total_weight - $max_kg);
-                                $total_kg = ($sub_1 * $excess_kg_fee);
+                                $total_kg = (round($sub_1) * $excess_kg_fee);
                             }else{
                               if($mycart[$a]->qty > 1){
-                                $sub_3 = ($total_weight * $mycart[$a]->qty );
-                                $sub_4 = (round($sub_3) - $max_kg);
+                                $sub_4 = (round($total_weight) - $max_kg);
                                 $total_kg = ($sub_4 * $excess_kg_fee );
                               }else{
                                 $total_kg = 0;
@@ -450,11 +471,10 @@ class CartController extends Controller
                         }else{
                             if ($total_weight > $max_kg){
                                 $sub_1 = ($total_weight - $max_kg);
-                                $total_kg = ($sub_1 * $excess_kg_fee);
+                                $total_kg = (round($sub_1) * $excess_kg_fee);
                             }else{
                               if($mycart[$a]->qty > 1){
-                                $sub_3 = ($total_weight * $mycart[$a]->qty );
-                                $sub_4 = (round($sub_3) - $max_kg);
+                                $sub_4 = (round($total_weight) - $max_kg);
                                 $total_kg = ($sub_4 * $excess_kg_fee );
                               }else{
                                 $total_kg = 0;
@@ -595,6 +615,7 @@ class CartController extends Controller
         ->findOrFail($id);
 
         $data['products'] = Product::leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->leftJoin('vrnt', 'vrnt.inmr_hash', '=', 'inmr.inmr_hash')
         ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'inmr.sumr_hash')
         ->where('inmr.is_deleted', 0)
         ->where('inmr.is_verified', 1)

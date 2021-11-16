@@ -6,11 +6,15 @@
   <div class="container-p-75 grey-bg"> <!-- Grey BG  -->	
      <div class="page-section">
       <div class="relative">
-        <h5 class="widget-title">Categories</h5>	
+        <h5 class="widget-title" style="color: rgb(72, 99, 160); text-align: center">Categories</h5>	
         <div class="row mb-30" >
           <div class="owl-clients-nav owl-carousel owl-arrows-bg" >
             <?php foreach ($category as $categories): ?> 
-            <div class="item m-bot-0 text-center"><a href="/categories/{{$categories->inct_hash}}" class="widget-title">{{$categories->cat_name}}<br><img src="/images/category/{{$categories->img_path}}" alt="img"></a></div>
+            <div class="item m-bot-0 text-center ">
+              <a href="/categories/{{$categories->inct_hash}}" class="widget-title">{{$categories->cat_name}}<br>
+                <img src="/images/category/{{$categories->img_path}}" alt="img">
+              </a>
+            </div>
              <?php endforeach; ?>
           </div>
         </div>
@@ -21,7 +25,7 @@
 
 <!-- CONTENT -->
 <div class="page-section p-100-cont">
-  <div class="container">
+  <div class="container-p-75">
     <div class="row">
       
       <!-- CONTENT -->
@@ -34,7 +38,7 @@
           {{-- <form class="form-search widget-search-form" action="/categories/{{$cat_hash->inct_hash}}/search" method="get"> --}}
             <form class="form-search widget-search-form" action="/searchcat" method="get">
             <input type="hidden" name="category" value={{$cat_hash->inct_hash}}>
-            <input type="text" name="keyword" class="input-search-widget" placeholder="Search">
+            <input type="text" name="keyword" class="form-control input-search-widget" placeholder="Search">
             <button class="" type="submit" title="Start Search">
               <span aria-hidden="true" class="icon_search"></span>
             </button>
@@ -76,10 +80,17 @@
           if(count($content) > 0){
           foreach ($content as $products):
           ?>
-            <div class="col-md-3 col-lg-3 pb-80 card" >
-              <div class="post-prev-img">  
-                <a href="/productdetails/{{$products->inmr_hash}}"><img style="height: 370px; width: 472px;" src="/images/products/{{$products->image_path}}" alt="img"></a>
-              </div>
+            <div class="col-sm-6 col-md-4 col-lg-2 col-xl-2 pb-20 pt-20 ">
+              <div class="" style="min-height: 250px;  background-color:white; border-radius: 5px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+              {{-- <div class="" style="min-height: 250px;  background-color:white; border: 1px solid rgb(136, 135, 135); border-radius: 5px;"> --}}
+                  <div class="shop-dep-item" style="overflow:hidden">
+                      <a href="/productdetails/{{ $products->inmr_hash }}">
+                              <img class="center"
+                              style="height: 16vmax; object-fit: cover; padding-top:5px "
+                              src="/images/products/{{ $products->image_path }}"
+                              alt="{{ $products->product_name }}">
+                      </a>
+                  </div>
             
               <div class="post-prev-title mb-5">
                 <h3 style="text-overflow: ellipsis;
@@ -110,13 +121,18 @@
               <div class="shop-price-cont">
                 
                 <?php if ($minimum === $maximum){ ?> 
-                  <strong>&#8369; {{ number_format($minimum, 2) }}</strong>
+                  <strong style="text-overflow: ellipsis;
+                  white-space: nowrap;
+                  overflow: hidden;">&#8369; {{ number_format($minimum, 2) }}</strong>
                 <?php }else{ ?> 
-                  <strong>&#8369; {{ number_format($maximum, 2) }} - {{ number_format($minimum, 2) }}</strong>
+                  <strong style="text-overflow: ellipsis;
+                  white-space: nowrap;
+                  overflow: hidden;">&#8369; {{ number_format($maximum, 2) }} - {{ number_format($minimum, 2) }}</strong>
                 <?php }?>
                 {{-- <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong> --}}
                 
               </div>
+            </div>
             </div>
           <?php endforeach; ?>   
           </div>

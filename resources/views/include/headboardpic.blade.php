@@ -57,7 +57,7 @@
     </style>
     @endsection
     
-    <div id="wrap" class="boxed ">
+    {{-- <div id="wrap" class="boxed ">
 			<div class="container-p-75 grey-bg"> <!-- Grey BG  -->	
 				
     <!-- FLEX SLIDER -->
@@ -69,40 +69,19 @@
             <ul class="slides">
             
               <!-- SLIDE 1 -->
-              <li style="background: url(/brands_try/Tarpuline.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
-                <div class="container">
-                  <div class="contain">
-                  </div>
-                </div><!-- End Container -->
-              </li><!-- End item -->
-              </li><!-- End item --> --}}
-
-              {{-- <li style="background: url(/brands_try/ads1.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
+              <li style="background: url(/brands_try/header_app.jpg); background-repeat: no-repeat; background-position:50% 0; background-size:contain;">
                 <div class="container">
                   <div class="contain">
                   </div>
                 </div><!-- End Container -->
               </li><!-- End item -->
               
-              <!-- SLIDE 2 -->  
-              <li style="background: url(/brands_try/ads2.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
+              <li style="background: url(/brands_try/header_app.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
                 <div class="container">
-                  <div class="sixteen columns contain">
+                  <div class="contain">
                   </div>
                 </div><!-- End Container -->
-              </li><!-- End item --> --}}
-               
-              <!-- SLIDE 3 -->
-              {{-- <li style="background:url(/HTML/images/flexslider/shop3.jpg) no-repeat; background-position:50% 0">
-                
-                <div class="container">
-                  <div class="sixteen columns contain">
-                    <h2 data-toptitle="38%" class="light-72 flex-top-bot" >NEW ARRIVALS<br></h2>
-                    <p data-bottomtext="38%" class="light-72 flex-bot-top"><span class="bold">SAVE UP TO 50%</span></p>
-                  </div>
-                </div><!-- End Container -->
-                
-              </li><!-- End item --> --}}
+              </li><!-- End item -->
 
             </ul>
           </div>
@@ -112,6 +91,39 @@
   </div>	
     </div>	
       </div>
-    </div>
+    </div> --}}
 
+    <div class="slider-1 clearfix pt-75">
+           
+      <div class="flex-container">
+        <div class="flexslider">
+          <ul class="slides">
+          
+            <!-- SLIDE 1 -->
+            <li style="background: url(/brands_try/app_head_real_2.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%; float: left; margin-right: -100%; opacity: 0.837956; display: block; z-index: 2;" class="flex-active-slide">
+            
+              <div class="container">
+                <div class="contain">
+                 {{-- <h2 data-toptitle="15%" class="light-100 flex-top-bot" style="top: 35%; left: 0px; opacity: 0;">2018</h2> --}}
+                  <p data-bottomtext="5%" class="light flex-bot-top " style="bottom: -50%; left: 0px; opacity: 0;"><a href="{{ url('download/azspreeMobileApp') }}"><span class="bold"><img src="/brands_try/btn_click_here.png" width="300vw" height="150vh" ></span></a></p>
+                </div>
+              </div><!-- End Container -->
+            
+            </li><!-- End item -->
+            
+            <!-- SLIDE 2 -->  
+            <li style="background: url(/brands_try/new_cover.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;" class="">
+              
+              <div class="container">
+                <div class="sixteen columns contain">
+                  <h2 data-bottomtext="31%" class="norm-50-wide text-center font-white bot-34-767 bot-30-480-767 flex-bot-top" style="bottom: -50%; left: 15px; opacity: 0;"><span class="slider-caption-border no-border-959" style="background-color:rgb(249, 91, 90); ">FREE SHIPPING MONTH!!</span></h2>
+                </div>
+              </div><!-- End Container -->
+              
+            </li><!-- End item -->
+          </ul>
+        </div>
+      <ul class="flex-direction-nav"><li class="flex-nav-prev"><a class="flex-prev" href="#"></a></li><li class="flex-nav-next"><a class="flex-next" href="#"></a></li></ul></div>
+       
+    </div>
     
