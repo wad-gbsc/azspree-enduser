@@ -100,12 +100,12 @@
           <ul class="slides">
           
             <!-- SLIDE 1 -->
-            <li style="background: url(/brands_try/app_head_real_2.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%; float: left; margin-right: -100%; opacity: 0.837956; display: block; z-index: 2;" class="flex-active-slide">
+            <li style="background: url(/brands_try/app_head_real_3.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%; float: left; margin-right: -100%; opacity: 0.837956; display: block; z-index: 2;" class="flex-active-slide">
             
               <div class="container">
                 <div class="contain">
                  {{-- <h2 data-toptitle="15%" class="light-100 flex-top-bot" style="top: 35%; left: 0px; opacity: 0;">2018</h2> --}}
-                  <p data-bottomtext="5%" class="light flex-bot-top " style="bottom: -50%; left: 0px; opacity: 0;"><a href="{{ url('download/azspreeMobileApp') }}"><span class="bold"><img src="/brands_try/btn_click_here.png" width="300vw" height="150vh" ></span></a></p>
+                  <p data-bottomtext="5%" class="light flex-bot-top " style="bottom: -50%; left: 0px; opacity: 0;"><a href="{{ url('download/azspreeMobileApp') }}"><span class="bold"><img src="/brands_try/btn_click_here.png" width="270vw" ></span></a></p>
                 </div>
               </div><!-- End Container -->
             

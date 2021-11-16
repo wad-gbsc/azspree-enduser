@@ -24,6 +24,62 @@ class PagesController extends Controller
         $title = 'Azspree';
         $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
         $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->orderBy('inmr_hash','desc')->paginate(24);
+
+        $rand =  DB::table('inmr')->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('inmr.is_verified', 1)
+        ->where('inct.is_deleted', 0)
+        ->inRandomOrder()
+        ->limit(1)
+        ->get();
+
+        $rand_2 =  DB::table('inmr')->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('inmr.is_verified', 1)
+        ->where('inct.is_deleted', 0)
+        ->inRandomOrder()
+        ->limit(1)
+        ->get();
+
+        $rand_3 =  DB::table('inmr')->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('inmr.is_verified', 1)
+        ->where('inct.is_deleted', 0)
+        ->inRandomOrder()
+        ->limit(1)
+        ->get();
+
+        $rand_4 =  DB::table('inmr')->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('inmr.is_verified', 1)
+        ->where('inct.is_deleted', 0)
+        ->inRandomOrder()
+        ->limit(1)
+        ->get();
+
+        $rand_5 =  DB::table('inmr')->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('inmr.is_verified', 1)
+        ->where('inct.is_deleted', 0)
+        ->inRandomOrder()
+        ->limit(1)
+        ->get();
+
+        $rand_6 =  DB::table('inmr')->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('inmr.is_verified', 1)
+        ->where('inct.is_deleted', 0)
+        ->inRandomOrder()
+        ->limit(1)
+        ->get();
+
+        $rand_7 =  DB::table('inmr')->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('inmr.is_verified', 1)
+        ->where('inct.is_deleted', 0)
+        ->inRandomOrder()
+        ->limit(1)
+        ->get();
         
         $variant =  DB::table('vrnt')
         ->leftJoin('inmr', 'inmr.inmr_hash', '=', 'vrnt.inmr_hash')
@@ -49,7 +105,7 @@ class PagesController extends Controller
         $visitcount =  DB::table('cntr')->where('is_deleted', 0)->where('ip_address', $request->ip())->get();
         $visit =  DB::table('cntr')->where('is_deleted', 0)->get();
         // $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->inRandomOrder()->paginate(24);
-        return view('welcome', compact('categories','content','visitcount', 'visit','var_min', 'var_max', 'variant'));
+        return view('welcome', compact('rand','rand_2','rand_3','rand_4','rand_5','rand_6','rand_7','categories','content','visitcount', 'visit','var_min', 'var_max', 'variant'));
     }
 
     public function login(){

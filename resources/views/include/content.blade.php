@@ -54,146 +54,152 @@
 </div> --}}
 
 <div id="wrap" class="boxed ">
-  <div class="container-p-75 ">
+  <div class="container-p-75">
 <div class="page-section">
   {{-- <div class="page-section indent-header"> --}}
-  <div class="relative">
+  <div class="relative grey-light-bg">
 
     <!-- ITEMS GRID -->
     <ul class="port-grid port-grid-gut clearfix masonry" id="items-grid" style="position: relative; height: 502.162px;">
         
       <!-- Item 1 -->
+      @foreach ($rand as $rands)
       <li class="port-item mix" style="position: absolute; left: 0px; top: 0px;">
-        <a href="shop-single.html">
-          <div class="port-img-overlay"><img class="port-main-img" src="/HTML/images/shop/portfolio/projects-1.jpg" alt="img"></div>
+        <a href="/productdetails/{{ $rands->inmr_hash }}">
+          <div class="port-img-overlay"><img class="port-main-img" style="height: 14vmax; object-fit: cover; " src="/images/products/{{ $rands->image_path }}" alt="{{ $rands->product_name }}"></div>
         </a>
         <div class="port-overlay-cont">
-
+          
             <div class="port-title-cont">
-              <h3><a href="shop-single.html">MEN'S GLOVES</a></h3>
-              <span><a href="#">men</a> / <a href="#">accessories</a></span>
+              <h3><a href="/productdetails/{{ $rands->inmr_hash }}">{{ $rands->product_name }}</a></h3>
+              <span><a href="/categories/{{ $rands->inct_hash }}">{{ $rands->cat_name }}</a></span>
             </div>
             <div class="port-btn-cont">
-              <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
-              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a>
+              {{-- <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
+              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a> --}}
             </div>
 
         </div>
       </li>
+      @endforeach
 
       <!-- Item 2 -->
+      @foreach ($rand_2 as $rands)
       <li class="port-item mix" style="position: absolute; left: 259px; top: 0px;">
-        <a href="shop-single.html">
-          <div class="port-img-overlay"><img class="port-main-img" src="/HTML/images/shop/portfolio/projects-2-big.jpg" alt="img"></div>
+        <a href="/productdetails/{{ $rands->inmr_hash }}">
+          <div class="port-img-overlay"><img class="port-main-img" style="height: 24vmax; object-fit: cover;" src="/images/products/{{ $rands->image_path }}" alt="{{ $rands->product_name }}"></div>
         </a>
         <div class="port-overlay-cont">
          
             <div class="port-title-cont">
-              <h3><a href="shop-single.html">GREY SWEATER</a></h3>
-              <span><a href="#">men</a> / <a href="#">clothing</a></span>
+              <h3><a href="/productdetails/{{ $rands->inmr_hash }}">{{ $rands->product_name }}</a></h3>
+              <span><a href="/categories/{{ $rands->inct_hash }}">{{ $rands->cat_name }}</a></span>
             </div>
             <div class="port-btn-cont">
-              <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
-              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a>
             </div>
       
         </div>
       </li>
+      @endforeach
       
       <!-- Item 3 -->
+      @foreach ($rand_3 as $rands)
       <li class="port-item mix" style="position: absolute; left: 519px; top: 0px;">
-        <a href="shop-single.html">
-          <div class="port-img-overlay"><img class="port-main-img" src="/HTML/images/shop/portfolio/projects-3-very-big.jpg" alt="img"></div>
+        <a href="/productdetails/{{ $rands->inmr_hash }}">
+          <div class="port-img-overlay"><img class="port-main-img" style="height: 39vmax; object-fit: cover;" src="/images/products/{{ $rands->image_path }}" alt="{{ $rands->product_name }}"></div>
         </a>
         <div class="port-overlay-cont">
       
-            <div class="port-title-cont">
-              <h3><a href="shop-single.html">VIOLET DRESS</a></h3>
-              <span><a href="#">women</a> / <a href="#">clothing</a></span>
-            </div>
-            <div class="port-btn-cont">
-              <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
-              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a>
-            </div>
+          <div class="port-title-cont">
+            <h3><a href="/productdetails/{{ $rands->inmr_hash }}">{{ $rands->product_name }}</a></h3>
+            <span><a href="/categories/{{ $rands->inct_hash }}">{{ $rands->cat_name }}</a></span>
+          </div>
+          <div class="port-btn-cont">
+          </div>
       
         </div>
       </li>
+      @endforeach
       
       <!-- Item 4 -->
-      <li class="port-item mix" style="position: absolute; left: 779px; top: 0px;">
-        <a href="shop-single.html">
-          <div class="port-img-overlay"><img class="port-main-img" src="/HTML/images/shop/portfolio/projects-4-big.jpg" alt="img"></div>
+      @foreach ($rand_4 as $rands)
+      <li class="port-item mix" style="position: absolute; left: 259px; top: 0px;">
+        <a href="/productdetails/{{ $rands->inmr_hash }}">
+          <div class="port-img-overlay"><img class="port-main-img" style="height: 24vmax; object-fit: cover;" src="/images/products/{{ $rands->image_path }}" alt="{{ $rands->product_name }}"></div>
         </a>
         <div class="port-overlay-cont">
          
             <div class="port-title-cont">
-              <h3><a href="shop-single.html">LEATHER BAG</a></h3>
-              <span><a href="#">women</a> / <a href="#">accessories</a></span>
+              <h3><a href="/productdetails/{{ $rands->inmr_hash }}">{{ $rands->product_name }}</a></h3>
+              <span><a href="/categories/{{ $rands->inct_hash }}">{{ $rands->cat_name }}</a></span>
             </div>
             <div class="port-btn-cont">
-              <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
-              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a>
             </div>
       
         </div>
       </li>
+      @endforeach
       
       <!-- Item 5 -->
-      <li class="port-item mix" style="position: absolute; left: 0px; top: 172px;">
-        <a href="shop-single.html">
-          <div class="port-img-overlay"><img class="port-main-img" src="/HTML/images/shop/portfolio/projects-5-big.jpg" alt="img"></div>
+      @foreach ($rand_5 as $rands)
+      <li class="port-item mix" style="position: absolute; left: 259px; top: 0px;">
+        <a href="/productdetails/{{ $rands->inmr_hash }}">
+          <div class="port-img-overlay"><img class="port-main-img" style="height: 24vmax; object-fit: cover;" src="/images/products/{{ $rands->image_path }}" alt="{{ $rands->product_name }}"></div>
         </a>
         <div class="port-overlay-cont">
-    
+         
             <div class="port-title-cont">
-              <h3><a href="shop-single.html">GREY SWEATER</a></h3>
-              <span><a href="#">men</a> / <a href="#">shirts</a></span>
+              <h3><a href="/productdetails/{{ $rands->inmr_hash }}">{{ $rands->product_name }}</a></h3>
+              <span><a href="/categories/{{ $rands->inct_hash }}">{{ $rands->cat_name }}</a></span>
             </div>
             <div class="port-btn-cont">
-              <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
-              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a>
             </div>
-    
+      
         </div>
       </li>
+      @endforeach
       
       <!-- Item 6 -->
-      <li class="port-item mix" style="position: absolute; left: 259px; top: 329px;">
-        <a href="shop-single.html">
-          <div class="port-img-overlay"><img class="port-main-img" src="/HTML/images/shop/portfolio/projects-6.jpg" alt="img"></div>
+      @foreach ($rand_6 as $rands)
+      <li class="port-item mix" style="position: absolute; left: 0px; top: 0px;">
+        <a href="/productdetails/{{ $rands->inmr_hash }}">
+          <div class="port-img-overlay"><img class="port-main-img" style="height: 14vmax; object-fit: cover;" src="/images/products/{{ $rands->image_path }}" alt="{{ $rands->product_name }}"></div>
         </a>
         <div class="port-overlay-cont">
-       
+          
             <div class="port-title-cont">
-              <h3><a href="shop-single.html">BLACK BELT</a></h3>
-              <span><a href="#">women</a> / <a href="#">accessories</a></span>
+              <h3><a href="/productdetails/{{ $rands->inmr_hash }}">{{ $rands->product_name }}</a></h3>
+              <span><a href="/categories/{{ $rands->inct_hash }}">{{ $rands->cat_name }}</a></span>
             </div>
             <div class="port-btn-cont">
-              <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
-              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a>
+              {{-- <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
+              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a> --}}
             </div>
-     
+
         </div>
       </li>
+      @endforeach
       
       <!-- Item 7 -->
-      <li class="port-item mix" style="position: absolute; left: 779px; top: 329px;">
-        <a href="shop-single.html">
-          <div class="port-img-overlay"><img class="port-main-img" src="/HTML/images/shop/portfolio/projects-7.jpg" alt="img"></div>
+      @foreach ($rand_7 as $rands)
+      <li class="port-item mix" style="position: absolute; left: 0px; top: 0px;">
+        <a href="/productdetails/{{ $rands->inmr_hash }}">
+          <div class="port-img-overlay"><img class="port-main-img" style="height: 14vmax; object-fit: cover;" src="/images/products/{{ $rands->image_path }}" alt="{{ $rands->product_name }}"></div>
         </a>
         <div class="port-overlay-cont">
-       
+          
             <div class="port-title-cont">
-              <h3><a href="shop-single.html">GREY SWEATER</a></h3>
-              <span><a href="#">men</a> / <a href="#">shirts</a></span>
+              <h3><a href="/productdetails/{{ $rands->inmr_hash }}">{{ $rands->product_name }}</a></h3>
+              <span><a href="/categories/{{ $rands->inct_hash }}">{{ $rands->cat_name }}</a></span>
             </div>
             <div class="port-btn-cont">
-              <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
-              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a>
+              {{-- <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
+              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a> --}}
             </div>
-  
+
         </div>
       </li>
+      @endforeach
        
     </ul>
 
