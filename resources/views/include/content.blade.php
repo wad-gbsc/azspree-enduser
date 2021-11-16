@@ -57,6 +57,12 @@
   <div class="container-p-75">
 <div class="page-section">
   {{-- <div class="page-section indent-header"> --}}
+
+    <div class="mb-50">
+      <h2 class="section-title pr-0">FEATURED <span class="bold">PRODUCTS</span>
+          </h2>
+    </div>
+
   <div class="relative grey-light-bg">
 
     <!-- ITEMS GRID -->
@@ -66,7 +72,7 @@
       @foreach ($rand as $rands)
       <li class="port-item mix" style="position: absolute; left: 0px; top: 0px;">
         <a href="/productdetails/{{ $rands->inmr_hash }}">
-          <div class="port-img-overlay"><img class="port-main-img" style="height: 14vmax; object-fit: cover; " src="/images/products/{{ $rands->image_path }}" alt="{{ $rands->product_name }}"></div>
+          <div class="port-img-overlay"><img class="port-main-img" style="height: 22vmax; object-fit: cover; " src="/images/products/{{ $rands->image_path }}" alt="{{ $rands->product_name }}"></div>
         </a>
         <div class="port-overlay-cont">
           
@@ -83,7 +89,7 @@
       </li>
       @endforeach
 
-      <!-- Item 2 -->
+      {{-- <!-- Item 2 -->
       @foreach ($rand_2 as $rands)
       <li class="port-item mix" style="position: absolute; left: 259px; top: 0px;">
         <a href="/productdetails/{{ $rands->inmr_hash }}">
@@ -172,8 +178,6 @@
               <span><a href="/categories/{{ $rands->inct_hash }}">{{ $rands->cat_name }}</a></span>
             </div>
             <div class="port-btn-cont">
-              {{-- <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
-              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a> --}}
             </div>
 
         </div>
@@ -193,13 +197,11 @@
               <span><a href="/categories/{{ $rands->inct_hash }}">{{ $rands->cat_name }}</a></span>
             </div>
             <div class="port-btn-cont">
-              {{-- <a href="/HTML/images/shop/portfolio/projects-2-big.jpg" class="lightbox mr-20"><div aria-hidden="true" class="icon_search"></div></a>
-              <a href="shop-single.html"><div aria-hidden="true" class="icon_link"></div></a> --}}
             </div>
 
         </div>
       </li>
-      @endforeach
+      @endforeach --}}
        
     </ul>
 

@@ -30,7 +30,7 @@ class PagesController extends Controller
         ->where('inmr.is_verified', 1)
         ->where('inct.is_deleted', 0)
         ->inRandomOrder()
-        ->limit(1)
+        ->limit(8)
         ->get();
 
         $rand_2 =  DB::table('inmr')->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
